@@ -1,5 +1,5 @@
 CC = g++
-C_STANDARD = -std=c++11 #-std=c11
+C_STANDARD = -std=c++0x #-std=c11
 INCLUDE_DIR = -I headers/ 
 SOURCES_DIR = sources
 BUILD_DIR = build
@@ -31,5 +31,5 @@ clean:
 	${RM} -rf ${BUILD_DIR}/*.dSYM
 	${RM} -rf ${OBJ_DIR}
 
-run: all
+run: ${FILENAME}
 	${BUILD_DIR}/${APPLICATION_NAME}
