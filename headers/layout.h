@@ -8,38 +8,29 @@ class Layout {
   friend class Application;
 
 public:
-  void setRect(Rect r) { m_rect = r; }
-  const Rect getRect() const { return m_rect; }
-  void setSpaceBetween(unsigned int sb) { m_spaceBetween = sb; }
-  void addWidget(Widget *widget) { m_widgets.push_back(widget); }
+  void setRect(Rect r);
+  const Rect getRect() const;
+  void setSpaceBetween(unsigned int sb);
+  void addWidget(Widget *widget, unsigned int w = 1);
   virtual void updatePosition() { assert(false && "Use VLayout / HLayout"); }
 
 protected:
   unsigned int m_spaceBetween = 0;
-  const std::vector<Widget *> getWidgets() const { return m_widgets; }
   std::vector<Widget *> m_widgets;
+  std::vector<unsigned int> m_weights;
   Rect m_rect = {.x = 0, .y = 0, .w = 1, .h = 1};
+
+  const std::vector<Widget *> getWidgets() const { return m_widgets; }
 };
 
 class VLayout : public Layout {
 public:
-  VLayout() {}
+  VLayout();
+  void updatePosition();
+};
 
+class HLayout : public Layout {
 public:
-  void updatePosition() {
-    if (m_widgets.empty())
-      return;
-    if (m_rect.h <= 1)
-      return;
-
-    unsigned int totalHeight = m_rect.h - (m_widgets.size() - 1) * m_spaceBetween;
-
-    int ypos = 0;
-    int height = totalHeight / m_widgets.size();
-
-    for (auto w_ : m_widgets) {
-      w_->setRect({.x = m_rect.x, .y = ypos, .w = m_rect.w, .h = height});
-      ypos += height + m_spaceBetween;
-    }
-  }
+  HLayout();
+  void updatePosition();
 };
