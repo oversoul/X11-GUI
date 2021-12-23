@@ -9,7 +9,6 @@ public:
   Label();
   Label(std::string value);
   ~Label();
-  void paint(XEvent &e);
   void paintEvent(XEvent &);
   void setValue(std::string value);
   const Window id() const { return m_window; }
