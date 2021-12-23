@@ -6,7 +6,7 @@
 #include "painter.h"
 #include "widget.h"
 
-class Application {
+class Application : public Widget {
 
 public:
   Application(std::string title, int width, int height);

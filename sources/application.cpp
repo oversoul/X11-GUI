@@ -2,7 +2,6 @@
 #include "../headers/painter.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 Application *Application::m_instance = nullptr;
 
@@ -13,26 +12,24 @@ Application::Application(std::string title, int width, int height) {
   m_instance = this;
 
   m_display = XOpenDisplay(nullptr);
-  m_screen = DefaultScreen(m_display);
-  m_root = DefaultRootWindow(m_display);
-  int depth = DefaultDepth(m_display, m_screen);
-  Visual *visual = XDefaultVisual(m_display, m_screen);
 
-  XSetWindowAttributes attr;
-  attr.background_pixel = 0xFFDEAD;
-  attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask;
-  unsigned long mask = CWBackPixel | CWEventMask;
+  Rect r = {0, 0, width, height};
+  long mask = ExposureMask | KeyPressMask | ButtonPressMask;
 
-  m_window = XCreateWindow(m_display, m_root, 0, 0, width, height, 0, depth, InputOutput, visual, mask, &attr);
+  m_window = Widget::createWindow(m_display, r, mask);
 
-  XWMHints wmhints;
+  XWMHints wmhints = {
+      .flags = StateHint,
+      .initial_state = NormalState,
+  };
+
   XTextProperty windowName;
 
-  wmhints.flags = StateHint;
-  wmhints.initial_state = NormalState;
   XSetWMHints(m_display, m_window, &wmhints);
+
   char *winTitle = (char *)title.c_str();
   XStringListToTextProperty(&winTitle, 1, &windowName);
+
   XSetWMName(m_display, m_window, &windowName);
   XMapWindow(m_display, m_window);
 }
@@ -158,7 +155,6 @@ void Application::exec() {
     redraw();
   }
 
-  /* 9.  clean up before exiting */
   XUnmapWindow(m_display, m_window);
   XDestroyWindow(m_display, m_window);
   XCloseDisplay(m_display);

@@ -16,6 +16,24 @@ public:
     return -1;
   }
 
+  static Window createWindow(Display *dpy, Rect r, long emask, Window p = -1) {
+    int screen = DefaultScreen(dpy);
+    int depth = DefaultDepth(dpy, screen);
+    Visual *visual = XDefaultVisual(dpy, screen);
+
+    if (p == (long unsigned int)-1) {
+      p = DefaultRootWindow(dpy);
+    }
+
+    XSetWindowAttributes attr = {
+        .background_pixel = 0xFFFFFF,
+        .event_mask = emask,
+    };
+
+    unsigned long mask = CWBackPixel | CWEventMask;
+    return XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
+  }
+
   void setFocus(bool focus) { m_focus = focus; }
   const bool hasFocus() const { return m_focus; }
   const bool isVisible() const { return m_visible; }

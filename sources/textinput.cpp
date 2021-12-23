@@ -6,30 +6,19 @@
 #include <X11/Xutil.h>
 #include <cstdio>
 
-bool in_region(int x, int y, Rect r) {
-  // y is height
-  // x is width
-  bool inX = (x >= r.x && x <= r.x + r.w);
-  bool inY = (y >= r.y && y <= r.y + r.h);
-
-  return inX && inY;
-}
-
-TextInput::TextInput() { //
+TextInput::TextInput() {
   m_display = Application::instance()->display();
   auto pw = Application::instance()->window();
 
-  int screen = DefaultScreen(m_display);
-  Visual *visual = XDefaultVisual(m_display, screen);
-  int depth = XDefaultDepth(m_display, XDefaultScreen(m_display));
+  Rect r = {0, 0, 1, 1};
 
-  XSetWindowAttributes attr;
-  attr.background_pixel = m_bgColor;
-  attr.event_mask =
-      ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask | LeaveWindowMask | KeyPressMask;
+  XSetWindowAttributes attr = {
+      .background_pixel = m_bgColor,
+      .event_mask =
+          ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask | LeaveWindowMask | KeyPressMask,
+  };
 
-  unsigned long mask = CWBackPixel | CWEventMask;
-  m_window = XCreateWindow(m_display, pw, 0, 0, 1, 1, 0, depth, InputOutput, visual, mask, &attr);
+  m_window = Widget::createWindow(m_display, r, attr.event_mask, pw);
 
   m_painter = new Painter(m_display, m_window);
   m_painter->clear();
@@ -66,7 +55,6 @@ bool TextInput::keyReleaseEvent(XKeyEvent &e) { //
 }
 
 void TextInput::paintEvent(XEvent &) {
-
   m_painter->clear();
   setBackground(m_bgColor);
 
