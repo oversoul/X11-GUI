@@ -26,11 +26,13 @@ protected:
 class VLayout : public Layout {
 public:
   VLayout();
+  ~VLayout();
   void updatePosition();
 };
 
 class HLayout : public Layout {
 public:
   HLayout();
+  ~HLayout();
   void updatePosition();
 };

@@ -19,6 +19,7 @@ void Layout::addWidget(Widget *widget, unsigned int w) {
 }
 
 VLayout::VLayout() {}
+VLayout::~VLayout() {}
 void VLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;
@@ -45,6 +46,7 @@ void VLayout::updatePosition() {
 // ------------------
 
 HLayout::HLayout() {}
+HLayout::~HLayout() {}
 void HLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;
