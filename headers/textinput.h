@@ -7,6 +7,7 @@
 class TextInput : public Widget {
 public:
   TextInput();
+  TextInput(std::string value);
   ~TextInput();
   void paint(XEvent &e);
   void setValue(std::string value);

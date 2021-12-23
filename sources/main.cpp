@@ -1,17 +1,16 @@
 #include <iostream>
 
-#include "../headers/application.h"
 #include "../headers/label.h"
 #include "../headers/layout.h"
 #include "../headers/textinput.h"
 
+#include "../headers/application.h"
+
 int main(void) {
   Application *app = new Application("Howdy!", 640, 480);
 
-  TextInput te;
-  Label la;
-  la.setValue("First Item:");
-  te.setValue("Hello world");
+  Label la("First Item:");
+  TextInput te("Hello World input");
 
   VLayout layout;
   layout.setRect({.x = 10, .y = 10, .w = 620, .h = 460});

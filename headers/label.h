@@ -7,6 +7,7 @@
 class Label : public Widget {
 public:
   Label();
+  Label(std::string value);
   ~Label();
   void paint(XEvent &e);
   void paintEvent(XEvent &);

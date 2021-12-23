@@ -23,6 +23,10 @@ Label::Label() {
   m_painter->clear();
 }
 
+Label::Label(std::string value) : Label() {
+  setValue(value);
+}
+
 Label::~Label() {
   //
 }

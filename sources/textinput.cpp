@@ -24,6 +24,10 @@ TextInput::TextInput() {
   m_painter->clear();
 }
 
+TextInput::TextInput(std::string value) : TextInput() { //
+  setValue(value);
+}
+
 TextInput::~TextInput() {
   //
 }
