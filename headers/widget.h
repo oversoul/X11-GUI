@@ -1,12 +1,11 @@
 #pragma once
+#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <assert.h>
+#include <iostream>
 
 typedef struct {
-  int x;
-  int y;
-  int w;
-  int h;
+  int x, y, w, h;
 } Rect;
 
 class Widget {
@@ -16,7 +15,9 @@ public:
     return -1;
   }
 
-  static Window createWindow(Display *dpy, Rect r, long emask, Window p = -1) {
+  void print_r(Rect r) { std::cout << "x: " << r.x << " y: " << r.y << " w: " << r.w << " h: " << r.h << std::endl; }
+
+  static Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p = -1) {
     int screen = DefaultScreen(dpy);
     int depth = DefaultDepth(dpy, screen);
     Visual *visual = XDefaultVisual(dpy, screen);
@@ -24,11 +25,6 @@ public:
     if (p == (long unsigned int)-1) {
       p = DefaultRootWindow(dpy);
     }
-
-    XSetWindowAttributes attr = {
-        .background_pixel = 0xFFFFFF,
-        .event_mask = emask,
-    };
 
     unsigned long mask = CWBackPixel | CWEventMask;
     return XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
@@ -38,12 +34,17 @@ public:
   const bool hasFocus() const { return m_focus; }
   const bool isVisible() const { return m_visible; }
 
-  virtual bool handleEvent(XEvent &e) {
+  bool handleEvent(XEvent &e) {
     switch (e.type) {
     case KeyPress:
       return keyPressEvent(e.xkey);
     case KeyRelease:
       return keyReleaseEvent(e.xkey);
+    case ButtonPress:
+      return mousePressEvent(e.xbutton);
+    default:
+      paintEvent(e);
+      return true;
     }
     return false;
   };
@@ -69,11 +70,12 @@ public:
   virtual void paintEvent(XEvent &) {}
   virtual bool keyPressEvent(XKeyEvent &) { return false; }
   virtual bool keyReleaseEvent(XKeyEvent &) { return false; }
+  virtual bool mousePressEvent(XButtonEvent &) { return false; }
 
 protected:
+  Window m_window;
   bool m_focus = false;
   bool m_visible = true;
-  Window m_window;
   Display *m_display = nullptr;
   unsigned long m_bgColor = 0xffffff;
   Rect m_rect = {.x = 0, .y = 0, .w = 1, .h = 1};
@@ -83,7 +85,6 @@ protected:
   virtual bool textInputEvent(&);
   virtual bool mouseDoubleClickEvent(&);
   virtual bool mouseMoveEvent(&);
-  virtual bool mousePressEvent(&);
   virtual bool mouseReleaseEvent(&);
   virtual void paintEvent(&);
   virtual void resizeEvent(&);

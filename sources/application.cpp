@@ -14,14 +14,14 @@ Application::Application(std::string title, int width, int height) {
   m_display = XOpenDisplay(nullptr);
 
   Rect r = {0, 0, width, height};
-  long mask = ExposureMask | KeyPressMask | ButtonPressMask;
-
-  m_window = Widget::createWindow(m_display, r, mask);
-
-  XWMHints wmhints = {
-      .flags = StateHint,
-      .initial_state = NormalState,
+  XSetWindowAttributes attr = {
+      .background_pixel = 0xFFFFFF,
+      .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
   };
+
+  m_window = Widget::createWindow(m_display, r, attr);
+
+  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
 
   XTextProperty windowName;
 
@@ -51,18 +51,6 @@ void Application::clear() { //
   XClearWindow(m_display, m_window);
 }
 
-void Application::redraw() { //
-  clear();
-  XMapWindow(m_display, m_window);
-  XMapRaised(m_display, m_window);
-
-  m_layout->updatePosition();
-
-  for (auto w_ : m_layout->getWidgets()) {
-    w_->paintEvent(m_event);
-  }
-}
-
 void Application::setLayout(Layout &l) { m_layout = &l; }
 void Application::setLayout(Layout *l) { m_layout = l; }
 
@@ -87,11 +75,64 @@ void Application::exit() { //
   m_shouldClose = true;
 }
 
+void Application::checkForExit() {
+  if (m_event.type == ClientMessage) {
+    if ((Atom)m_event.xclient.data.l[0] == m_wmDeleteMessage)
+      exit();
+    return;
+  }
+  if (m_event.type == KeyPress) {
+    if (XK_Escape == XLookupKeysym(&m_event.xkey, 0))
+      exit();
+    return;
+  }
+}
+
+void Application::paintEvent(XEvent &e) {
+  for (auto w_ : m_layout->getWidgets()) {
+    w_->paintEvent(e);
+  }
+}
+
 void Application::exec() {
-  Window window = -1;
+  m_focusedWindow = m_window;
+  XMapWindow(m_display, m_window);
 
   while (!m_shouldClose) {
+    XSync(m_display, false);
+    XFlush(m_display);
     XNextEvent(m_display, &m_event);
+    checkForExit();
+
+    m_layout->updatePosition();
+
+    if (m_event.type == ButtonPress) {
+      m_focusedWindow = m_event.xbutton.window;
+    }
+
+    for (auto &w_ : m_layout->getWidgets()) {
+      w_->updateSizeAndPos();
+      if (w_->handleEvent(m_event)) {
+        w_->paintEvent(m_event);
+      }
+      XMapWindow(m_display, w_->id());
+    }
+
+    /*
+    XMapWindow(m_display, m_window);
+
+    for (auto &w_ : m_layout->getWidgets()) {
+      w_->updateSizeAndPos();
+      XMapWindow(m_display, w_->id());
+    }
+
+    for (auto &w_ : m_layout->getWidgets()) {
+      if (w_->id() == m_event.xany.window) {
+        Widget *focusedWidget = w_;
+      }
+    }
+    */
+    /*
     window = -1;
 
     if (m_window == m_event.xany.window) {
@@ -131,37 +172,29 @@ void Application::exec() {
     case ButtonPress:
     case ButtonRelease:
 
-      for (auto w_ : m_layout->getWidgets()) {
-        w_->setFocus(w_->id() == m_event.xany.window);
-      }
-      break;
-      /*
-    case ButtonPress:
-      XUngrabPointer(m_display, CurrentTime);
-      break;
-    case EnterNotify:
-      for (auto w_ : m_widgets) {
-        if (w_->isVisible()) {
-          XMapWindow(m_display, w_->id());
-        } else {
-          XUnmapWindow(m_display, w_->id());
-        }
-      }
-      XFlush(m_display);
-      break;
-    case LeaveNotify:
-      // XSetWindowBackground(m_display, W[window].id, 0xFFFFFF);
-      // XClearWindow(m_display, W[window].id);
       break;
       */
-    }
+    // case ButtonPress:
+    //  XUngrabPointer(m_display, CurrentTime);
+    //  break;
+    // case EnterNotify:
+    //  for (auto w_ : m_widgets) {
+    //    if (w_->isVisible()) {
+    //      XMapWindow(m_display, w_->id());
+    //    } else {
+    //      XUnmapWindow(m_display, w_->id());
+    //    }
+    //  }
+    //  XFlush(m_display);
+    //  break;
+    // case LeaveNotify:
+    //  // XSetWindowBackground(m_display, W[window].id, 0xFFFFFF);
+    //  // XClearWindow(m_display, W[window].id);
+    //  break;
+    //}
 
-    for (auto w_ : m_layout->getWidgets()) {
-      if (w_->hasFocus()) {
-        w_->handleEvent(m_event);
-      }
-    }
-    redraw();
+    // focusedWidget->handleEvent(m_event);
+    // redraw();
   }
 
   XUnmapWindow(m_display, m_window);

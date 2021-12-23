@@ -15,6 +15,8 @@ Painter::Painter(Display *display, Window window) : m_window(window), m_display(
   }
 
   XSetFont(m_display, m_gc, m_font->fid);
+
+  clear();
 }
 
 Painter::~Painter() { //

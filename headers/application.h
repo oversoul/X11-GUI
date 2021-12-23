@@ -19,9 +19,9 @@ public:
   void exit();
   void exec();
   void clear();
-  void redraw();
   bool shouldExit();
   bool eventPending();
+  void paintEvent(XEvent &);
 
   void setInputSelection(long types = ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask |
                                       LeaveWindowMask | KeyPressMask);
@@ -31,8 +31,13 @@ public:
   void addWidget(Widget *);
   long getInputSelection();
   Painter *painter() { return m_painter; }
-  Window window() const { return m_window; }
+  const Window window() const { return m_window; }
+  const Window id() const { return m_window; }
   Display *display() const { return m_display; }
+  const Window focusedWindow() const { return m_focusedWindow; }
+
+protected:
+  void checkForExit();
 
 private:
   int m_root;
@@ -40,6 +45,7 @@ private:
   XEvent m_event;
   Window m_window;
 
+  Window m_focusedWindow = -1;
   std::vector<Widget *> m_widgets;
 
   long m_input_types;

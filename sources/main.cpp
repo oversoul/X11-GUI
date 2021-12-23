@@ -2,6 +2,7 @@
 
 #include "../headers/label.h"
 #include "../headers/layout.h"
+#include "../headers/listview.h"
 #include "../headers/textinput.h"
 
 #include "../headers/application.h"
@@ -11,13 +12,15 @@ int main(void) {
 
   Label la("First Item:");
   TextInput te("Hello World input");
+  ListView lv;
 
   VLayout layout;
   layout.setRect({.x = 10, .y = 10, .w = 620, .h = 460});
   layout.setSpaceBetween(20);
 
-  layout.addWidget(&la, 1);
-  layout.addWidget(&te, 1);
+  layout.addWidget(&la);
+  layout.addWidget(&te);
+  layout.addWidget(&lv, 4);
 
   app->setLayout(layout);
 
