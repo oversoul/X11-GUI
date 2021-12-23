@@ -1,10 +1,8 @@
-#include <X11/Xlib.h>
-#include <X11/Xos.h>
-#include <X11/Xutil.h>
 #include <iostream>
 
 #include "../headers/application.h"
 #include "../headers/label.h"
+#include "../headers/layout.h"
 #include "../headers/textinput.h"
 
 int main(void) {
@@ -16,13 +14,21 @@ int main(void) {
   te.setValue("Hello world");
   tee.setValue("Hello world");
 
-  la.setRect({.x = 10, .y = 10, .w = 620, .h = 30});
-  te.setRect({.x = 10, .y = 50, .w = 620, .h = 30});
-  tee.setRect({.x = 10, .y = 90, .w = 620, .h = 30});
-
+  /*
   app->addWidget(&la);
   app->addWidget(&te);
   app->addWidget(&tee);
+  */
+
+  VLayout layout;
+  layout.setRect({.x = 10, .y = 10, .w = 620, .h = 460});
+  layout.setSpaceBetween(20);
+
+  layout.addWidget(&la);
+  layout.addWidget(&te);
+  layout.addWidget(&tee);
+
+  app->setLayout(layout);
 
   app->exec();
   return 0;

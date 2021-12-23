@@ -3,10 +3,13 @@
 #include <iostream>
 #include <vector>
 
+#include "layout.h"
 #include "painter.h"
 #include "widget.h"
 
 class Application : public Widget {
+
+  friend class HLayout;
 
 public:
   Application(std::string title, int width, int height);
@@ -23,6 +26,8 @@ public:
   void setInputSelection(long types = ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask |
                                       LeaveWindowMask | KeyPressMask);
 
+  void setLayout(Layout &);
+  void setLayout(Layout *);
   void addWidget(Widget *);
   long getInputSelection();
   Painter *painter() { return m_painter; }
@@ -40,6 +45,7 @@ private:
   long m_input_types;
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
+  Layout *m_layout = nullptr;
   Painter *m_painter = nullptr;
   Display *m_display = nullptr;
 

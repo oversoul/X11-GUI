@@ -55,10 +55,16 @@ void Application::redraw() { //
   clear();
   XMapWindow(m_display, m_window);
   XMapRaised(m_display, m_window);
-  for (auto w_ : m_widgets) {
+
+  m_layout->updatePosition();
+
+  for (auto w_ : m_layout->getWidgets()) {
     w_->paintEvent(m_event);
   }
 }
+
+void Application::setLayout(Layout &l) { m_layout = &l; }
+void Application::setLayout(Layout *l) { m_layout = l; }
 
 void Application::setInputSelection(long types) { //
   m_input_types = types;
@@ -91,7 +97,7 @@ void Application::exec() {
     if (m_window == m_event.xany.window) {
       window = m_window;
     } else {
-      for (auto w_ : m_widgets) {
+      for (auto w_ : m_layout->getWidgets()) {
         if (w_->id() == m_event.xany.window) {
           window = w_->id();
           break;
@@ -114,15 +120,18 @@ void Application::exec() {
       }
       break;
     case Expose:
+      redraw();
       XMapWindow(m_display, m_window);
-      for (auto w_ : m_widgets) {
+
+      for (auto w_ : m_layout->getWidgets()) {
         w_->updateSizeAndPos();
         XMapWindow(m_display, w_->id());
       }
       break;
     case ButtonPress:
     case ButtonRelease:
-      for (auto w_ : m_widgets) {
+
+      for (auto w_ : m_layout->getWidgets()) {
         w_->setFocus(w_->id() == m_event.xany.window);
       }
       break;
@@ -147,7 +156,7 @@ void Application::exec() {
       */
     }
 
-    for (auto w_ : m_widgets) {
+    for (auto w_ : m_layout->getWidgets()) {
       if (w_->hasFocus()) {
         w_->handleEvent(m_event);
       }

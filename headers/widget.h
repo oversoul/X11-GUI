@@ -50,7 +50,7 @@ public:
 
   void setRect(Rect r) { m_rect = r; }
   void setWidth(int w) { m_rect.w = w; }
-  void setHeight(int w) { m_rect.w = w; }
+  void setHeight(int h) { m_rect.h = h; }
   void setPosition(int x, int y) {
     m_rect.x = x;
     m_rect.y = y;
