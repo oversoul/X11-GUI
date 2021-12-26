@@ -10,16 +10,13 @@ Label::Label() {
   m_display = Application::instance()->display();
   auto pw = Application::instance()->window();
 
-  Rect r = {0, 0, 1, 1};
-
   // EnterWindowMask | LeaveWindowMask|
   XSetWindowAttributes attr = {
       .background_pixel = m_bgColor,
       .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask,
   };
 
-  m_window = Widget::createWindow(m_display, r, attr, pw);
-
+  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
   m_painter = new Painter(m_display, m_window);
 }
 
@@ -27,16 +24,16 @@ Label::Label(std::string value) : Label() { //
   m_value = value;
 }
 
-Label::~Label() {
-  //
+Label::~Label() { //
 }
 
 void Label::paintEvent(XEvent &) {
   m_painter->clear();
-  setBackground(m_bgColor);
+  m_painter->setBackground(m_bgColor);
   m_painter->drawRect(0, m_rect.y, m_rect.w - 1, m_rect.h - 1);
   m_painter->setForeground(0x000000);
   m_painter->drawString(m_value.c_str(), 5, m_rect.h / 2);
+  m_painter->swapBuffers();
 }
 
 void Label::setValue(std::string value) { //

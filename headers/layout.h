@@ -9,6 +9,7 @@ class Layout {
 
 public:
   void setRect(Rect r);
+  void setFullSize(int = 0);
   const Rect getRect() const;
   void setSpaceBetween(unsigned int sb);
   void addWidget(Widget *widget, unsigned int w = 1);

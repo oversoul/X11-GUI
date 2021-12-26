@@ -11,12 +11,11 @@ public:
   ~TextInput();
   void paint(XEvent &e);
   void setValue(std::string value);
-  const bool hasFocus() const;
 
   void paintEvent(XEvent &);
-  bool keyPressEvent(XKeyEvent &);
-  bool keyReleaseEvent(XKeyEvent &);
-  bool mousePressEvent(XButtonEvent &);
+  bool keyPressEvent(KeySym, std::string);
+  bool keyReleaseEvent(KeySym, std::string);
+  bool mousePressEvent(XButtonEvent &, MouseButton);
 
   const Window id() const { return m_window; }
 

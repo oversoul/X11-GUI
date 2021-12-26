@@ -1,13 +1,12 @@
 #include "../headers/painter.h"
 #include "../headers/application.h"
-#include <X11/X.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <cstring>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) { //
   m_gc = XCreateGC(m_display, m_window, 0, 0);
   m_font = XLoadQueryFont(m_display, "-*-clean-*-*-normal-*-15-150-*-*-*-*-*-*");
+  m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
 
   if (!m_font) {
     printf("Failed to load lucidasans-12 font!\n");
@@ -15,8 +14,6 @@ Painter::Painter(Display *display, Window window) : m_window(window), m_display(
   }
 
   XSetFont(m_display, m_gc, m_font->fid);
-
-  clear();
 }
 
 Painter::~Painter() { //
@@ -25,23 +22,29 @@ Painter::~Painter() { //
 }
 
 void Painter::drawString(const char *text, int x, int y) {
-  XDrawString(m_display, m_window, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
+  XDrawString(m_display, m_backBuffer, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
 }
 
 void Painter::drawLine(int x1, int y1, int x2, int y2) { //
-  XDrawLine(m_display, m_window, m_gc, x1, y1, x2, y2);
+  XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
 }
 
 void Painter::drawPoint(int x, int y) { //
-  XDrawPoint(m_display, m_window, m_gc, x, y);
+  XDrawPoint(m_display, m_backBuffer, m_gc, x, y);
 }
 
 void Painter::clear() { //
-  XClearWindow(m_display, m_window);
+  XSetForeground(m_display, m_gc, 0xffffff);
+  XFillRectangle(m_display, m_backBuffer, m_gc, 0, 0, Application::instance()->width(),
+                 Application::instance()->height());
 }
 
 void Painter::drawRect(int x, int y, int width, int height) {
-  XDrawRectangle(m_display, m_window, m_gc, x, y, width, height);
+  XDrawRectangle(m_display, m_backBuffer, m_gc, x, y, width, height);
+}
+
+void Painter::fillRect(int x, int y, int width, int height) {
+  XFillRectangle(m_display, m_backBuffer, m_gc, x, y, width, height);
 }
 
 void Painter::setForeground(unsigned long color) { //
@@ -49,5 +52,10 @@ void Painter::setForeground(unsigned long color) { //
 }
 
 void Painter::setBackground(unsigned long color) { //
-  XSetBackground(m_display, m_gc, color);
+  XSetWindowBackground(m_display, m_window, color);
+}
+
+void Painter::swapBuffers() {
+  XdbeSwapInfo swap_info = {.swap_window = m_window, .swap_action = 0};
+  XdbeSwapBuffers(m_display, &swap_info, 1);
 }

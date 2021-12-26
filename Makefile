@@ -6,7 +6,7 @@ BUILD_DIR = build
 APPLICATION_NAME = app
 FILENAME = ${BUILD_DIR}/${APPLICATION_NAME}
 CFLAGS = -Wall -ansi ${C_STANDARD}
-LDFLAGS = -lX11
+LDFLAGS = -lX11 -lXext
 DEBUG_SUFFIX = _debug
 CFLAGS_DEBUG = -gdwarf-2 -DDEBUG
 SRC = $(wildcard ${SOURCES_DIR}/*.cpp)
@@ -21,7 +21,7 @@ all : ${FILENAME} ${FILENAME}${DEBUG_SUFFIX}
 
 $(FILENAME): $(OBJECTS)
 	@mkdir -p $(@D)
-	${CC} ${CFLAGS} -o $@  $^ ${INCLUDE_DIR} ${LDFLAGS}
+	${CC} ${CFLAGS} -o $@ $^ ${INCLUDE_DIR} ${LDFLAGS}
 
 $(FILENAME)$(DEBUG_SUFFIX): ${OBJECTS}
 	${CC} ${CFLAGS} ${CFLAGS_DEBUG} -o $@ $^ ${INCLUDE_DIR} ${LDFLAGS}

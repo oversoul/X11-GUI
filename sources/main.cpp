@@ -15,13 +15,12 @@ int main(void) {
   ListView lv;
 
   VLayout layout;
-  layout.setRect({.x = 10, .y = 10, .w = 620, .h = 460});
-  layout.setSpaceBetween(20);
-
   layout.addWidget(&la);
   layout.addWidget(&te);
   layout.addWidget(&lv, 4);
 
+  layout.setFullSize(20);
+  layout.setSpaceBetween(10);
   app->setLayout(layout);
 
   app->exec();

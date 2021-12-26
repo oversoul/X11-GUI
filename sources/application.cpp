@@ -2,11 +2,15 @@
 #include "../headers/painter.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/extensions/Xdbe.h>
+#include <stdexcept>
+#include <unistd.h>
+#define FPS 120
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(std::string title, int width, int height) {
-
+Application::Application(std::string title, int width, int height) : m_width(width), m_height(height) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
@@ -22,16 +26,22 @@ Application::Application(std::string title, int width, int height) {
   m_window = Widget::createWindow(m_display, r, attr);
 
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
-
-  XTextProperty windowName;
-
   XSetWMHints(m_display, m_window, &wmhints);
 
-  char *winTitle = (char *)title.c_str();
-  XStringListToTextProperty(&winTitle, 1, &windowName);
+  // wmhints.flags = USPosition | PAspect | PMinSize | PMaxSize;
 
-  XSetWMName(m_display, m_window, &windowName);
+  XStoreName(m_display, m_window, title.c_str());
   XMapWindow(m_display, m_window);
+
+  int majorVersion, minorVersion;
+  if (XdbeQueryExtension(m_display, &majorVersion, &minorVersion)) {
+    std::cout << "XDBE version: " << majorVersion << "." << minorVersion << std::endl;
+  } else {
+    throw std::runtime_error("XDBE is not supported!!!1");
+  }
+
+  m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
+  XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
 }
 
 Application *Application::instance() { //
@@ -39,6 +49,7 @@ Application *Application::instance() { //
 }
 
 Application::~Application() {
+  XUnmapWindow(m_display, m_window);
   XDestroyWindow(m_display, m_window);
   XCloseDisplay(m_display);
 }
@@ -53,15 +64,6 @@ void Application::clear() { //
 
 void Application::setLayout(Layout &l) { m_layout = &l; }
 void Application::setLayout(Layout *l) { m_layout = l; }
-
-void Application::setInputSelection(long types) { //
-  m_input_types = types;
-  XSelectInput(m_display, m_window, types);
-}
-
-long Application::getInputSelection() { //
-  return m_input_types;
-}
 
 void Application::addWidget(Widget *w) { //
   m_widgets.push_back(w);
@@ -94,110 +96,40 @@ void Application::paintEvent(XEvent &e) {
   }
 }
 
+void Application::processEvents() {
+  checkForExit();
+
+  m_layout->updatePosition();
+
+  if (m_event.type == ButtonPress) {
+    m_focusedWindow = m_event.xbutton.window;
+  }
+
+  for (auto &w_ : m_layout->getWidgets()) {
+    w_->updateSizeAndPos();
+    w_->handleEvent(m_event);
+    w_->paintEvent(m_event);
+  }
+}
+
+bool Application::isFocused(Window id) { //
+  return focusedWindow() == id;
+}
+
 void Application::exec() {
   m_focusedWindow = m_window;
   XMapWindow(m_display, m_window);
 
-  while (!m_shouldClose) {
-    XSync(m_display, false);
-    XFlush(m_display);
-    XNextEvent(m_display, &m_event);
-    checkForExit();
-
-    m_layout->updatePosition();
-
-    if (m_event.type == ButtonPress) {
-      m_focusedWindow = m_event.xbutton.window;
-    }
-
-    for (auto &w_ : m_layout->getWidgets()) {
-      w_->updateSizeAndPos();
-      if (w_->handleEvent(m_event)) {
-        w_->paintEvent(m_event);
-      }
-      XMapWindow(m_display, w_->id());
-    }
-
-    /*
-    XMapWindow(m_display, m_window);
-
-    for (auto &w_ : m_layout->getWidgets()) {
-      w_->updateSizeAndPos();
-      XMapWindow(m_display, w_->id());
-    }
-
-    for (auto &w_ : m_layout->getWidgets()) {
-      if (w_->id() == m_event.xany.window) {
-        Widget *focusedWidget = w_;
-      }
-    }
-    */
-    /*
-    window = -1;
-
-    if (m_window == m_event.xany.window) {
-      window = m_window;
-    } else {
-      for (auto w_ : m_layout->getWidgets()) {
-        if (w_->id() == m_event.xany.window) {
-          window = w_->id();
-          break;
-        }
-      }
-    }
-
-    (void)window;
-
-    switch (m_event.type) {
-
-    case ClientMessage:
-      if ((Atom)m_event.xclient.data.l[0] == m_wmDeleteMessage) {
-        exit();
-      }
-      break;
-    case KeyPress:
-      if (XK_Escape == XLookupKeysym(&m_event.xkey, 0)) {
-        exit();
-      }
-      break;
-    case Expose:
-      redraw();
-      XMapWindow(m_display, m_window);
-
-      for (auto w_ : m_layout->getWidgets()) {
-        w_->updateSizeAndPos();
-        XMapWindow(m_display, w_->id());
-      }
-      break;
-    case ButtonPress:
-    case ButtonRelease:
-
-      break;
-      */
-    // case ButtonPress:
-    //  XUngrabPointer(m_display, CurrentTime);
-    //  break;
-    // case EnterNotify:
-    //  for (auto w_ : m_widgets) {
-    //    if (w_->isVisible()) {
-    //      XMapWindow(m_display, w_->id());
-    //    } else {
-    //      XUnmapWindow(m_display, w_->id());
-    //    }
-    //  }
-    //  XFlush(m_display);
-    //  break;
-    // case LeaveNotify:
-    //  // XSetWindowBackground(m_display, W[window].id, 0xFFFFFF);
-    //  // XClearWindow(m_display, W[window].id);
-    //  break;
-    //}
-
-    // focusedWidget->handleEvent(m_event);
-    // redraw();
+  for (auto &w_ : m_layout->getWidgets()) {
+    XMapWindow(m_display, w_->id());
   }
 
-  XUnmapWindow(m_display, m_window);
-  XDestroyWindow(m_display, m_window);
-  XCloseDisplay(m_display);
+  while (!m_shouldClose) {
+    XNextEvent(m_display, &m_event);
+    processEvents();
+    usleep(1000 * 1000 / FPS);
+  }
 }
+
+const int Application::width() const { return m_width; }
+const int Application::height() const { return m_height; }

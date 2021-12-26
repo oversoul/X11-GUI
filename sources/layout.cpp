@@ -1,4 +1,5 @@
 #include "../headers/layout.h"
+#include "../headers/application.h"
 
 void Layout::setRect(Rect r) { //
   m_rect = r;
@@ -10,6 +11,15 @@ const Rect Layout::getRect() const { //
 
 void Layout::setSpaceBetween(unsigned int sb) { //
   m_spaceBetween = sb;
+}
+
+void Layout::setFullSize(int padding) {
+  m_rect = {
+      .x = padding,
+      .y = padding,
+      .w = Application::instance()->width() - padding * 2,
+      .h = Application::instance()->height() - padding,
+  };
 }
 
 void Layout::addWidget(Widget *widget, unsigned int w) {

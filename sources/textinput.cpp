@@ -10,68 +10,57 @@ TextInput::TextInput() {
   m_display = Application::instance()->display();
   auto pw = Application::instance()->window();
 
-  Rect r = {0, 0, 1, 1};
-
   XSetWindowAttributes attr = {
       .background_pixel = m_bgColor,
       .event_mask =
           ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask | LeaveWindowMask | KeyPressMask,
   };
 
-  m_window = Widget::createWindow(m_display, r, attr, pw);
+  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
   m_painter = new Painter(m_display, m_window);
 }
 TextInput::TextInput(std::string value) : TextInput() { //
   setValue(value);
 }
 
-TextInput::~TextInput() {
-  //
+TextInput::~TextInput() { //
 }
 
-bool TextInput::mousePressEvent(XButtonEvent &) { //
+bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) { //
   return false;
 }
 
-bool TextInput::keyPressEvent(XKeyEvent &e) {
-  if (!hasFocus())
+bool TextInput::keyPressEvent(KeySym key, std::string text) {
+  if (!Application::instance()->isFocused(id()))
     return false;
-  KeySym key;
-  char text[255];
 
-  if (XLookupString(&e, text, 255, &key, 0) == 1) {
-    if (key == XK_BackSpace) {
-      if (m_value.size() > 0)
-        m_value.pop_back();
-      return true;
-    }
-
-    if (key == XK_Tab || key == XK_BackSpace)
-      return false;
-
-    m_value += text;
+  if (key == XK_BackSpace) {
+    if (m_value.size() > 0)
+      m_value.pop_back();
     return true;
   }
-  return false;
+
+  if (key == XK_Tab || key == XK_BackSpace || key == XK_Return)
+    return false;
+
+  m_value += text;
+  return true;
 }
 
-bool TextInput::keyReleaseEvent(XKeyEvent &e) { //
+bool TextInput::keyReleaseEvent(KeySym, std::string) { //
   return false;
-}
-
-const bool TextInput::hasFocus() const { //
-  return Application::instance()->focusedWindow() == id();
 }
 
 void TextInput::paintEvent(XEvent &) {
   m_painter->clear();
-  setBackground(m_bgColor);
+  m_painter->setBackground(m_bgColor);
 
-  m_painter->setForeground(Application::instance()->focusedWindow() == id() ? 0xff0000 : 0x000000);
+  m_painter->setForeground(Application::instance()->isFocused(id()) ? 0xff0000 : 0x000000);
   m_painter->drawRect(0, 0, m_rect.w - 1, m_rect.h - 1);
 
   m_painter->setForeground(0x000000);
   m_painter->drawString(m_value.c_str(), 5, m_rect.h / 2);
+  m_painter->swapBuffers();
 }
 
 void TextInput::setValue(std::string value) { //
