@@ -29,15 +29,11 @@ Application::Application(std::string title, int width, int height) : m_width(wid
   XSetWMHints(m_display, m_window, &wmhints);
 
   // wmhints.flags = USPosition | PAspect | PMinSize | PMaxSize;
-
   XStoreName(m_display, m_window, title.c_str());
-  XMapWindow(m_display, m_window);
 
   int majorVersion, minorVersion;
-  if (XdbeQueryExtension(m_display, &majorVersion, &minorVersion)) {
-    std::cout << "XDBE version: " << majorVersion << "." << minorVersion << std::endl;
-  } else {
-    throw std::runtime_error("XDBE is not supported!!!1");
+  if (!XdbeQueryExtension(m_display, &majorVersion, &minorVersion)) {
+    throw std::runtime_error("XDBE is not supported!!!");
   }
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
@@ -101,14 +97,14 @@ void Application::processEvents() {
 
   m_layout->updatePosition();
 
-  if (m_event.type == ButtonPress) {
+  if (m_event.type == ButtonPress && getButton(m_event.xbutton.button) == MouseButton::Left) {
     m_focusedWindow = m_event.xbutton.window;
   }
 
-  for (auto &w_ : m_layout->getWidgets()) {
-    w_->updateSizeAndPos();
-    w_->handleEvent(m_event);
-    w_->paintEvent(m_event);
+  for (auto &w : m_layout->getWidgets()) {
+    w->updateSizeAndPos();
+    w->handleEvent(m_event);
+    w->paintEvent(m_event);
   }
 }
 
@@ -120,8 +116,8 @@ void Application::exec() {
   m_focusedWindow = m_window;
   XMapWindow(m_display, m_window);
 
-  for (auto &w_ : m_layout->getWidgets()) {
-    XMapWindow(m_display, w_->id());
+  for (auto &w : m_layout->getWidgets()) {
+    XMapWindow(m_display, w->id());
   }
 
   while (!m_shouldClose) {
