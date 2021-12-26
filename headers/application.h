@@ -7,7 +7,7 @@
 #include "painter.h"
 #include "widget.h"
 
-class Application : public Widget {
+class Application {
 
   friend class HLayout;
 
@@ -21,7 +21,6 @@ public:
   void clear();
   bool shouldExit();
   bool eventPending();
-  void paintEvent(XEvent &);
 
   bool isFocused(Window id);
 

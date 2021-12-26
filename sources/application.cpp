@@ -1,6 +1,5 @@
 #include "../headers/application.h"
 #include "../headers/painter.h"
-#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xdbe.h>
@@ -17,13 +16,12 @@ Application::Application(std::string title, int width, int height) : m_width(wid
 
   m_display = XOpenDisplay(nullptr);
 
-  Rect r = {0, 0, width, height};
   XSetWindowAttributes attr = {
       .background_pixel = 0xFFFFFF,
       .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
   };
 
-  m_window = Widget::createWindow(m_display, r, attr);
+  m_window = Widget::createWindow(m_display, {0, 0, width, height}, attr);
 
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
   XSetWMHints(m_display, m_window, &wmhints);
@@ -40,7 +38,7 @@ Application::Application(std::string title, int width, int height) : m_width(wid
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
 }
 
-Application *Application::instance() { //
+Application *Application::instance() {
   return m_instance;
 }
 
@@ -50,26 +48,31 @@ Application::~Application() {
   XCloseDisplay(m_display);
 }
 
-bool Application::eventPending() { //
+bool Application::eventPending() {
   return XPending(m_display);
 }
 
-void Application::clear() { //
+void Application::clear() {
   XClearWindow(m_display, m_window);
 }
 
-void Application::setLayout(Layout &l) { m_layout = &l; }
-void Application::setLayout(Layout *l) { m_layout = l; }
+void Application::setLayout(Layout &l) {
+  m_layout = &l;
+}
 
-void Application::addWidget(Widget *w) { //
+void Application::setLayout(Layout *l) {
+  m_layout = l;
+}
+
+void Application::addWidget(Widget *w) {
   m_widgets.push_back(w);
 }
 
-bool Application::shouldExit() { //
+bool Application::shouldExit() {
   return m_shouldClose;
 }
 
-void Application::exit() { //
+void Application::exit() {
   m_shouldClose = true;
 }
 
@@ -83,12 +86,6 @@ void Application::checkForExit() {
     if (XK_Escape == XLookupKeysym(&m_event.xkey, 0))
       exit();
     return;
-  }
-}
-
-void Application::paintEvent(XEvent &e) {
-  for (auto w_ : m_layout->getWidgets()) {
-    w_->paintEvent(e);
   }
 }
 
@@ -108,7 +105,7 @@ void Application::processEvents() {
   }
 }
 
-bool Application::isFocused(Window id) { //
+bool Application::isFocused(Window id) {
   return focusedWindow() == id;
 }
 
@@ -122,5 +119,10 @@ void Application::exec() {
   }
 }
 
-const int Application::width() const { return m_width; }
-const int Application::height() const { return m_height; }
+const int Application::width() const {
+  return m_width;
+}
+
+const int Application::height() const {
+  return m_height;
+}
