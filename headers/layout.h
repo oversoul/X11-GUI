@@ -9,19 +9,24 @@ class Layout {
 
 public:
   void setRect(Rect r);
-  void setFullSize(int = 0);
+  void setFullSize(unsigned int = 0);
   const Rect getRect() const;
   void setSpaceBetween(unsigned int sb);
   void addWidget(Widget *widget, unsigned int w = 1);
-  virtual void updatePosition() { assert(false && "Use VLayout / HLayout"); }
+
+  virtual void updatePosition() {
+    assert(false && "Use VLayout / HLayout");
+  }
 
 protected:
+  Rect m_rect = {0, 0, 1, 1};
   unsigned int m_spaceBetween = 0;
   std::vector<Widget *> m_widgets;
   std::vector<unsigned int> m_weights;
-  Rect m_rect = {.x = 0, .y = 0, .w = 1, .h = 1};
 
-  const std::vector<Widget *> getWidgets() const { return m_widgets; }
+  const std::vector<Widget *> getWidgets() const {
+    return m_widgets;
+  }
 };
 
 class VLayout : public Layout {

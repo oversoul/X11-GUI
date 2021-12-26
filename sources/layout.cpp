@@ -13,7 +13,7 @@ void Layout::setSpaceBetween(unsigned int sb) {
   m_spaceBetween = sb;
 }
 
-void Layout::setFullSize(int padding) {
+void Layout::setFullSize(unsigned int padding) {
   m_rect = {
       .x = padding,
       .y = padding,
@@ -30,8 +30,10 @@ void Layout::addWidget(Widget *widget, unsigned int w) {
 
 VLayout::VLayout() {
 }
+
 VLayout::~VLayout() {
 }
+
 void VLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;
@@ -40,17 +42,16 @@ void VLayout::updatePosition() {
 
   unsigned int totalHeight = m_rect.h - (m_widgets.size() - 1) * m_spaceBetween;
 
-  int ypos = 0;
-  int weightSum = 0;
+  unsigned int ypos = 0;
+  unsigned int weightSum = 0;
   for (auto &w : m_weights) {
     weightSum += w;
   }
 
-  int height = totalHeight / weightSum;
-
+  unsigned int height = totalHeight / weightSum;
   for (size_t i = 0; i < m_widgets.size(); ++i) {
-    int h = height * m_weights[i];
-    m_widgets[i]->setRect({.x = m_rect.x, .y = ypos, .w = m_rect.w, .h = h});
+    unsigned int h = height * m_weights[i];
+    m_widgets[i]->setRect({m_rect.x, ypos, m_rect.w, h});
     ypos += h + m_spaceBetween;
   }
 }
@@ -59,8 +60,10 @@ void VLayout::updatePosition() {
 
 HLayout::HLayout() {
 }
+
 HLayout::~HLayout() {
 }
+
 void HLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;
@@ -69,17 +72,17 @@ void HLayout::updatePosition() {
 
   unsigned int totalWidth = m_rect.w - (m_widgets.size() - 1) * m_spaceBetween;
 
-  int xpos = 0;
-  int weightSum = 0;
+  unsigned int xpos = 0;
+  unsigned int weightSum = 0;
   for (auto &w : m_weights) {
     weightSum += w;
   }
 
-  int width = totalWidth / weightSum;
+  unsigned int width = totalWidth / weightSum;
 
   for (size_t i = 0; i < m_widgets.size(); ++i) {
-    int w = width * m_weights[i];
-    m_widgets[i]->setRect({.x = xpos, .y = m_rect.y, .w = w, .h = m_rect.h});
+    unsigned int w = width * m_weights[i];
+    m_widgets[i]->setRect({xpos, m_rect.y, w, m_rect.h});
     xpos += w + m_spaceBetween;
   }
 }
