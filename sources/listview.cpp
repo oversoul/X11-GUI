@@ -24,23 +24,23 @@ ListView::ListView() {
   };
 }
 
-ListView::~ListView() { //
+ListView::~ListView() {
   XDestroyWindow(m_display, m_window);
 }
 
-ListView::ListView(std::vector<std::string> rows) : ListView() { //
+ListView::ListView(std::vector<std::string> rows) : ListView() {
   m_rows = rows;
 }
 
-void ListView::removeItem(int index) { //
+void ListView::removeItem(int index) {
   m_rows.erase(m_rows.begin() + index);
 }
 
-void ListView::addItem(std::string item) { //
+void ListView::addItem(std::string item) {
   m_rows.push_back(item);
 }
 
-void ListView::addItemAt(int index, std::string item) { //
+void ListView::addItemAt(int index, std::string item) {
   m_rows.insert(m_rows.begin() + index, item);
 }
 
@@ -54,7 +54,9 @@ void ListView::recalculateItems() {
   }
 }
 
-unsigned int ListView::findClosestIndex(int position) { return position / m_itemHeight; }
+unsigned int ListView::findClosestIndex(int position) {
+  return position / m_itemHeight;
+}
 
 bool ListView::keyPressEvent(KeySym key, std::string) {
   if (!Application::instance()->isFocused(id()))
@@ -77,7 +79,7 @@ bool ListView::keyPressEvent(KeySym key, std::string) {
 }
 
 bool ListView::mousePressEvent(XButtonEvent &e, MouseButton btn) {
-  if (Application::instance()->focusedWindow() != id())
+  if (Application::instance()->isFocused(id()))
     return false;
   if (btn != MouseButton::Left)
     return false;

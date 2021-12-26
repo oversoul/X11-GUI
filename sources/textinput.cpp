@@ -19,14 +19,14 @@ TextInput::TextInput() {
   m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
   m_painter = new Painter(m_display, m_window);
 }
-TextInput::TextInput(std::string value) : TextInput() { //
+TextInput::TextInput(std::string value) : TextInput() {
   setValue(value);
 }
 
-TextInput::~TextInput() { //
+TextInput::~TextInput() {
 }
 
-bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) { //
+bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
   return false;
 }
 
@@ -47,7 +47,7 @@ bool TextInput::keyPressEvent(KeySym key, std::string text) {
   return true;
 }
 
-bool TextInput::keyReleaseEvent(KeySym, std::string) { //
+bool TextInput::keyReleaseEvent(KeySym, std::string) {
   return false;
 }
 
@@ -63,6 +63,6 @@ void TextInput::paintEvent(XEvent &) {
   m_painter->swapBuffers();
 }
 
-void TextInput::setValue(std::string value) { //
+void TextInput::setValue(std::string value) {
   m_value = value;
 }

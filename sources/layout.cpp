@@ -1,15 +1,15 @@
 #include "../headers/layout.h"
 #include "../headers/application.h"
 
-void Layout::setRect(Rect r) { //
+void Layout::setRect(Rect r) {
   m_rect = r;
 }
 
-const Rect Layout::getRect() const { //
+const Rect Layout::getRect() const {
   return m_rect;
 }
 
-void Layout::setSpaceBetween(unsigned int sb) { //
+void Layout::setSpaceBetween(unsigned int sb) {
   m_spaceBetween = sb;
 }
 
@@ -28,8 +28,10 @@ void Layout::addWidget(Widget *widget, unsigned int w) {
   m_weights.push_back(w);
 }
 
-VLayout::VLayout() {}
-VLayout::~VLayout() {}
+VLayout::VLayout() {
+}
+VLayout::~VLayout() {
+}
 void VLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;
@@ -55,8 +57,10 @@ void VLayout::updatePosition() {
 
 // ------------------
 
-HLayout::HLayout() {}
-HLayout::~HLayout() {}
+HLayout::HLayout() {
+}
+HLayout::~HLayout() {
+}
 void HLayout::updatePosition() {
   if (m_widgets.empty() || m_widgets.size() != m_weights.size())
     return;

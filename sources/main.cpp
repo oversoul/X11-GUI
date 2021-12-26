@@ -1,11 +1,10 @@
 #include <iostream>
 
+#include "../headers/application.h"
 #include "../headers/label.h"
 #include "../headers/layout.h"
 #include "../headers/listview.h"
 #include "../headers/textinput.h"
-
-#include "../headers/application.h"
 
 int main(void) {
   Application *app = new Application("Howdy!", 640, 480);
@@ -17,7 +16,7 @@ int main(void) {
   VLayout layout;
   layout.addWidget(&la);
   layout.addWidget(&te);
-  layout.addWidget(&lv, 4);
+  layout.addWidget(&lv, 8);
 
   layout.setFullSize(20);
   layout.setSpaceBetween(10);
