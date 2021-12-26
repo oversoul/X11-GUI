@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../headers/application.h"
+#include "../headers/button.h"
 #include "../headers/label.h"
 #include "../headers/layout.h"
 #include "../headers/listview.h"
@@ -12,11 +13,18 @@ int main(void) {
   Label la("First Item:");
   TextInput te("Hello World input");
   ListView lv;
+  Button btn;
+
+  btn.setLabel("Close");
+  btn.setOnClick([app] { //
+    app->triggerExit();
+  });
 
   VLayout layout;
   layout.addWidget(&la);
   layout.addWidget(&te);
   layout.addWidget(&lv, 8);
+  layout.addWidget(&btn);
 
   layout.setFullSize(20);
   layout.setSpaceBetween(10);
