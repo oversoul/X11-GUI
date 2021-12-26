@@ -40,23 +40,18 @@ const bool Widget::isVisible() const { //
 bool Widget::handleEvent(XEvent &e) {
   switch (e.type) {
   case KeyPress:
-  case KeyRelease:
+  case KeyRelease: {
     KeySym key;
     char text[255];
-    if (XLookupString(&e.xkey, text, 255, &key, 0) == 1) {
-      std::string str(text);
-      if (e.type == KeyPress)
-        return keyPressEvent(key, str);
-      else if (e.type == KeyRelease)
-        return keyReleaseEvent(key, str);
-    }
+    XLookupString(&e.xkey, text, 255, &key, 0);
+    if (e.type == KeyPress)
+      return keyPressEvent(key, std::string(text));
+    if (e.type == KeyRelease)
+      return keyReleaseEvent(key, std::string(text));
     return false;
-  case ButtonPress: {
-    return mousePressEvent(e.xbutton, getButton(e.xbutton.button));
   }
-  default:
-    paintEvent(e);
-    return true;
+  case ButtonPress:
+    return mousePressEvent(e.xbutton, getButton(e.xbutton.button));
   }
   return false;
 };
