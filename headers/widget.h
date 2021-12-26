@@ -6,12 +6,12 @@
 
 class Application;
 
-typedef struct RectS {
+typedef struct RectStruct {
   int x, y, w, h;
 
   void print_r() { std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl; }
 
-  bool inRegion(int mx, int my, RectS r) {
+  bool inRegion(int mx, int my, RectStruct r) {
     bool inX = x >= r.x && x <= r.h;
     bool inY = y >= r.y && y <= r.w;
     return inX && inY;
@@ -19,7 +19,7 @@ typedef struct RectS {
 
 } Rect;
 
-enum class MouseButton { Unknown, Left, Right, Middle };
+enum class MouseButton { Unknown, Left, Middle, Right };
 
 MouseButton getButton(int btn);
 

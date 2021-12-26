@@ -1,7 +1,6 @@
 #include "../headers/widget.h"
 #include "../headers/application.h"
 
-#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -35,7 +34,7 @@ Window Widget::createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Win
   return w;
 }
 
-const bool Widget::isVisible() const { //
+const bool Widget::isVisible() const {
   return m_visible;
 }
 
@@ -58,23 +57,42 @@ bool Widget::handleEvent(XEvent &e) {
   return false;
 };
 
-void Widget::setRect(Rect r) { m_rect = r; }
-void Widget::setWidth(int w) { m_rect.w = w; }
-void Widget::setHeight(int h) { m_rect.h = h; }
+void Widget::setRect(Rect r) {
+  m_rect = r;
+}
+
+void Widget::setWidth(int w) {
+  m_rect.w = w;
+}
+
+void Widget::setHeight(int h) {
+  m_rect.h = h;
+}
+
 void Widget::setPosition(int x, int y) {
   m_rect.x = x;
   m_rect.y = y;
 }
 
-const Rect Widget::getRect() const { //
+const Rect Widget::getRect() const {
   return m_rect;
 }
 
-void Widget::updateSizeAndPos() { //
+void Widget::updateSizeAndPos() {
   XMoveResizeWindow(m_display, m_window, m_rect.x, m_rect.y, m_rect.w, m_rect.h);
 }
 
-void Widget::paintEvent(XEvent &) {}
-bool Widget::keyPressEvent(KeySym, std::string) { return false; }
-bool Widget::keyReleaseEvent(KeySym, std::string) { return false; }
-bool Widget::mousePressEvent(XButtonEvent &, MouseButton) { return false; }
+void Widget::paintEvent(XEvent &) {
+}
+
+bool Widget::keyPressEvent(KeySym, std::string) {
+  return false;
+}
+
+bool Widget::keyReleaseEvent(KeySym, std::string) {
+  return false;
+}
+
+bool Widget::mousePressEvent(XButtonEvent &, MouseButton) {
+  return false;
+}
