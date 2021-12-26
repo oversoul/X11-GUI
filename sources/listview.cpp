@@ -18,6 +18,7 @@ ListView::ListView() {
 
   m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
   m_painter = new Painter(m_display, m_window);
+
   m_rows = {
       "Item 1", "Item 2", "Item 3", "Item 4",  "Item 5",  "Item 6",
       "Item 7", "Item 8", "Item 9", "Item 10", "Item 11", "Item 12",
@@ -47,67 +48,102 @@ void ListView::addItemAt(int index, std::string item) {
 void ListView::recalculateItems() {
   if (m_rows.size() == m_rects.size())
     return;
+
   m_rects.clear();
-  for (int i = 0; i < (int)m_rows.size(); ++i) {
-    int ypos = m_itemHeight * i;
-    m_rects.push_back({.x = 1, .y = ypos + 1, .w = m_rect.w - 2, .h = (int)m_itemHeight - 2});
+  unsigned int width = m_rect.w - 2;
+  unsigned int height = m_itemHeight - 2;
+  m_areas = m_rect.h / m_itemHeight;
+
+  for (unsigned int i = 0; i < m_areas; ++i) {
+    unsigned int ypos = m_itemHeight * i;
+    m_rects.push_back({1, ypos + 1, width, height});
   }
 }
 
 unsigned int ListView::findClosestIndex(int position) {
-  return position / m_itemHeight;
+  unsigned int index = position / m_itemHeight;
+  return (index < m_areas) ? index : index - 1;
 }
 
 bool ListView::keyPressEvent(KeySym key, std::string) {
-  if (!Application::instance()->isFocused(id()))
+  if (!isFocused())
     return false;
 
-  switch (key) {
-  case XK_Up:
-    if (m_selectedItem > 0)
+  if (key == XK_Up) {
+    if (m_selectedItem > 0) {
       m_selectedItem--;
+    } else {
+      scrollDown();
+    }
     return true;
-  case XK_Down:
-    if (m_selectedItem < m_rows.size())
+  }
+
+  if (key == XK_Down) {
+    if (m_selectedItem < m_areas - 1) {
       m_selectedItem++;
+    } else {
+      scrollUp();
+    }
     return true;
-  default:
-    return false;
   }
 
   return false;
 }
 
 bool ListView::mousePressEvent(XButtonEvent &e, MouseButton btn) {
-  if (Application::instance()->isFocused(id()))
+  if (!isFocused())
     return false;
   if (btn != MouseButton::Left)
     return false;
   m_selectedItem = findClosestIndex(e.y);
+  std::cout << "selected: " << m_rows[m_selectedItem + m_scroll] << std::endl;
 
   return true;
+}
+
+bool ListView::scrollUp() {
+  if ((m_scroll < m_rows.size() - m_areas) && m_rows.size() > m_areas)
+    ++m_scroll;
+  return true;
+}
+
+bool ListView::scrollDown() {
+  if (m_scroll > 0)
+    --m_scroll;
+  return true;
+}
+
+bool ListView::mouseScrollEvent(XButtonEvent &, MouseWheelDirection dir) {
+  if (!isFocused())
+    return false;
+
+  if (dir == MouseWheelDirection::Down)
+    return scrollUp();
+
+  if (dir == MouseWheelDirection::Up)
+    return scrollDown();
+
+  return false;
 }
 
 void ListView::paintEvent(XEvent &e) {
   recalculateItems();
   m_painter->clear();
 
-  unsigned int maxItems = std::min(m_rect.h / (double)m_itemHeight, (double)m_rects.size());
-
   m_painter->setForeground(0x000000);
   m_painter->drawRect(0, 0, m_rect.w - 1, m_rect.h - 1);
 
-  unsigned long sColor = 0xAAAAAA;
-  if (Application::instance()->isFocused(id())) {
-    sColor = 0xFF0000;
-  }
+  unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
 
-  for (unsigned int i = 0; i < maxItems; ++i) {
+  for (unsigned int i = 0; i < m_areas; ++i) {
+    if (i + m_scroll == m_rows.size())
+      break;
+
     Rect r = m_rects[i];
     m_painter->setForeground(m_selectedItem == i ? sColor : 0xFFFFFF);
     m_painter->fillRect(r.x, r.y, r.w, r.h);
     m_painter->setForeground(m_selectedItem == i ? 0xFFFFFF : 0x000000);
-    m_painter->drawString(m_rows[i].c_str(), m_rect.x - 5, r.y + r.h / 2);
+    m_painter->drawString(m_rows[i + m_scroll].c_str(), m_rect.x - 5, r.y + r.h / 2);
   }
 
   m_painter->swapBuffers();

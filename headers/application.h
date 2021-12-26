@@ -29,7 +29,6 @@ public:
   void addWidget(Widget *);
 
   Display *display() const;
-
   const Window id() const;
   const Window window() const;
   const Painter *painter() const;
