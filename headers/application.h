@@ -16,10 +16,10 @@ public:
   ~Application();
   static Application *instance();
 
-  void exit();
   void exec();
   void clear();
   bool shouldExit();
+  void triggerExit();
   bool eventPending();
 
   bool isFocused(Window id);

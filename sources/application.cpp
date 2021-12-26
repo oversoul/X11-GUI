@@ -1,5 +1,7 @@
 #include "../headers/application.h"
 #include "../headers/painter.h"
+#include <X11/X.h>
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xdbe.h>
@@ -15,19 +17,26 @@ Application::Application(std::string title, unsigned int width, unsigned int hei
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_display = XOpenDisplay(nullptr);
+  m_display = XOpenDisplay(NULL);
+
+  if (!m_display) {
+    fprintf(stderr, "Couldnt open XDisplay\n");
+    exit(1);
+  }
 
   XSetWindowAttributes attr = {
       .background_pixel = 0xFFFFFF,
       .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
+      .override_redirect = true,
   };
 
-  m_window = Widget::createWindow(m_display, {0, 0, width, height}, attr);
+  unsigned int w = XDisplayWidth(m_display, XDefaultScreen(m_display));
+  unsigned int h = XDisplayHeight(m_display, XDefaultScreen(m_display));
+  m_window = Widget::createWindow(m_display, {w / 4 - width / 2, h / 2 - height / 2, width, height}, attr);
 
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
   XSetWMHints(m_display, m_window, &wmhints);
 
-  // wmhints.flags = USPosition | PAspect | PMinSize | PMaxSize;
   XStoreName(m_display, m_window, title.c_str());
 
   int majorVersion, minorVersion;
@@ -37,10 +46,43 @@ Application::Application(std::string title, unsigned int width, unsigned int hei
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
+  XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
 }
 
 Application *Application::instance() {
   return m_instance;
+}
+
+const int Application::width() const {
+  return m_width;
+}
+
+const int Application::height() const {
+  return m_height;
+}
+
+const Painter *Application::painter() const {
+  return m_painter;
+}
+
+const Window Application::window() const {
+  return m_window;
+}
+
+const Window Application::id() const {
+  return m_window;
+}
+
+Display *Application::display() const {
+  return m_display;
+}
+
+const Window Application::focusedWindow() const {
+  return m_focusedWindow;
+}
+
+bool Application::isFocused(Window id) {
+  return focusedWindow() == id;
 }
 
 Application::~Application() {
@@ -73,26 +115,25 @@ bool Application::shouldExit() {
   return m_shouldClose;
 }
 
-void Application::exit() {
+void Application::triggerExit() {
   m_shouldClose = true;
 }
 
 void Application::checkForExit() {
   if (m_event.type == ClientMessage) {
     if ((Atom)m_event.xclient.data.l[0] == m_wmDeleteMessage)
-      exit();
+      triggerExit();
     return;
   }
   if (m_event.type == KeyPress) {
     if (XK_Escape == XLookupKeysym(&m_event.xkey, 0))
-      exit();
+      triggerExit();
     return;
   }
 }
 
 void Application::processEvents() {
   checkForExit();
-
   m_layout->updatePosition();
 
   if (m_event.type == ButtonPress && getButton(m_event.xbutton.button) == MouseButton::Left) {
@@ -106,10 +147,6 @@ void Application::processEvents() {
   }
 }
 
-bool Application::isFocused(Window id) {
-  return focusedWindow() == id;
-}
-
 void Application::exec() {
   m_focusedWindow = m_window;
 
@@ -118,32 +155,4 @@ void Application::exec() {
     processEvents();
     usleep(1000 * 1000 / FPS);
   }
-}
-
-const int Application::width() const {
-  return m_width;
-}
-
-const int Application::height() const {
-  return m_height;
-}
-
-const Painter *Application::painter() const {
-  return m_painter;
-}
-
-const Window Application::window() const {
-  return m_window;
-}
-
-const Window Application::id() const {
-  return m_window;
-}
-
-Display *Application::display() const {
-  return m_display;
-}
-
-const Window Application::focusedWindow() const {
-  return m_focusedWindow;
 }
