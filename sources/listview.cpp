@@ -3,6 +3,7 @@
 #include "../headers/label.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <algorithm>
 #include <vector>
 
@@ -55,6 +56,26 @@ void ListView::recalculateItems() {
 
 unsigned int ListView::findClosestIndex(int position) { return position / m_itemHeight; }
 
+bool ListView::keyPressEvent(KeySym key, std::string) {
+  if (!Application::instance()->isFocused(id()))
+    return false;
+
+  switch (key) {
+  case XK_Up:
+    if (m_selectedItem > 0)
+      m_selectedItem--;
+    return true;
+  case XK_Down:
+    if (m_selectedItem < m_rows.size())
+      m_selectedItem++;
+    return true;
+  default:
+    return false;
+  }
+
+  return false;
+}
+
 bool ListView::mousePressEvent(XButtonEvent &e, MouseButton btn) {
   if (Application::instance()->focusedWindow() != id())
     return false;
@@ -74,9 +95,14 @@ void ListView::paintEvent(XEvent &e) {
   m_painter->setForeground(0x000000);
   m_painter->drawRect(0, 0, m_rect.w - 1, m_rect.h - 1);
 
+  unsigned long sColor = 0xAAAAAA;
+  if (Application::instance()->isFocused(id())) {
+    sColor = 0xFF0000;
+  }
+
   for (unsigned int i = 0; i < maxItems; ++i) {
     Rect r = m_rects[i];
-    m_painter->setForeground(m_selectedItem == i ? 0xFF0000 : 0xFFFFFF);
+    m_painter->setForeground(m_selectedItem == i ? sColor : 0xFFFFFF);
     m_painter->fillRect(r.x, r.y, r.w, r.h);
     m_painter->setForeground(m_selectedItem == i ? 0xFFFFFF : 0x000000);
     m_painter->drawString(m_rows[i].c_str(), m_rect.x - 5, r.y + r.h / 2);

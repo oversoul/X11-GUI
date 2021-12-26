@@ -19,6 +19,8 @@ public:
   unsigned int findClosestIndex(int);
 
   void paintEvent(XEvent &);
+
+  bool keyPressEvent(KeySym, std::string);
   bool mousePressEvent(XButtonEvent &, MouseButton);
 
   const Window id() const { return m_window; }
