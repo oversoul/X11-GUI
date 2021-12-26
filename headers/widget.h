@@ -4,14 +4,14 @@
 #include <assert.h>
 #include <iostream>
 
-class Application;
-
 typedef struct RectStruct {
-  int x, y, w, h;
+  unsigned int x, y, w, h;
 
-  void print_r() { std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl; }
+  void print_r() {
+    std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl;
+  }
 
-  bool inRegion(int mx, int my, RectStruct r) {
+  bool inRegion(unsigned int mx, unsigned int my, RectStruct r) {
     bool inX = x >= r.x && x <= r.h;
     bool inY = y >= r.y && y <= r.w;
     return inX && inY;
@@ -19,9 +19,11 @@ typedef struct RectStruct {
 
 } Rect;
 
-enum class MouseButton { Unknown, Left, Middle, Right };
+enum class MouseWheelDirection { Up, Down, Unknown };
+enum class MouseButton { Unknown, Left, Middle, Right, Scroll };
 
 MouseButton getButton(int btn);
+MouseWheelDirection getDirection(int btn);
 
 class Widget {
 public:
@@ -36,12 +38,15 @@ public:
   void setPosition(int x, int y);
   const Rect getRect() const;
 
+  bool isFocused();
   void updateSizeAndPos();
   bool handleEvent(XEvent &e);
+
   virtual void paintEvent(XEvent &);
   virtual bool keyPressEvent(KeySym, std::string);
   virtual bool keyReleaseEvent(KeySym, std::string);
   virtual bool mousePressEvent(XButtonEvent &, MouseButton);
+  virtual bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection);
 
 protected:
   Window m_window;

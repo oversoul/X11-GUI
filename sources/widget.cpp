@@ -9,6 +9,10 @@ const Window Widget::id() const {
   return -1;
 }
 
+bool Widget::isFocused() {
+  return Application::instance()->isFocused(id());
+}
+
 MouseButton getButton(int btn) {
   if (btn == 1)
     return MouseButton::Left;
@@ -16,7 +20,17 @@ MouseButton getButton(int btn) {
     return MouseButton::Middle;
   if (btn == 3)
     return MouseButton::Right;
+  if (btn == 4 || btn == 5)
+    return MouseButton::Scroll;
   return MouseButton::Unknown;
+}
+
+MouseWheelDirection getDirection(int btn) {
+  if (btn == 4)
+    return MouseWheelDirection::Up;
+  if (btn == 5)
+    return MouseWheelDirection::Down;
+  return MouseWheelDirection::Unknown;
 }
 
 Window Widget::createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
@@ -52,6 +66,9 @@ bool Widget::handleEvent(XEvent &e) {
     return false;
   }
   case ButtonPress:
+    if (getButton(e.xbutton.button) == MouseButton::Scroll) {
+      return mouseScrollEvent(e.xbutton, getDirection(e.xbutton.button));
+    }
     return mousePressEvent(e.xbutton, getButton(e.xbutton.button));
   }
   return false;
@@ -94,5 +111,9 @@ bool Widget::keyReleaseEvent(KeySym, std::string) {
 }
 
 bool Widget::mousePressEvent(XButtonEvent &, MouseButton) {
+  return false;
+}
+
+bool Widget::mouseScrollEvent(XButtonEvent &, MouseWheelDirection) {
   return false;
 }
