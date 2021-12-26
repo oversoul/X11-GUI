@@ -5,8 +5,7 @@
 #include <X11/Xutil.h>
 
 const Window Widget::id() const {
-  assert(false && "Widget doesn't have an ID");
-  return -1;
+  return m_window;
 }
 
 bool Widget::isFocused() {
