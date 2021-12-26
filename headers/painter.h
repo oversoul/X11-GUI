@@ -19,6 +19,7 @@ public:
   void drawString(const char *text, int x, int y);
   void setForeground(unsigned long color);
   void setBackground(unsigned long color);
+  unsigned int textWidth(const char *text);
   void swapBuffers();
 
 private:

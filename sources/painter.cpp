@@ -55,6 +55,10 @@ void Painter::setBackground(unsigned long color) {
   XSetWindowBackground(m_display, m_window, color);
 }
 
+unsigned int Painter::textWidth(const char *text) {
+  return XTextWidth(m_font, text, strlen(text));
+}
+
 void Painter::swapBuffers() {
   XdbeSwapInfo swap_info = {.swap_window = m_window, .swap_action = 0};
   XdbeSwapBuffers(m_display, &swap_info, 1);
