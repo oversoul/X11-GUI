@@ -60,9 +60,10 @@ void ListView::recalculateItems() {
   }
 }
 
-unsigned int ListView::findClosestIndex(int position) {
+void ListView::selectClosestIndex(int position) {
   unsigned int index = position / m_itemHeight;
-  return (index < m_areas) ? index : index - 1;
+  if (index < m_areas)
+    m_selectedItem = index;
 }
 
 bool ListView::keyPressEvent(KeySym key, std::string) {
@@ -95,8 +96,10 @@ bool ListView::mousePressEvent(XButtonEvent &e, MouseButton btn) {
     return false;
   if (btn != MouseButton::Left)
     return false;
-  m_selectedItem = findClosestIndex(e.y);
-  std::cout << "selected: " << m_rows[m_selectedItem + m_scroll] << std::endl;
+
+  selectClosestIndex(e.y);
+
+  // std::cout << "selected: " << m_rows[m_selectedItem + m_scroll] << std::endl;
 
   return true;
 }
