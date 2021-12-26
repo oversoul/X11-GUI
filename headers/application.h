@@ -12,7 +12,7 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(std::string title, int width, int height);
+  Application(std::string title, unsigned int width, unsigned int height);
   ~Application();
   static Application *instance();
 
@@ -27,11 +27,13 @@ public:
   void setLayout(Layout &);
   void setLayout(Layout *);
   void addWidget(Widget *);
-  Painter *painter() { return m_painter; }
-  const Window window() const { return m_window; }
-  const Window id() const { return m_window; }
-  Display *display() const { return m_display; }
-  const Window focusedWindow() const { return m_focusedWindow; }
+
+  Display *display() const;
+
+  const Window id() const;
+  const Window window() const;
+  const Painter *painter() const;
+  const Window focusedWindow() const;
 
   const int width() const;
   const int height() const;
@@ -41,8 +43,8 @@ protected:
   void processEvents();
 
 private:
-  int m_width = 0;
-  int m_height = 0;
+  unsigned int m_width = 0;
+  unsigned int m_height = 0;
 
   int m_root;
   int m_screen;

@@ -9,7 +9,8 @@
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(std::string title, int width, int height) : m_width(width), m_height(height) {
+Application::Application(std::string title, unsigned int width, unsigned int height)
+    : m_width(width), m_height(height) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
@@ -125,4 +126,24 @@ const int Application::width() const {
 
 const int Application::height() const {
   return m_height;
+}
+
+const Painter *Application::painter() const {
+  return m_painter;
+}
+
+const Window Application::window() const {
+  return m_window;
+}
+
+const Window Application::id() const {
+  return m_window;
+}
+
+Display *Application::display() const {
+  return m_display;
+}
+
+const Window Application::focusedWindow() const {
+  return m_focusedWindow;
 }
