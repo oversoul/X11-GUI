@@ -30,7 +30,9 @@ Window Widget::createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Win
   }
 
   unsigned long mask = CWBackPixel | CWEventMask;
-  return XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
+  auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
+  XMapWindow(dpy, w);
+  return w;
 }
 
 const bool Widget::isVisible() const { //

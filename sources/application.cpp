@@ -114,11 +114,6 @@ bool Application::isFocused(Window id) { //
 
 void Application::exec() {
   m_focusedWindow = m_window;
-  XMapWindow(m_display, m_window);
-
-  for (auto &w : m_layout->getWidgets()) {
-    XMapWindow(m_display, w->id());
-  }
 
   while (!m_shouldClose) {
     XNextEvent(m_display, &m_event);
