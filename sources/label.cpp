@@ -25,6 +25,8 @@ Label::Label(std::string value) : Label() {
 }
 
 Label::~Label() {
+  XDestroyWindow(m_display, m_window);
+  delete m_painter;
 }
 
 void Label::paintEvent(XEvent &) {

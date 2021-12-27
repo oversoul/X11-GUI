@@ -11,11 +11,10 @@ int main(void) {
   Application *app = new Application("Howdy!");
 
   Label la("First Item:");
-  TextInput te("Hello World input");
   ListView lv;
-  Button btn;
+  TextInput te("Hello World input");
 
-  btn.setLabel("Close");
+  Button btn("Close");
   btn.setOnClick([app] { //
     app->triggerExit();
   });

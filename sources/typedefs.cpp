@@ -1,7 +1,7 @@
 #include "../headers/typedefs.h"
 #include <iostream>
 
-int get_screens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {
+int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {
   // Get currently focused window
   Window win = -1;
   int focus_status;
@@ -14,14 +14,12 @@ int get_screens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *t
   XRRScreenResources *screen_res = XRRGetScreenResources(dpy, DefaultRootWindow(dpy));
   XGetWindowAttributes(dpy, win, &win_attr);
 
-  int nmonitors = 0;
-  int det_x = 0, det_y = 0;
+  int det_x = 0, det_y = 0, nmonitors = 0;
 
   XRRGetMonitors(dpy, win, 1, &nmonitors);
 
   for (int i = 0; i < nmonitors; i++) {
     XRRCrtcInfo *screen_info = XRRGetCrtcInfo(dpy, screen_res, screen_res->crtcs[i]);
-
     // option flag for using the "anchor" (top left corner)  of a window to determine what screen it belongs to
     if (use_anchors == 1) {
       det_x = win_attr.x;
@@ -36,7 +34,6 @@ int get_screens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *t
     if (det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) {
       // If the window is on the ith screen in the y
       if (det_y >= screen_info->y && det_y < (int)(screen_info->y + screen_info->height)) {
-
         *left_x = screen_info->x;
         *right_x = screen_info->x + screen_info->width;
         *top_y = screen_info->y;
@@ -52,7 +49,7 @@ int get_screens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *t
 
 void getMonitorSize(Display *dpy, unsigned int *width, unsigned int *height) {
   int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
-  if (get_screens(dpy, 1, &left_x, &right_x, &top_y, &bottom_y) < 0) {
+  if (getScreens(dpy, 1, &left_x, &right_x, &top_y, &bottom_y) < 0) {
     *width = XDisplayWidth(dpy, XDefaultScreen(dpy));
     *height = XDisplayHeight(dpy, XDefaultScreen(dpy));
   } else {

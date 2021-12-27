@@ -27,6 +27,7 @@ ListView::ListView() {
 
 ListView::~ListView() {
   XDestroyWindow(m_display, m_window);
+  delete m_painter;
 }
 
 ListView::ListView(std::vector<std::string> rows) : ListView() {
