@@ -12,7 +12,7 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(std::string title, unsigned int width, unsigned int height);
+  Application(std::string title, bool isModal = false);
   ~Application();
   static Application *instance();
 
@@ -24,6 +24,7 @@ public:
 
   bool isFocused(Window id);
 
+  void setSize(unsigned int, unsigned int);
   void setLayout(Layout &);
   void setLayout(Layout *);
   void addWidget(Widget *);
@@ -44,6 +45,8 @@ protected:
 private:
   unsigned int m_width = 0;
   unsigned int m_height = 0;
+  unsigned int m_screenWidth = 1;
+  unsigned int m_screenHeight = 1;
 
   int m_root;
   int m_screen;

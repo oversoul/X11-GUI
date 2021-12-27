@@ -1,5 +1,6 @@
 #include "../headers/application.h"
 #include "../headers/painter.h"
+#include "../headers/typedefs.h"
 #include <X11/X.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
@@ -11,8 +12,7 @@
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(std::string title, unsigned int width, unsigned int height)
-    : m_width(width), m_height(height) {
+Application::Application(std::string title, bool isModal) : m_width(640), m_height(480) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
@@ -24,15 +24,21 @@ Application::Application(std::string title, unsigned int width, unsigned int hei
     exit(1);
   }
 
+  getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
+
   XSetWindowAttributes attr = {
       .background_pixel = 0xFFFFFF,
       .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
-      .override_redirect = true,
+      .override_redirect = isModal,
   };
 
-  unsigned int w = XDisplayWidth(m_display, XDefaultScreen(m_display));
-  unsigned int h = XDisplayHeight(m_display, XDefaultScreen(m_display));
-  m_window = Widget::createWindow(m_display, {w / 4 - width / 2, h / 2 - height / 2, width, height}, attr);
+  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr);
+  setSize(m_width, m_height);
+  if (isModal) {
+    XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
+  } else {
+    XSetTransientForHint(m_display, m_window, m_window);
+  }
 
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
   XSetWMHints(m_display, m_window, &wmhints);
@@ -46,11 +52,16 @@ Application::Application(std::string title, unsigned int width, unsigned int hei
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
-  XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
 }
 
 Application *Application::instance() {
   return m_instance;
+}
+
+void Application::setSize(unsigned int w, unsigned int h) {
+  m_width = w;
+  m_height = h;
+  XMoveResizeWindow(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
 }
 
 const int Application::width() const {

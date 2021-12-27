@@ -8,7 +8,7 @@
 #include "../headers/textinput.h"
 
 int main(void) {
-  Application *app = new Application("Howdy!", 640, 480);
+  Application *app = new Application("Howdy!");
 
   Label la("First Item:");
   TextInput te("Hello World input");
