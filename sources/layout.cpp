@@ -23,7 +23,7 @@ void Layout::setFullSize(unsigned int padding) {
 }
 
 void Layout::addWidget(Widget *widget, unsigned int w) {
-  assert(w > 0 && "Weight should at least be 1");
+  assert(w > 0 && "Weight should at least be 1\n");
   m_widgets.push_back(widget);
   m_weights.push_back(w);
 }
@@ -40,9 +40,9 @@ void VLayout::updatePosition() {
   if (m_rect.h <= 1)
     return;
 
-  unsigned int totalHeight = m_rect.h - (m_widgets.size() - 1) * m_spaceBetween;
+  unsigned int totalHeight = m_rect.h - (m_widgets.size() - 1) * m_spaceBetween - m_rect.y;
 
-  unsigned int ypos = 0;
+  unsigned int ypos = m_rect.y;
   unsigned int weightSum = 0;
   for (auto &w : m_weights) {
     weightSum += w;
@@ -70,9 +70,9 @@ void HLayout::updatePosition() {
   if (m_rect.h <= 1)
     return;
 
-  unsigned int totalWidth = m_rect.w - (m_widgets.size() - 1) * m_spaceBetween;
+  unsigned int totalWidth = m_rect.w - (m_widgets.size() - 1) * m_spaceBetween - m_rect.x;
 
-  unsigned int xpos = 0;
+  unsigned int xpos = m_rect.x;
   unsigned int weightSum = 0;
   for (auto &w : m_weights) {
     weightSum += w;
