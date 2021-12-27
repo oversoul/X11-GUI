@@ -8,6 +8,7 @@
 class Button : public Widget {
 public:
   Button();
+  Button(std::string);
   ~Button();
   void setLabel(std::string);
   void paintEvent(XEvent &);

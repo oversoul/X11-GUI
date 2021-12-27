@@ -15,6 +15,10 @@ Button::Button() {
   m_painter = new Painter(m_display, m_window);
 }
 
+Button::Button(std::string label) : Button() {
+  setLabel(label);
+}
+
 Button::~Button() {
 }
 
