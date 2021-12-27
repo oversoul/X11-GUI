@@ -25,6 +25,8 @@ TextInput::TextInput(std::string value) : TextInput() {
 }
 
 TextInput::~TextInput() {
+  XDestroyWindow(m_display, m_window);
+  delete m_painter;
 }
 
 bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
@@ -32,7 +34,7 @@ bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
 }
 
 bool TextInput::keyPressEvent(KeySym key, std::string text) {
-  if (!Application::instance()->isFocused(id()))
+  if (!isFocused())
     return false;
 
   if (key == XK_BackSpace) {
@@ -41,7 +43,7 @@ bool TextInput::keyPressEvent(KeySym key, std::string text) {
     return true;
   }
 
-  if (key == XK_Tab || key == XK_BackSpace || key == XK_Return)
+  if (key == XK_Tab || key == XK_Delete || key == XK_Return)
     return false;
 
   m_value += text;

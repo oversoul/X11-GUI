@@ -8,7 +8,7 @@ const Window Widget::id() const {
   return m_window;
 }
 
-bool Widget::isFocused() {
+const bool Widget::isFocused() const {
   return Application::instance()->isFocused(id());
 }
 
@@ -47,14 +47,10 @@ Window Widget::createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Win
   return w;
 }
 
-const bool Widget::isVisible() const {
-  return m_visible;
-}
-
 bool Widget::handleEvent(XEvent &e) {
   switch (e.type) {
   case KeyPress:
-  case KeyRelease: {
+  case KeyRelease:
     KeySym key;
     char text[255];
     XLookupString(&e.xkey, text, 255, &key, 0);
@@ -63,7 +59,6 @@ bool Widget::handleEvent(XEvent &e) {
     if (e.type == KeyRelease)
       return keyReleaseEvent(key, std::string(text));
     return false;
-  }
   case ButtonPress:
     if (getButton(e.xbutton.button) == MouseButton::Scroll) {
       return mouseScrollEvent(e.xbutton, getDirection(e.xbutton.button));
@@ -77,15 +72,15 @@ void Widget::setRect(Rect r) {
   m_rect = r;
 }
 
-void Widget::setWidth(int w) {
+void Widget::setWidth(unsigned int w) {
   m_rect.w = w;
 }
 
-void Widget::setHeight(int h) {
+void Widget::setHeight(unsigned int h) {
   m_rect.h = h;
 }
 
-void Widget::setPosition(int x, int y) {
+void Widget::setPosition(unsigned int x, unsigned int y) {
   m_rect.x = x;
   m_rect.y = y;
 }

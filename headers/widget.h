@@ -30,15 +30,14 @@ public:
   virtual const Window id() const;
   static Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p = -1);
 
-  const bool isVisible() const;
-
   void setRect(Rect r);
-  void setWidth(int w);
-  void setHeight(int h);
-  void setPosition(int x, int y);
   const Rect getRect() const;
 
-  bool isFocused();
+  void setWidth(unsigned int w);
+  void setHeight(unsigned int h);
+  void setPosition(unsigned int x, unsigned int y);
+
+  const bool isFocused() const;
   void updateSizeAndPos();
   bool handleEvent(XEvent &e);
 
