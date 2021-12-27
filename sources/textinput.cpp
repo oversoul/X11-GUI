@@ -19,6 +19,7 @@ TextInput::TextInput() {
   m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
   m_painter = new Painter(m_display, m_window);
 }
+
 TextInput::TextInput(std::string value) : TextInput() {
   setValue(value);
 }
@@ -55,7 +56,7 @@ void TextInput::paintEvent(XEvent &) {
   m_painter->clear();
   m_painter->setBackground(m_bgColor);
 
-  m_painter->setForeground(Application::instance()->isFocused(id()) ? 0xff0000 : 0x000000);
+  m_painter->setForeground(isFocused() ? 0xff0000 : 0x000000);
   m_painter->drawRect(0, 0, m_rect.w - 1, m_rect.h - 1);
 
   m_painter->setForeground(0x000000);
