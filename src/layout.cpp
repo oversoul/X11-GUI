@@ -1,5 +1,5 @@
-#include "../headers/layout.h"
-#include "../headers/application.h"
+#include "../include/layout.h"
+#include "../include/application.h"
 
 void Layout::setRect(Rect r) {
   m_rect = r;

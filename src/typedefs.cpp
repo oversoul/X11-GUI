@@ -1,4 +1,4 @@
-#include "../headers/typedefs.h"
+#include "../include/typedefs.h"
 #include <iostream>
 
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {

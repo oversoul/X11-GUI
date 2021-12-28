@@ -1,6 +1,5 @@
-#include "../headers/painter.h"
-#include "../headers/application.h"
-#include <X11/Xlib.h>
+#include "../include/painter.h"
+#include "../include/application.h"
 #include <cstring>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {

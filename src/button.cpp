@@ -1,5 +1,5 @@
-#include "../headers/button.h"
-#include "../headers/application.h"
+#include "../include/button.h"
+#include "../include/application.h"
 
 Button::Button() {
   m_display = Application::instance()->display();

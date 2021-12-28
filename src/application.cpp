@@ -1,11 +1,5 @@
-#include "../headers/application.h"
-#include "../headers/painter.h"
-#include "../headers/typedefs.h"
-#include <X11/X.h>
-#include <X11/Xatom.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/extensions/Xdbe.h>
+#include "../include/typedefs.h"
+#include "../include/application.h"
 #include <stdexcept>
 #include <unistd.h>
 #define FPS 120

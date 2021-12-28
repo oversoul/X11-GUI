@@ -1,9 +1,6 @@
-#include "../headers/textinput.h"
-#include "../headers/application.h"
-#include "../headers/widget.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "../include/textinput.h"
+#include "../include/application.h"
+#include <X11/keysym.h>
 #include <cstdio>
 
 TextInput::TextInput() {

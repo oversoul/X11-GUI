@@ -1,7 +1,5 @@
-#include "../headers/widget.h"
-#include "../headers/application.h"
-
-#include <X11/Xlib.h>
+#include "../include/widget.h"
+#include "../include/application.h"
 #include <X11/Xutil.h>
 
 const Window Widget::id() const {

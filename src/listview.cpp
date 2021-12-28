@@ -1,9 +1,6 @@
-#include "../headers/listview.h"
-#include "../headers/application.h"
-#include "../headers/label.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "../include/listview.h"
+#include "../include/application.h"
+#include <X11/keysym.h>
 #include <algorithm>
 #include <vector>
 
