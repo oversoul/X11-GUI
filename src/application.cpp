@@ -10,7 +10,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_display = XOpenDisplay(NULL);
+  m_display = XOpenDisplay(getenv("DISPLAY"));
 
   if (!m_display) {
     fprintf(stderr, "Couldn't open Display\n");
