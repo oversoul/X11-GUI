@@ -20,7 +20,6 @@ ListView::ListView() {
 }
 
 ListView::~ListView() {
-  delete m_painter;
 }
 
 ListView::ListView(std::vector<std::string> rows) : ListView() {

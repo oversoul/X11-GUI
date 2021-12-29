@@ -17,7 +17,6 @@ Button::Button(std::string label) : Button() {
 }
 
 Button::~Button() {
-  delete m_painter;
 }
 
 void Button::setLabel(std::string label) {

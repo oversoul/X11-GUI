@@ -38,6 +38,4 @@ private:
 
   std::vector<Rect> m_rects;
   std::vector<std::string> m_rows;
-
-  Painter *m_painter = nullptr;
 };

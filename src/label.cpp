@@ -18,7 +18,6 @@ Label::Label(std::string value) : Label() {
 }
 
 Label::~Label() {
-  delete m_painter;
 }
 
 void Label::paintEvent(XEvent &) {

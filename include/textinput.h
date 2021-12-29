@@ -17,9 +17,6 @@ public:
   bool keyReleaseEvent(KeySym, std::string);
   bool mousePressEvent(XButtonEvent &, MouseButton);
 
-  const Window id() const { return m_window; }
-
 private:
   std::string m_value;
-  Painter *m_painter = nullptr;
 };

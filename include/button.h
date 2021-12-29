@@ -1,7 +1,6 @@
 #pragma once
 #include "painter.h"
 #include "widget.h"
-#include <X11/Xlib.h>
 #include <functional>
 #include <iostream>
 
@@ -17,7 +16,6 @@ public:
 
 private:
   std::string m_label;
-  Painter *m_painter = nullptr;
   unsigned long m_bgColor = 0xCCCCCC;
   std::function<void()> m_onClickCallback = [] {};
 };

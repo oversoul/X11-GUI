@@ -19,7 +19,6 @@ TextInput::TextInput(std::string value) : TextInput() {
 }
 
 TextInput::~TextInput() {
-  delete m_painter;
 }
 
 bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
