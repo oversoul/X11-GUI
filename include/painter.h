@@ -1,8 +1,7 @@
 #pragma once
-
 #include <X11/Xlib.h>
+#include <X11/Xft/Xft.h>
 #include <X11/extensions/Xdbe.h>
-#include <iostream>
 
 class Application;
 
@@ -30,5 +29,10 @@ private:
   Pixmap m_pixmap;
   XdbeBackBuffer m_backBuffer;
   Display *m_display = nullptr;
-  XFontStruct *m_font = nullptr;
+  // XFontStruct *m_font = nullptr;
+
+
+  XftColor m_color;
+  XftFont *m_font;
+  XftDraw *m_draw;
 };

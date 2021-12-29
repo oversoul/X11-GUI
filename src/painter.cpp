@@ -1,12 +1,29 @@
 #include "../include/painter.h"
 #include "../include/application.h"
 #include <X11/Xlib.h>
+#include <X11/extensions/Xrender.h>
 #include <cstring>
+#include <iostream>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
-  m_font = XLoadQueryFont(m_display, "-*-clean-*-*-normal-*-15-150-*-*-*-*-*-*");
+  int s = XDefaultScreen(display);
+  m_font = XftFontOpenName(display, s, "Monospace-12");
+  if (!m_font) {
+    fprintf(stderr, "Couldn't open font.\n");
+    exit(1);
+  }
   m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
+  m_draw = XftDrawCreate(display, m_backBuffer, DefaultVisual(display, s), DefaultColormap(display, s));
+
+  memset(&m_color, 0, sizeof(XftColor));
+
+  if (!XftColorAllocName(display, DefaultVisual(display, s), DefaultColormap(display, s), "#000000", &m_color)) {
+    XftDrawDestroy(m_draw);
+    throw std::runtime_error("Couldn't create xft drawing area.");
+  }
+  /*
+  m_font = XLoadQueryFont(m_display, "-*-clean-*-*-normal-*-15-150-*-*-*-*-*-*");
 
   if (!m_font) {
     printf("Failed to load font!\n");
@@ -14,15 +31,17 @@ Painter::Painter(Display *display, Window window) : m_window(window), m_display(
   }
 
   XSetFont(m_display, m_gc, m_font->fid);
+  */
 }
 
 Painter::~Painter() {
-  XFreeFont(m_display, m_font);
+  XftDrawDestroy(m_draw);
   XFreeGC(m_display, m_gc);
 }
 
 void Painter::drawString(const char *text, int x, int y) {
-  XDrawString(m_display, m_backBuffer, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
+  XftDrawString8(m_draw, &m_color, m_font, x, y + m_font->ascent / 2, (XftChar8 *)text, strlen(text));
+  // XDrawString(m_display, m_backBuffer, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
 }
 
 void Painter::drawLine(int x1, int y1, int x2, int y2) {
@@ -64,7 +83,10 @@ void Painter::setBackground(unsigned long color) {
 }
 
 unsigned int Painter::textWidth(const char *text) {
-  return XTextWidth(m_font, text, strlen(text));
+  XGlyphInfo extents = {};
+  XftTextExtents8(m_display, m_font, (FcChar8 *)text, strlen(text), &extents);
+  return extents.width;
+  // return XTextWidth(m_font, text, strlen(text));
 }
 
 void Painter::swapBuffers() {
