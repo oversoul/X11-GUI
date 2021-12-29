@@ -1,5 +1,6 @@
 #include "../include/painter.h"
 #include "../include/application.h"
+#include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <cstring>
@@ -8,7 +9,7 @@
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
   int s = XDefaultScreen(display);
-  m_font = XftFontOpenName(display, s, "Monospace-12");
+  m_font = XftFontOpenName(display, s, "SF Mono-12");
   if (!m_font) {
     fprintf(stderr, "Couldn't open font.\n");
     exit(1);
@@ -40,7 +41,7 @@ Painter::~Painter() {
 }
 
 void Painter::drawString(const char *text, int x, int y) {
-  XftDrawString8(m_draw, &m_color, m_font, x, y + m_font->ascent / 2, (XftChar8 *)text, strlen(text));
+  XftDrawStringUtf8(m_draw, &m_color, m_font, x, y + m_font->ascent / 2, (FcChar8 *)text, strlen(text));
   // XDrawString(m_display, m_backBuffer, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
 }
 
@@ -84,7 +85,7 @@ void Painter::setBackground(unsigned long color) {
 
 unsigned int Painter::textWidth(const char *text) {
   XGlyphInfo extents = {};
-  XftTextExtents8(m_display, m_font, (FcChar8 *)text, strlen(text), &extents);
+  XftTextExtentsUtf8(m_display, m_font, (FcChar8 *)text, strlen(text), &extents);
   return extents.width;
   // return XTextWidth(m_font, text, strlen(text));
 }
