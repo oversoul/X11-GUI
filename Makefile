@@ -23,5 +23,6 @@ $(FILENAME): $(OBJECTS) xgui
 	$(CC) $(BUILD)/xgui.o $(OBJECTS) -shared -o $(FILENAME) $(LDFLAGS) $(STANDARD)
 
 clean:
-	@$(RM) -rf build/
+	@$(RM) -rf $(BUILD)/*.o
+	@$(RM) -rf $(OBJ_DIR)/*.o
 	@echo "cleaning..."

@@ -11,7 +11,7 @@ public:
   Painter(Display *display, Window window);
   ~Painter();
 
-  void clear();
+  void clear(unsigned long = 0xFFFFFF);
   void drawPoint(int x, int y);
   void drawLine(int x1, int y1, int x2, int y2);
   void drawRect(int x, int y, int width, int height);
