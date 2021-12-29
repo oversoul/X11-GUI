@@ -32,8 +32,8 @@ void Painter::drawPoint(int x, int y) {
   XDrawPoint(m_display, m_backBuffer, m_gc, x, y);
 }
 
-void Painter::clear() {
-  XSetForeground(m_display, m_gc, 0xffffff);
+void Painter::clear(unsigned long color) {
+  XSetForeground(m_display, m_gc, color);
   XFillRectangle(m_display, m_backBuffer, m_gc, 0, 0, Application::instance()->width(),
                  Application::instance()->height());
 }

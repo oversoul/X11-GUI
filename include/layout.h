@@ -9,9 +9,10 @@ class Layout {
 
 public:
   void setRect(Rect r);
-  void setFullSize(unsigned int = 0);
   const Rect getRect() const;
-  void setSpaceBetween(unsigned int sb);
+  void setFullSize(unsigned int = 0);
+  void setSpaceBetween(unsigned int);
+  const Widget *getFirstWidget() const;
   void addWidget(Widget *widget, unsigned int w = 1);
 
   virtual void updatePosition() {

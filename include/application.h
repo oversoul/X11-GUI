@@ -35,8 +35,8 @@ public:
   const Painter *painter() const;
   const Window focusedWindow() const;
 
-  const int width() const;
-  const int height() const;
+  const unsigned int width() const;
+  const unsigned int height() const;
 
 protected:
   void checkForExit();
@@ -59,7 +59,6 @@ private:
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
   Layout *m_layout = nullptr;
-  Painter *m_painter = nullptr;
   Display *m_display = nullptr;
 
   static Application *m_instance;

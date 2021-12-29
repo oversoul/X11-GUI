@@ -1,5 +1,5 @@
-#include "../include/typedefs.h"
 #include "../include/application.h"
+#include "../include/typedefs.h"
 #include <stdexcept>
 #include <unistd.h>
 #define FPS 120
@@ -58,16 +58,12 @@ void Application::setSize(unsigned int w, unsigned int h) {
   XMoveResizeWindow(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
 }
 
-const int Application::width() const {
+const unsigned int Application::width() const {
   return m_width;
 }
 
-const int Application::height() const {
+const unsigned int Application::height() const {
   return m_height;
-}
-
-const Painter *Application::painter() const {
-  return m_painter;
 }
 
 const Window Application::window() const {
@@ -138,7 +134,6 @@ void Application::checkForExit() {
 }
 
 void Application::processEvents() {
-  checkForExit();
   m_layout->updatePosition();
 
   if (m_event.type == ButtonPress && getButton(m_event.xbutton.button) == MouseButton::Left) {
@@ -147,13 +142,16 @@ void Application::processEvents() {
 
   for (auto &w : m_layout->getWidgets()) {
     w->updateSizeAndPos();
-    w->handleEvent(m_event);
+    if (!w->handleEvent(m_event)) {
+      checkForExit();
+    }
     w->paintEvent(m_event);
   }
 }
 
 void Application::exec() {
-  m_focusedWindow = m_window;
+  auto *widget = m_layout->getFirstWidget();
+  m_focusedWindow = widget == nullptr ? m_window : widget->id();
 
   while (!m_shouldClose) {
     XNextEvent(m_display, &m_event);
