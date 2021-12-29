@@ -30,6 +30,8 @@ public:
   virtual const Window id() const;
   static Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p = -1);
 
+  ~Widget();
+
   void setRect(Rect r);
   const Rect getRect() const;
 

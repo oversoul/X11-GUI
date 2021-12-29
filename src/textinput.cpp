@@ -22,7 +22,6 @@ TextInput::TextInput(std::string value) : TextInput() {
 }
 
 TextInput::~TextInput() {
-  XDestroyWindow(m_display, m_window);
   delete m_painter;
 }
 

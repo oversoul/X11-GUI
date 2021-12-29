@@ -22,6 +22,10 @@ void Layout::setFullSize(unsigned int padding) {
   };
 }
 
+const Widget *Layout::getFirstWidget() const {
+  return (m_widgets.size() > 0) ? m_widgets[0] : nullptr;
+}
+
 void Layout::addWidget(Widget *widget, unsigned int w) {
   assert(w > 0 && "Weight should at least be 1\n");
   m_widgets.push_back(widget);

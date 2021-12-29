@@ -1,9 +1,14 @@
 #include "../include/widget.h"
 #include "../include/application.h"
+#include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
 const Window Widget::id() const {
   return m_window;
+}
+
+Widget::~Widget() {
+  XDestroyWindow(m_display, m_window);
 }
 
 const bool Widget::isFocused() const {
