@@ -1,19 +1,16 @@
 #include "../include/label.h"
 #include "../include/application.h"
+#include "../include/typedefs.h"
 #include <cstdio>
 
 Label::Label() {
-  m_display = Application::instance()->display();
-  auto pw = Application::instance()->window();
-
   // EnterWindowMask | LeaveWindowMask|
   XSetWindowAttributes attr = {
       .background_pixel = m_bgColor,
       .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask,
   };
 
-  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
-  m_painter = new Painter(m_display, m_window);
+  newWindow(attr);
 }
 
 Label::Label(std::string value) : Label() {

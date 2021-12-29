@@ -1,3 +1,4 @@
+#include "../include/typedefs.h"
 #include "../include/listview.h"
 #include "../include/application.h"
 #include <X11/keysym.h>
@@ -5,16 +6,12 @@
 #include <vector>
 
 ListView::ListView() {
-  m_display = Application::instance()->display();
-  auto pw = Application::instance()->window();
-
   XSetWindowAttributes attr = {
       .background_pixel = 0xFFFFFF,
       .event_mask = ExposureMask | EnterWindowMask | LeaveWindowMask | ButtonPressMask,
   };
 
-  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
-  m_painter = new Painter(m_display, m_window);
+  newWindow(attr);
 
   m_rows = {
       "Item 1", "Item 2", "Item 3", "Item 4",  "Item 5",  "Item 6",

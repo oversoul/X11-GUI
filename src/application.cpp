@@ -1,6 +1,5 @@
 #include "../include/application.h"
 #include "../include/typedefs.h"
-#include <stdexcept>
 #include <unistd.h>
 #define FPS 120
 
@@ -14,7 +13,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
   m_display = XOpenDisplay(NULL);
 
   if (!m_display) {
-    fprintf(stderr, "Couldnt open XDisplay\n");
+    fprintf(stderr, "Couldn't open Display\n");
     exit(1);
   }
 
@@ -26,7 +25,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
       .override_redirect = isModal,
   };
 
-  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr);
+  m_window = createWindow(m_display, {0, 0, 1, 1}, attr);
   setSize(m_width, m_height);
   if (isModal) {
     XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
@@ -36,13 +35,9 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
 
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
   XSetWMHints(m_display, m_window, &wmhints);
-
   XStoreName(m_display, m_window, title.c_str());
 
-  int majorVersion, minorVersion;
-  if (!XdbeQueryExtension(m_display, &majorVersion, &minorVersion)) {
-    throw std::runtime_error("XDBE is not supported!!!");
-  }
+  loadXdbeExtension(m_display);
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);

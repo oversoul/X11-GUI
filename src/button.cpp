@@ -1,18 +1,15 @@
 #include "../include/button.h"
 #include "../include/application.h"
+#include "../include/typedefs.h"
 
 Button::Button() {
-  m_display = Application::instance()->display();
-  auto pw = Application::instance()->window();
-
-  // EnterWindowMask | LeaveWindowMask|
   XSetWindowAttributes attr = {
       .background_pixel = m_bgColor,
+      // EnterWindowMask | LeaveWindowMask|
       .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask,
   };
 
-  m_window = Widget::createWindow(m_display, {0, 0, 1, 1}, attr, pw);
-  m_painter = new Painter(m_display, m_window);
+  newWindow(attr);
 }
 
 Button::Button(std::string label) : Button() {

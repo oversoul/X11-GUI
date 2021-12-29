@@ -1,5 +1,14 @@
 #include "../include/typedefs.h"
+#include <X11/extensions/Xdbe.h>
 #include <iostream>
+#include <stdexcept>
+
+void loadXdbeExtension(Display *dpy) {
+  int majorVersion, minorVersion;
+  if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion)) {
+    throw std::runtime_error("XDBE is not supported!!!");
+  }
+}
 
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {
   // Get currently focused window
@@ -56,4 +65,19 @@ void getMonitorSize(Display *dpy, unsigned int *width, unsigned int *height) {
     *width = right_x;
     *height = bottom_y;
   }
+}
+
+Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
+  int screen = DefaultScreen(dpy);
+  int depth = DefaultDepth(dpy, screen);
+  Visual *visual = XDefaultVisual(dpy, screen);
+
+  if (p == (long unsigned int)-1) {
+    p = DefaultRootWindow(dpy);
+  }
+
+  unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
+  auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
+  XMapWindow(dpy, w);
+  return w;
 }

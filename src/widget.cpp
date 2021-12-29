@@ -1,10 +1,20 @@
 #include "../include/widget.h"
 #include "../include/application.h"
+#include "../include/typedefs.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
 const Window Widget::id() const {
   return m_window;
+}
+
+Widget::Widget() : m_display(Application::instance()->display()) {
+}
+
+void Widget::newWindow(XSetWindowAttributes attr, bool isChildWindow) {
+  Window p = (isChildWindow) ? Application::instance()->window() : -1;
+  m_window = createWindow(m_display, {0, 0, 1, 1}, attr, p);
+  m_painter = new Painter(m_display, m_window);
 }
 
 Widget::~Widget() {
@@ -33,21 +43,6 @@ MouseWheelDirection getDirection(int btn) {
   if (btn == 5)
     return MouseWheelDirection::Down;
   return MouseWheelDirection::Unknown;
-}
-
-Window Widget::createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
-  int screen = DefaultScreen(dpy);
-  int depth = DefaultDepth(dpy, screen);
-  Visual *visual = XDefaultVisual(dpy, screen);
-
-  if (p == (long unsigned int)-1) {
-    p = DefaultRootWindow(dpy);
-  }
-
-  unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
-  auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
-  XMapWindow(dpy, w);
-  return w;
 }
 
 bool Widget::handleEvent(XEvent &e) {
