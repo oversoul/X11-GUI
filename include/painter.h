@@ -17,6 +17,8 @@ public:
   void drawRect(int x, int y, int width, int height);
   void fillRect(int x, int y, int width, int height);
   void drawString(const char *text, int x, int y);
+  void drawCircle(int x, int y, uint width, uint height);
+  void fillCircle(int x, int y, uint width, uint height);
   void setForeground(unsigned long color);
   void setBackground(unsigned long color);
   unsigned int textWidth(const char *text);

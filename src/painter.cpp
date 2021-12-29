@@ -1,5 +1,6 @@
 #include "../include/painter.h"
 #include "../include/application.h"
+#include <X11/Xlib.h>
 #include <cstring>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
@@ -26,6 +27,14 @@ void Painter::drawString(const char *text, int x, int y) {
 
 void Painter::drawLine(int x1, int y1, int x2, int y2) {
   XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
+}
+
+void Painter::drawCircle(int x, int y, uint width, uint height) {
+  XDrawArc(m_display, m_backBuffer, m_gc, x, y, width, height, 0, 360 * 64);
+}
+
+void Painter::fillCircle(int x, int y, uint width, uint height) {
+  XFillArc(m_display, m_backBuffer, m_gc, x, y, width, height, 0, 360 * 64);
 }
 
 void Painter::drawPoint(int x, int y) {
