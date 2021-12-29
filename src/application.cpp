@@ -1,5 +1,6 @@
 #include "../include/application.h"
 #include "../include/typedefs.h"
+#include <X11/Xutil.h>
 #include <unistd.h>
 #define FPS 120
 
@@ -27,6 +28,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
 
   m_window = createWindow(m_display, {0, 0, 1, 1}, attr);
   setSize(m_width, m_height);
+
   if (isModal) {
     XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
   } else {
@@ -43,6 +45,20 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
 }
 
+void Application::setType(std::string type) {
+  // addWindowState(m_display, m_window, "ABOVE");
+  // setWindowType(m_display, m_window, "UTILITY");
+  // DOCKAPP needs proper initialization afterwards (not to seen in taskbar, but be seen in system-tray)
+  // setWindowType(m_display, m_window, "DOCK");
+  // setWindowType(m_display, m_window, "NOTIFICATION");
+  // NOICONIFY is only relevant if there's NOTASKBAR, vice-versa, and is more important
+  // setWindowType(m_display, m_window, "DIALOG");
+  // (not to have minimize-icon) than NOMAXIMIZE, ALWAYSONTOP can be set later
+  // setWindowType(m_display, m_window, "TOOLBAR");
+  // setWindowType(m_display, m_window, "MENU");
+  // setWindowType(m_display, m_window, "NORMAL"); // printf("%d\n",options);
+}
+
 Application *Application::instance() {
   return m_instance;
 }
@@ -50,6 +66,14 @@ Application *Application::instance() {
 void Application::setSize(unsigned int w, unsigned int h) {
   m_width = w;
   m_height = h;
+
+  XSizeHints sizehints;
+  sizehints.flags = PMinSize | PMaxSize;
+  sizehints.min_width = w;
+  sizehints.max_width = w;
+  sizehints.min_height = h;
+  sizehints.max_height = h;
+  XSetNormalHints(m_display, m_window, &sizehints);
   XMoveResizeWindow(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
 }
 
@@ -131,6 +155,19 @@ void Application::checkForExit() {
 void Application::processEvents() {
   m_layout->updatePosition();
 
+  if (m_event.type == ConfigureNotify) {
+    /*
+    setSize(m_width, m_height);
+    if ((uint)m_event.xconfigure.width != m_width || (uint)m_event.xconfigure.height != m_height) {
+      // if ((event.xconfigure.x!=ewin->x || event.xconfigure.y!=ewin->y)) break;
+      // ewin->resizecnt++;    // ewin->x=event.xconfigure.x; ewin->y=event.xconfigure.y;
+      m_width = m_event.xconfigure.width;
+      m_height = m_event.xconfigure.height;
+    }
+    */
+    return;
+  }
+
   if (m_event.type == ButtonPress && getButton(m_event.xbutton.button) == MouseButton::Left) {
     m_focusedWindow = m_event.xbutton.window;
   }
@@ -149,8 +186,10 @@ void Application::exec() {
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
 
   while (!m_shouldClose) {
-    XNextEvent(m_display, &m_event);
-    processEvents();
+    while (eventPending()) {
+      XNextEvent(m_display, &m_event);
+      processEvents();
+    }
     usleep(1000 * 1000 / FPS);
   }
 }

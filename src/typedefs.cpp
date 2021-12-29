@@ -81,3 +81,23 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
   XMapWindow(dpy, w);
   return w;
 }
+
+Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite) {
+  Atom wmatom = XInternAtom(dpy, data, False);
+  XChangeProperty(dpy, w, XInternAtom(dpy, property.c_str(), False), XA_ATOM, 32,
+                  overwrite ? PropModeReplace : PropModeAppend, (unsigned char *)&wmatom, 1);
+  return wmatom;
+}
+
+Atom addWindowState(Display *dpy, Window w, std::string type) {
+  std::string prop = "_NET_WM_STATE_" + type;
+  return changeWMprop(dpy, w, "_NET_WM_STATE", prop.c_str(), False);
+}
+
+void setWindowType(Display *dpy, Window w, std::string type) {
+  // called when creating window, preferably not called afterwards
+  // 64 Window-Manager property text max. size
+  std::string prop = "_NET_WM_WINDOW_TYPE_" + type;
+  // printf("Setting window as type %s\n",type);
+  changeWMprop(dpy, w, "_NET_WM_WINDOW_TYPE", prop.c_str(), True);
+}
