@@ -2,6 +2,8 @@
 #include "rect.h"
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
+#include <X11/Xft/Xft.h>
+#include <X11/extensions/Xdbe.h>
 #include <X11/extensions/Xrandr.h>
 
 void loadXdbeExtension(Display *dpy);
@@ -12,3 +14,5 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p = 
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
+
+XftDraw *createXftDraw(Display *d, XdbeBackBuffer buffer);

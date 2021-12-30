@@ -1,5 +1,6 @@
 #include "../include/application.h"
 #include "../include/typedefs.h"
+#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <unistd.h>
@@ -21,13 +22,18 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
 
   getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
 
-  XSetWindowAttributes attr = {
-      .background_pixel = 0xFFFFFF,
-      .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
+  XVisualInfo vinfo;
+  XMatchVisualInfo(m_display, DefaultScreen(m_display), 32, TrueColor, &vinfo);
+
+  XSetWindowAttributes attrs = {
+      .background_pixel = 0xff000000,
+      .border_pixel = 0,
+      .event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask,
       .override_redirect = isModal,
+      .colormap = XCreateColormap(m_display, DefaultRootWindow(m_display), vinfo.visual, AllocNone),
   };
 
-  m_window = createWindow(m_display, {0, 0, 1, 1}, attr);
+  m_window = createWindow(m_display, {0, 0, 1, 1}, attrs, DefaultRootWindow(m_display));
   setSize(m_width, m_height);
 
   if (isModal) {
@@ -44,6 +50,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
+  XMapWindow(m_display, m_window);
 }
 
 void Application::setType(std::string type) {
@@ -189,6 +196,9 @@ void Application::processEvents() {
 void Application::exec() {
   auto *widget = m_layout->getFirstWidget();
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
+
+  for (auto &w : m_layout->getWidgets())
+    XMapWindow(m_display, w->id());
 
   while (!m_shouldClose) {
     while (eventPending()) {

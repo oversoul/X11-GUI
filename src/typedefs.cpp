@@ -1,7 +1,10 @@
 #include "../include/typedefs.h"
+#include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>
 #include <iostream>
 #include <stdexcept>
+
+#include <X11/extensions/Xcomposite.h>
 
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;
@@ -67,7 +70,35 @@ void getMonitorSize(Display *dpy, unsigned int *width, unsigned int *height) {
   }
 }
 
+int test(Display *d, Rect r, XSetWindowAttributes attr, Window p) {
+  if (p == (long unsigned int)-1) {
+    p = DefaultRootWindow(d);
+  }
+  XVisualInfo vinfo;
+  XMatchVisualInfo(d, DefaultScreen(d), 32, TrueColor, &vinfo);
+
+  XSetWindowAttributes attrs;
+  attrs.colormap = XCreateColormap(d, DefaultRootWindow(d), vinfo.visual, AllocNone);
+  attrs.border_pixel = 0;
+  attrs.background_pixel = attr.background_pixel;
+  attrs.event_mask = attr.event_mask;
+
+  unsigned long mask = CWColormap | CWBorderPixel | CWBackPixel | CWEventMask;
+  Window win = XCreateWindow(d, p, r.x, r.y, r.w, r.h, 0, vinfo.depth, InputOutput, vinfo.visual, mask, &attrs);
+  XMapWindow(d, win);
+  return win;
+}
+
+XftDraw *createXftDraw(Display *d, XdbeBackBuffer buffer) {
+  XVisualInfo vinfo;
+  int screen = DefaultScreen(d);
+  XMatchVisualInfo(d, screen, 32, TrueColor, &vinfo);
+  Colormap colormap = XCreateColormap(d, DefaultRootWindow(d), vinfo.visual, AllocNone);
+  return XftDrawCreate(d, buffer, vinfo.visual, colormap);
+}
+
 Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
+  return test(dpy, r, attr, p);
   int screen = DefaultScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
@@ -76,7 +107,7 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
     p = DefaultRootWindow(dpy);
   }
 
-  unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
+  unsigned long mask = CWBackPixel | CWEventMask;
   auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
   XMapWindow(dpy, w);
   return w;
