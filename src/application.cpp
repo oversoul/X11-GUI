@@ -1,5 +1,6 @@
 #include "../include/application.h"
 #include "../include/typedefs.h"
+#include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <unistd.h>
 #define FPS 120
@@ -61,6 +62,10 @@ void Application::setType(std::string type) {
 
 Application *Application::instance() {
   return m_instance;
+}
+
+void Application::setBackground(unsigned long color) {
+  XSetWindowBackground(m_display, m_window, color);
 }
 
 void Application::setSize(unsigned int w, unsigned int h) {
