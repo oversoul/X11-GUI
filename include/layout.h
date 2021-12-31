@@ -10,10 +10,10 @@ class Layout {
 public:
   void setRect(Rect r);
   const Rect getRect() const;
-  void setFullSize(unsigned int = 0);
-  void setSpaceBetween(unsigned int);
+  void setSpaceBetween(uint);
+  void setFullSize(uint = 0, uint = 0);
   const Widget *getFirstWidget() const;
-  void addWidget(Widget *widget, unsigned int w = 1);
+  void addWidget(Widget *widget, uint w = 1);
 
   virtual void updatePosition() {
     assert(false && "Use VLayout / HLayout");
@@ -21,9 +21,9 @@ public:
 
 protected:
   Rect m_rect = {0, 0, 1, 1};
-  unsigned int m_spaceBetween = 0;
+  uint m_spaceBetween = 0;
+  std::vector<uint> m_weights;
   std::vector<Widget *> m_widgets;
-  std::vector<unsigned int> m_weights;
 
   const std::vector<Widget *> getWidgets() const {
     return m_widgets;

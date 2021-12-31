@@ -12,6 +12,9 @@ FontSystem::~FontSystem() {
 }
 
 void FontSystem::setFont(std::string name, uint size) {
+  if (m_area != nullptr)
+    XftFontClose(m_display, m_area);
+
   int s = DefaultScreen(m_display);
   m_area = XftFontOpenName(m_display, s, (name + "-" + std::to_string(size)).c_str());
 

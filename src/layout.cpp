@@ -13,12 +13,12 @@ void Layout::setSpaceBetween(unsigned int sb) {
   m_spaceBetween = sb;
 }
 
-void Layout::setFullSize(unsigned int padding) {
+void Layout::setFullSize(uint vert, uint hor) {
   m_rect = {
-      .x = padding,
-      .y = padding,
-      .w = Application::instance()->width() - padding * 2,
-      .h = Application::instance()->height() - padding,
+      .x = hor,
+      .y = vert,
+      .w = Application::instance()->width() - hor * 2,
+      .h = Application::instance()->height() - vert,
   };
 }
 
