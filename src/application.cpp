@@ -78,7 +78,7 @@ FontSystem *Application::font() {
   return m_font;
 }
 
-void Application::setSize(unsigned int w, unsigned int h) {
+void Application::setSize(uint w, uint h) {
   m_width = w;
   m_height = h;
 
@@ -92,11 +92,11 @@ void Application::setSize(unsigned int w, unsigned int h) {
   XMoveResizeWindow(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
 }
 
-const unsigned int Application::width() const {
+const uint Application::width() const {
   return m_width;
 }
 
-const unsigned int Application::height() const {
+const uint Application::height() const {
   return m_height;
 }
 

@@ -12,6 +12,132 @@
       "-I",
       "/usr/include/freetype2",
       "-c",
+      "src/application.cpp",
+      "-o",
+      "build/src/application.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/application.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/application.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/button.cpp",
+      "-o",
+      "build/src/button.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/button.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/button.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/font.cpp",
+      "-o",
+      "build/src/font.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/font.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/font.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/label.cpp",
+      "-o",
+      "build/src/label.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/label.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/label.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/layout.cpp",
+      "-o",
+      "build/src/layout.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/layout.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/layout.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/listview.cpp",
+      "-o",
+      "build/src/listview.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/listview.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/listview.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
       "src/painter.cpp",
       "-o",
       "build/src/painter.o"
@@ -19,6 +145,69 @@
     "directory": "/home/ae/Code/clang/notes/xgui/lib",
     "file": "/home/ae/Code/clang/notes/xgui/lib/src/painter.cpp",
     "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/painter.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/textinput.cpp",
+      "-o",
+      "build/src/textinput.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/textinput.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/textinput.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/typedefs.cpp",
+      "-o",
+      "build/src/typedefs.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/typedefs.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/typedefs.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-10",
+      "-Wall",
+      "-ansi",
+      "-std=c++0x",
+      "-c",
+      "-fpic",
+      "-I",
+      "include/",
+      "-I",
+      "/usr/include/freetype2",
+      "-c",
+      "src/widget.cpp",
+      "-o",
+      "build/src/widget.o"
+    ],
+    "directory": "/home/ae/Code/clang/notes/xgui/lib",
+    "file": "/home/ae/Code/clang/notes/xgui/lib/src/widget.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/lib/build/src/widget.o"
   },
   {
     "arguments": [

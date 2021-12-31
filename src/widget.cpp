@@ -70,15 +70,15 @@ void Widget::setRect(Rect r) {
   m_rect = r;
 }
 
-void Widget::setWidth(unsigned int w) {
+void Widget::setWidth(uint w) {
   m_rect.w = w;
 }
 
-void Widget::setHeight(unsigned int h) {
+void Widget::setHeight(uint h) {
   m_rect.h = h;
 }
 
-void Widget::setPosition(unsigned int x, unsigned int y) {
+void Widget::setPosition(uint x, uint y) {
   m_rect.x = x;
   m_rect.y = y;
 }

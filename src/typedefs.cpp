@@ -59,7 +59,7 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
   return -1;
 }
 
-void getMonitorSize(Display *dpy, unsigned int *width, unsigned int *height) {
+void getMonitorSize(Display *dpy, uint *width, uint *height) {
   int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
   if (getScreens(dpy, 1, &left_x, &right_x, &top_y, &bottom_y) < 0) {
     *width = XDisplayWidth(dpy, XDefaultScreen(dpy));
@@ -75,7 +75,7 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
 
-  if (p == (long unsigned int)-1) {
+  if (p == (unsigned long)-1) {
     p = DefaultRootWindow(dpy);
   }
 

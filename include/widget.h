@@ -25,9 +25,9 @@ public:
   void setRect(Rect r);
   const Rect getRect() const;
 
-  void setWidth(unsigned int w);
-  void setHeight(unsigned int h);
-  void setPosition(unsigned int x, unsigned int y);
+  void setWidth(uint w);
+  void setHeight(uint h);
+  void setPosition(uint x, uint y);
 
   const bool isFocused() const;
   void updateSizeAndPos();

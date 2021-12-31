@@ -31,10 +31,10 @@ public:
 
 private:
   void recalculateItems();
-  unsigned int m_areas = 0;
-  unsigned int m_scroll = 0;
-  unsigned int m_itemHeight = 35;
-  unsigned int m_selectedItem = 0;
+  uint m_areas = 0;
+  uint m_scroll = 0;
+  uint m_itemHeight = 35;
+  uint m_selectedItem = 0;
 
   std::vector<Rect> m_rects;
   std::vector<std::string> m_rows;

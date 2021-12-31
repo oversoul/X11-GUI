@@ -1,6 +1,6 @@
-#include "../include/typedefs.h"
 #include "../include/listview.h"
 #include "../include/application.h"
+#include "../include/typedefs.h"
 #include <X11/keysym.h>
 #include <algorithm>
 #include <vector>
@@ -43,18 +43,18 @@ void ListView::recalculateItems() {
     return;
 
   m_rects.clear();
-  unsigned int width = m_rect.w - 2;
-  unsigned int height = m_itemHeight - 2;
+  uint width = m_rect.w - 2;
+  uint height = m_itemHeight - 2;
   m_areas = m_rect.h / m_itemHeight;
 
-  for (unsigned int i = 0; i < m_areas; ++i) {
-    unsigned int ypos = m_itemHeight * i;
+  for (uint i = 0; i < m_areas; ++i) {
+    uint ypos = m_itemHeight * i;
     m_rects.push_back({1, ypos + 1, width, height});
   }
 }
 
 void ListView::selectClosestIndex(int position) {
-  unsigned int index = position / m_itemHeight;
+  uint index = position / m_itemHeight;
   if (index < m_areas)
     m_selectedItem = index;
 }
@@ -131,7 +131,7 @@ void ListView::paintEvent(XEvent &e) {
 
   unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
 
-  for (unsigned int i = 0; i < m_areas; ++i) {
+  for (uint i = 0; i < m_areas; ++i) {
     if (i + m_scroll == m_rows.size())
       break;
 

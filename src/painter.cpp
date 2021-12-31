@@ -82,7 +82,7 @@ void Painter::setBackground(unsigned long color) {
   XSetWindowBackground(m_display, m_window, color);
 }
 
-unsigned int Painter::textWidth(const char *text) {
+uint Painter::textWidth(const char *text) {
   XGlyphInfo extents = {};
   auto font = Application::instance()->font()->getFontArea();
   XftTextExtentsUtf8(m_display, font, (FcChar8 *)text, strlen(text), &extents);

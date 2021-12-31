@@ -25,7 +25,7 @@ public:
   void fillCircle(int x, int y, uint width, uint height);
   void setForeground(unsigned long color);
   void setBackground(unsigned long color);
-  unsigned int textWidth(const char *text);
+  uint textWidth(const char *text);
   void swapBuffers();
 
 private:

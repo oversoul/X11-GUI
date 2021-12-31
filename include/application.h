@@ -27,7 +27,7 @@ public:
 
   bool isFocused(Window id);
 
-  void setSize(unsigned int, unsigned int);
+  void setSize(uint, uint);
   void setLayout(Layout &);
   void setLayout(Layout *);
   void addWidget(Widget *);
@@ -41,18 +41,18 @@ public:
   const Painter *painter() const;
   const Window focusedWindow() const;
 
-  const unsigned int width() const;
-  const unsigned int height() const;
+  const uint width() const;
+  const uint height() const;
 
 protected:
   void checkForExit();
   void processEvents();
 
 private:
-  unsigned int m_width = 0;
-  unsigned int m_height = 0;
-  unsigned int m_screenWidth = 1;
-  unsigned int m_screenHeight = 1;
+  uint m_width = 0;
+  uint m_height = 0;
+  uint m_screenWidth = 1;
+  uint m_screenHeight = 1;
 
   int m_root;
   int m_screen;
