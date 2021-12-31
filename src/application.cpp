@@ -1,5 +1,5 @@
-#include "../include/application.h"
-#include "../include/typedefs.h"
+#include "application.h"
+#include "typedefs.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <unistd.h>
@@ -44,6 +44,8 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
 
   m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
+
+  m_font = new FontSystem(m_display, "arial", 12);
 }
 
 void Application::setType(std::string type) {
@@ -66,6 +68,14 @@ Application *Application::instance() {
 
 void Application::setBackground(unsigned long color) {
   XSetWindowBackground(m_display, m_window, color);
+}
+
+void Application::setFont(std::string name, uint size) {
+  m_font->setFont(name, size);
+}
+
+FontSystem *Application::font() {
+  return m_font;
 }
 
 void Application::setSize(unsigned int w, unsigned int h) {

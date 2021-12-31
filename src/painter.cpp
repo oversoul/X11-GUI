@@ -9,30 +9,12 @@
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
   int s = XDefaultScreen(display);
-  m_font = XftFontOpenName(display, s, "SF Mono-12");
-  if (!m_font) {
-    fprintf(stderr, "Couldn't open font.\n");
-    exit(1);
-  }
+
   m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
   m_draw = XftDrawCreate(display, m_backBuffer, DefaultVisual(display, s), DefaultColormap(display, s));
 
-  memset(&m_color, 0, sizeof(XftColor));
-
-  if (!XftColorAllocName(display, DefaultVisual(display, s), DefaultColormap(display, s), "#000000", &m_color)) {
-    XftDrawDestroy(m_draw);
-    throw std::runtime_error("Couldn't create xft drawing area.");
-  }
-  /*
-  m_font = XLoadQueryFont(m_display, "-*-clean-*-*-normal-*-15-150-*-*-*-*-*-*");
-
-  if (!m_font) {
-    printf("Failed to load font!\n");
-    m_font = XLoadQueryFont(m_display, "fixed");
-  }
-
-  XSetFont(m_display, m_gc, m_font->fid);
-  */
+  initializeColor("#000000");
+  initializeColor("#FFFFFF");
 }
 
 Painter::~Painter() {
@@ -40,9 +22,26 @@ Painter::~Painter() {
   XFreeGC(m_display, m_gc);
 }
 
-void Painter::drawString(const char *text, int x, int y) {
-  XftDrawStringUtf8(m_draw, &m_color, m_font, x, y + m_font->ascent / 2, (FcChar8 *)text, strlen(text));
-  // XDrawString(m_display, m_backBuffer, m_gc, x, y + (m_font->ascent / 2), text, strlen(text));
+void Painter::initializeColor(std::string color) {
+  if (m_colors.count(color))
+    return;
+
+  int s = XDefaultScreen(m_display);
+  int cm = XDefaultColormap(m_display, s);
+  Visual *dv = DefaultVisual(m_display, s);
+
+  memset(&m_colors[color], 0, sizeof(XftColor));
+
+  if (!XftColorAllocName(m_display, dv, cm, color.c_str(), &m_colors[color])) {
+    XftDrawDestroy(m_draw);
+    throw std::runtime_error("Couldn't create xft drawing area.");
+  }
+}
+
+void Painter::drawString(const char *text, int x, int y, std::string color) {
+  auto font = Application::instance()->font()->getFontArea();
+  XftColor c = (m_colors.count(color)) ? m_colors[color] : m_colors["#000000"];
+  XftDrawStringUtf8(m_draw, &c, font, x, y + font->ascent / 2, (FcChar8 *)text, strlen(text));
 }
 
 void Painter::drawLine(int x1, int y1, int x2, int y2) {
@@ -85,9 +84,9 @@ void Painter::setBackground(unsigned long color) {
 
 unsigned int Painter::textWidth(const char *text) {
   XGlyphInfo extents = {};
-  XftTextExtentsUtf8(m_display, m_font, (FcChar8 *)text, strlen(text), &extents);
+  auto font = Application::instance()->font()->getFontArea();
+  XftTextExtentsUtf8(m_display, font, (FcChar8 *)text, strlen(text), &extents);
   return extents.width;
-  // return XTextWidth(m_font, text, strlen(text));
 }
 
 void Painter::swapBuffers() {

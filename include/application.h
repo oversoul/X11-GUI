@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "font.h"
 #include "layout.h"
 #include "painter.h"
 #include "widget.h"
@@ -30,6 +31,9 @@ public:
   void setLayout(Layout &);
   void setLayout(Layout *);
   void addWidget(Widget *);
+
+  FontSystem *font();
+  void setFont(std::string name, uint size = 12);
 
   Display *display() const;
   const Window id() const;
@@ -61,6 +65,7 @@ private:
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
   Layout *m_layout = nullptr;
+  FontSystem *m_font = nullptr;
   Display *m_display = nullptr;
 
   static Application *m_instance;
