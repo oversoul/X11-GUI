@@ -197,6 +197,10 @@ void Application::processEvents() {
 }
 
 void Application::exec() {
+  XMapWindow(m_display, m_window);
+  for (auto &w : m_layout->getWidgets()) {
+    XMapWindow(m_display, w->id());
+  }
   auto *widget = m_layout->getFirstWidget();
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
 
