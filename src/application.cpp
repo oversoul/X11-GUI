@@ -66,7 +66,7 @@ Application *Application::instance() {
   return m_instance;
 }
 
-void Application::setBackground(unsigned long color) {
+void Application::setBg(unsigned long color) {
   XSetWindowBackground(m_display, m_window, color);
 }
 

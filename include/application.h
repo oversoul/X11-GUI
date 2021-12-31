@@ -16,8 +16,7 @@ public:
   ~Application();
   static Application *instance();
   void setType(std::string type);
-
-  void setBackground(unsigned long color);
+  void setBg(unsigned long color);
 
   void exec();
   void clear();
