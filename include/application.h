@@ -15,6 +15,8 @@ public:
   Application(std::string title, bool isModal = false);
   ~Application();
   static Application *instance();
+
+  void setName(char *name);
   void setType(std::string type);
   void setBg(unsigned long color);
 

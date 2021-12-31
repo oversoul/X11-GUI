@@ -22,7 +22,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
   getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
 
   XSetWindowAttributes attr = {
-      .background_pixel = 0xFFFFFF,
+      .background_pixel = 0x000000,
       .event_mask = ExposureMask | KeyPressMask | ButtonPressMask,
       .override_redirect = isModal,
   };
@@ -46,6 +46,11 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
   XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
 
   m_font = new FontSystem(m_display, "arial", 12);
+}
+
+void Application::setName(char *name) {
+  XClassHint class_hints = {.res_name = name, .res_class = name};
+  XSetClassHint(m_display, m_window, &class_hints);
 }
 
 void Application::setType(std::string type) {
