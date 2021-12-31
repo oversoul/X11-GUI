@@ -9,6 +9,8 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
 void getMonitorSize(Display *dpy, unsigned int *width, unsigned int *height);
 Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p = -1);
 
-Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
+Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
+
+unsigned long stringToKeysym(const char *key);

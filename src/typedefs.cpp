@@ -5,9 +5,12 @@
 
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;
-  if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion)) {
+  if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion))
     throw std::runtime_error("XDBE is not supported!!!");
-  }
+}
+
+unsigned long stringToKeysym(const char *key) {
+  return XStringToKeysym(key);
 }
 
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {
@@ -84,8 +87,8 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
 
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite) {
   Atom wmatom = XInternAtom(dpy, data, False);
-  XChangeProperty(dpy, w, XInternAtom(dpy, property.c_str(), False), XA_ATOM, 32,
-                  overwrite ? PropModeReplace : PropModeAppend, (unsigned char *)&wmatom, 1);
+  Atom atom = XInternAtom(dpy, property.c_str(), False);
+  XChangeProperty(dpy, w, atom, XA_ATOM, 32, overwrite ? PropModeReplace : PropModeAppend, (unsigned char *)&wmatom, 1);
   return wmatom;
 }
 
