@@ -127,7 +127,7 @@ void ListView::paintEvent(XEvent &e) {
   m_painter->clear();
 
   m_painter->setForeground(0x000000);
-  m_painter->drawRect(0, 0, m_rect.w - 1, m_rect.h - 1);
+  m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
 
@@ -137,7 +137,7 @@ void ListView::paintEvent(XEvent &e) {
 
     Rect r = m_rects[i];
     m_painter->setForeground(m_selectedItem == i ? sColor : 0xFFFFFF);
-    m_painter->fillRect(r.x, r.y, r.w, r.h);
+    m_painter->fillRect(r);
     m_painter->setForeground(m_selectedItem == i ? 0xFFFFFF : 0x000000);
     m_painter->drawString(m_rows[i + m_scroll].c_str(), m_rect.x - 5, r.y + r.h / 2);
   }

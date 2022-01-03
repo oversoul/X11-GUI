@@ -37,7 +37,7 @@ bool Button::mousePressEvent(XButtonEvent &e, MouseButton) {
 void Button::paintEvent(XEvent &) {
   m_painter->clear();
   m_painter->setForeground(m_bgColor);
-  m_painter->fillRect(0, 0, m_rect.w, m_rect.h);
+  m_painter->fillRect({0, 0, m_rect.w, m_rect.h});
   m_painter->setForeground(0x000000);
   uint width = m_painter->textWidth(m_label.c_str());
   m_painter->drawString(m_label.c_str(), m_rect.w / 2 - width / 2, m_rect.h / 2);

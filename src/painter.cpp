@@ -48,12 +48,12 @@ void Painter::drawLine(int x1, int y1, int x2, int y2) {
   XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
 }
 
-void Painter::drawCircle(int x, int y, uint width, uint height) {
-  XDrawArc(m_display, m_backBuffer, m_gc, x, y, width, height, 0, 360 * 64);
+void Painter::drawCircle(Rect r) {
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h, 0, 360 * 64);
 }
 
-void Painter::fillCircle(int x, int y, uint width, uint height) {
-  XFillArc(m_display, m_backBuffer, m_gc, x, y, width, height, 0, 360 * 64);
+void Painter::fillCircle(Rect r) {
+  XFillArc(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h, 0, 360 * 64);
 }
 
 void Painter::drawPoint(int x, int y) {
@@ -66,12 +66,12 @@ void Painter::clear(unsigned long color) {
                  Application::instance()->height());
 }
 
-void Painter::drawRect(int x, int y, int width, int height) {
-  XDrawRectangle(m_display, m_backBuffer, m_gc, x, y, width, height);
+void Painter::drawRect(Rect r) {
+  XDrawRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
 }
 
-void Painter::fillRect(int x, int y, int width, int height) {
-  XFillRectangle(m_display, m_backBuffer, m_gc, x, y, width, height);
+void Painter::fillRect(Rect r) {
+  XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
 }
 
 void Painter::setForeground(unsigned long color) {
