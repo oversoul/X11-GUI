@@ -1,8 +1,6 @@
 #pragma once
-#include "rect.h"
 #include "painter.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
+#include "rect.h"
 #include <assert.h>
 #include <iostream>
 
@@ -18,7 +16,6 @@ public:
 
   Widget();
   ~Widget();
-
 
   void newWindow(XSetWindowAttributes attr, bool isChildWindow = true);
 

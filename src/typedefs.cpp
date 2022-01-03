@@ -3,6 +3,15 @@
 #include <iostream>
 #include <stdexcept>
 
+Display *openDisplay() {
+  Display *dpy = XOpenDisplay(getenv("DISPLAY"));
+  if (!dpy) {
+    fprintf(stderr, "Couldn't open Display\n");
+    exit(1);
+  }
+  return dpy;
+}
+
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;
   if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion))
@@ -71,13 +80,13 @@ void getMonitorSize(Display *dpy, uint *width, uint *height) {
   }
 }
 
-Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
+Window createWindow(Display *dpy, XSetWindowAttributes attr, Window p) {
   int screen = DefaultScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
 
   unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
-  auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
+  auto w = XCreateWindow(dpy, p, 0, 1, 1, 1, 0, depth, InputOutput, visual, mask, &attr);
   return w;
 }
 

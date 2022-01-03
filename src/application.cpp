@@ -12,14 +12,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_display = XOpenDisplay(getenv("DISPLAY"));
-
-  if (!m_display) {
-    fprintf(stderr, "Couldn't open Display\n");
-    exit(1);
-  }
-
-  getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
+  m_display = openDisplay();
 
   XSetWindowAttributes attr = {
       .background_pixel = 0x000000,
@@ -27,7 +20,8 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
       .override_redirect = isModal,
   };
 
-  m_window = createWindow(m_display, {0, 0, 1, 1}, attr, DefaultRootWindow(m_display));
+  getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
+  m_window = createWindow(m_display, attr, DefaultRootWindow(m_display));
   setSize(m_width, m_height);
 
   if (isModal) {

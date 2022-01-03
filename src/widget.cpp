@@ -1,19 +1,17 @@
 #include "../include/widget.h"
 #include "../include/application.h"
 #include "../include/typedefs.h"
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+
+Widget::Widget() : m_display(Application::instance()->display()) {
+}
 
 const Window Widget::id() const {
   return m_window;
 }
 
-Widget::Widget() : m_display(Application::instance()->display()) {
-}
-
 void Widget::newWindow(XSetWindowAttributes attr, bool isChildWindow) {
   Window p = (isChildWindow) ? Application::instance()->window() : DefaultRootWindow(m_display);
-  m_window = createWindow(m_display, {0, 0, 1, 1}, attr, p);
+  m_window = createWindow(m_display, attr, p);
   m_painter = new Painter(m_display, m_window);
 }
 
