@@ -2,6 +2,7 @@
 #include "../include/application.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
+#include <X11/extensions/Xdbe.h>
 #include <X11/extensions/Xrender.h>
 #include <cstring>
 #include <iostream>
@@ -18,6 +19,7 @@ Painter::Painter(Display *display, Window window) : m_window(window), m_display(
 }
 
 Painter::~Painter() {
+  XdbeDeallocateBackBufferName(m_display, m_backBuffer);
   XftDrawDestroy(m_draw);
   XFreeGC(m_display, m_gc);
 }
@@ -40,7 +42,7 @@ void Painter::initializeColor(std::string color) {
 
 void Painter::drawString(const char *text, int x, int y, std::string color) {
   auto font = Application::instance()->font()->getFontArea();
-  XftColor c = (m_colors.count(color)) ? m_colors[color] : m_colors["#000000"];
+  XftColor c = m_colors.count(color) ? m_colors[color] : m_colors["#000000"];
   XftDrawStringUtf8(m_draw, &c, font, x, y + font->ascent / 2, (FcChar8 *)text, strlen(text));
 }
 
