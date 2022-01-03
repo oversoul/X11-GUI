@@ -33,6 +33,7 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
   for (int i = 0; i < nmonitors; i++) {
     XRRCrtcInfo *screen_info = XRRGetCrtcInfo(dpy, screen_res, screen_res->crtcs[i]);
     // option flag for using the "anchor" (top left corner)  of a window to determine what screen it belongs to
+    /*
     if (use_anchors == 1) {
       det_x = win_attr.x;
       det_y = win_attr.y;
@@ -40,7 +41,7 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
     } else {
       det_x = win_attr.x + ((win_attr.width) / 2);
       det_y = win_attr.y + ((win_attr.height) / 2);
-    }
+    }*/
 
     // If the window is on the ith screen in the x
     if (det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) {
@@ -61,7 +62,7 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
 
 void getMonitorSize(Display *dpy, uint *width, uint *height) {
   int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
-  if (getScreens(dpy, 1, &left_x, &right_x, &top_y, &bottom_y) < 0) {
+  if (getScreens(dpy, 0, &left_x, &right_x, &top_y, &bottom_y) < 0) {
     *width = XDisplayWidth(dpy, XDefaultScreen(dpy));
     *height = XDisplayHeight(dpy, XDefaultScreen(dpy));
   } else {
