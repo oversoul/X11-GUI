@@ -21,8 +21,7 @@ Label::~Label() {
 }
 
 void Label::paintEvent(XEvent &) {
-  m_painter->clear();
-  m_painter->setForeground(0x000000);
+  m_painter->clear(m_bgColor);
   m_painter->drawString(m_value.c_str(), 0, m_rect.h / 2);
   m_painter->swapBuffers();
 }

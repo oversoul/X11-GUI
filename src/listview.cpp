@@ -7,7 +7,7 @@
 
 ListView::ListView() {
   XSetWindowAttributes attr = {
-      .background_pixel = 0xFFFFFF,
+      .background_pixel = m_bgColor,
       .event_mask = ExposureMask | EnterWindowMask | LeaveWindowMask | ButtonPressMask,
   };
 
@@ -124,9 +124,7 @@ bool ListView::mouseScrollEvent(XButtonEvent &, MouseWheelDirection dir) {
 
 void ListView::paintEvent(XEvent &e) {
   recalculateItems();
-  m_painter->clear();
-
-  m_painter->setForeground(0x000000);
+  m_painter->clear(m_bgColor);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;

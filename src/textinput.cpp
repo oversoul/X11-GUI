@@ -47,13 +47,9 @@ bool TextInput::keyReleaseEvent(KeySym, std::string) {
 }
 
 void TextInput::paintEvent(XEvent &) {
-  m_painter->clear();
-  m_painter->setBackground(m_bgColor);
-
+  m_painter->clear(m_bgColor);
   m_painter->setForeground(isFocused() ? 0xff0000 : 0x000000);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
-
-  m_painter->setForeground(0x000000);
   m_painter->drawString(m_value.c_str(), 5, m_rect.h / 2);
   m_painter->swapBuffers();
 }

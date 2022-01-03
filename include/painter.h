@@ -23,10 +23,10 @@ public:
   void fillRect(Rect r);
   void drawCircle(Rect r);
   void fillCircle(Rect r);
+  uint textWidth(const char *text);
   void drawString(const char *text, int x, int y, std::string color = "#000000");
   void setForeground(unsigned long color);
   void setBackground(unsigned long color);
-  uint textWidth(const char *text);
   void swapBuffers();
 
 private:

@@ -35,7 +35,6 @@ private:
   uint m_scroll = 0;
   uint m_itemHeight = 35;
   uint m_selectedItem = 0;
-
   std::vector<Rect> m_rects;
   std::vector<std::string> m_rows;
 };

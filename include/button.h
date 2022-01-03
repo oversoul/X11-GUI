@@ -16,6 +16,5 @@ public:
 
 private:
   std::string m_label;
-  unsigned long m_bgColor = 0xCCCCCC;
   std::function<void()> m_onClickCallback = [] {};
 };

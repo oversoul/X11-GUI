@@ -39,9 +39,7 @@ VLayout::~VLayout() {
 }
 
 void VLayout::updatePosition() {
-  if (m_widgets.empty() || m_widgets.size() != m_weights.size())
-    return;
-  if (m_rect.h <= 1)
+  if ((m_widgets.empty() || m_widgets.size() != m_weights.size()) || m_rect.h <= 1)
     return;
 
   uint totalHeight = m_rect.h - (m_widgets.size() - 1) * m_spaceBetween - m_rect.y;

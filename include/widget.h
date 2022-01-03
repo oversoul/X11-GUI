@@ -22,13 +22,14 @@ public:
   void setRect(Rect r);
   const Rect getRect() const;
 
+  void setBg(ulong c);
   void setWidth(uint w);
   void setHeight(uint h);
   void setPosition(uint x, uint y);
 
-  const bool isFocused() const;
   void updateSizeAndPos();
   bool handleEvent(XEvent &e);
+  const bool isFocused() const;
 
   virtual void paintEvent(XEvent &);
   virtual bool keyPressEvent(KeySym, std::string);
@@ -38,9 +39,9 @@ public:
 
 protected:
   Window m_window;
+  Rect m_rect = {0, 0, 1, 1};
   bool m_needRepaint = true;
   Display *m_display = nullptr;
   Painter *m_painter = nullptr;
   unsigned long m_bgColor = 0xffffff;
-  Rect m_rect = {.x = 0, .y = 0, .w = 1, .h = 1};
 };

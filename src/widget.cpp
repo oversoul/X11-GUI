@@ -64,6 +64,10 @@ bool Widget::handleEvent(XEvent &e) {
   return false;
 };
 
+void Widget::setBg(ulong c) {
+  m_bgColor = c;
+}
+
 void Widget::setRect(Rect r) {
   m_rect = r;
 }
