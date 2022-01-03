@@ -76,10 +76,6 @@ Window createWindow(Display *dpy, Rect r, XSetWindowAttributes attr, Window p) {
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
 
-  if (p == (unsigned long)-1) {
-    p = DefaultRootWindow(dpy);
-  }
-
   unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
   auto w = XCreateWindow(dpy, p, r.x, r.y, r.w, r.h, 0, depth, InputOutput, visual, mask, &attr);
   return w;

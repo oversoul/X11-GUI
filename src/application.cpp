@@ -27,7 +27,7 @@ Application::Application(std::string title, bool isModal) : m_width(640), m_heig
       .override_redirect = isModal,
   };
 
-  m_window = createWindow(m_display, {0, 0, 1, 1}, attr);
+  m_window = createWindow(m_display, {0, 0, 1, 1}, attr, DefaultRootWindow(m_display));
   setSize(m_width, m_height);
 
   if (isModal) {

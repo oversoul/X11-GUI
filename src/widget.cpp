@@ -12,7 +12,7 @@ Widget::Widget() : m_display(Application::instance()->display()) {
 }
 
 void Widget::newWindow(XSetWindowAttributes attr, bool isChildWindow) {
-  Window p = (isChildWindow) ? Application::instance()->window() : -1;
+  Window p = (isChildWindow) ? Application::instance()->window() : DefaultRootWindow(m_display);
   m_window = createWindow(m_display, {0, 0, 1, 1}, attr, p);
   m_painter = new Painter(m_display, m_window);
 }
