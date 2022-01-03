@@ -7,7 +7,7 @@ STANDARD = -std=c++0x
 OBJECTS = $(SRC:%.cpp=$(BUILD)/%.o)
 CFLAGS = -Wall -ansi ${STANDARD} -c -fpic
 LDFLAGS = -lX11 -lXext -lXrandr -lXft
-INCLUDE_DIR = -I include/ -I /usr/include/freetype2
+INCLUDE_DIR = -I include/  `pkg-config --cflags freetype2`
 
 $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
