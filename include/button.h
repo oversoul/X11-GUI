@@ -10,9 +10,9 @@ public:
   Button(std::string);
   ~Button();
   void setLabel(std::string);
-  void paintEvent(XEvent &);
+  void paintEvent(XEvent &) override;
   void setOnClick(std::function<void()>);
-  bool mousePressEvent(XButtonEvent &, MouseButton);
+  bool mousePressEvent(XButtonEvent &, MouseButton) override;
 
 private:
   std::string m_label;

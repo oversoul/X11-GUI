@@ -4,7 +4,13 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 
+typedef struct {
+  KeySym key;
+  std::string text;
+} KeyEvent;
+
 Display *openDisplay();
+KeyEvent eventKeyToString(XEvent e);
 void loadXdbeExtension(Display *dpy);
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 void getMonitorSize(Display *dpy, uint *width, uint *height);

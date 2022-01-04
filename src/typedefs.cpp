@@ -3,12 +3,10 @@
 #include <iostream>
 #include <stdexcept>
 
-
-static int error_handler(Display * d, XErrorEvent * e)
-{
-    std::cerr << "Error minor code: " << e->minor_code << std::endl;
-    std::cerr << "Error code: " << e->error_code << std::endl;
-    return 0;
+static int error_handler(Display *d, XErrorEvent *e) {
+  std::cerr << "Error minor code: " << e->minor_code << std::endl;
+  std::cerr << "Error code: " << e->error_code << std::endl;
+  return 0;
 }
 
 Display *openDisplay() {
@@ -21,6 +19,12 @@ Display *openDisplay() {
   return dpy;
 }
 
+KeyEvent eventKeyToString(XEvent e) {
+  KeySym key;
+  char text[255];
+  XLookupString(&e.xkey, text, 255, &key, 0);
+  return {.key = key, .text = std::string(text)};
+}
 
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;

@@ -12,10 +12,10 @@ public:
   void paint(XEvent &e);
   void setValue(std::string value);
 
-  void paintEvent(XEvent &);
-  bool keyPressEvent(KeySym, std::string);
-  bool keyReleaseEvent(KeySym, std::string);
-  bool mousePressEvent(XButtonEvent &, MouseButton);
+  void paintEvent(XEvent &) override;
+  bool keyPressEvent(KeyEvent) override;
+  bool keyReleaseEvent(KeyEvent) override;
+  bool mousePressEvent(XButtonEvent &, MouseButton) override;
 
 private:
   std::string m_value;

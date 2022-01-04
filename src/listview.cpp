@@ -59,11 +59,11 @@ void ListView::selectClosestIndex(int position) {
     m_selectedItem = index;
 }
 
-bool ListView::keyPressEvent(KeySym key, std::string) {
+bool ListView::keyPressEvent(KeyEvent ke) {
   if (!isFocused())
     return false;
 
-  if (key == XK_Up) {
+  if (ke.key == XK_Up) {
     if (m_selectedItem > 0) {
       m_selectedItem--;
     } else {
@@ -72,7 +72,7 @@ bool ListView::keyPressEvent(KeySym key, std::string) {
     return true;
   }
 
-  if (key == XK_Down) {
+  if (ke.key == XK_Down) {
     if (m_selectedItem < m_areas - 1) {
       m_selectedItem++;
     } else {

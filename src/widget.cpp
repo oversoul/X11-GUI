@@ -46,15 +46,14 @@ MouseWheelDirection getDirection(int btn) {
 bool Widget::handleEvent(XEvent &e) {
   switch (e.type) {
   case KeyPress:
-  case KeyRelease:
-    KeySym key;
-    char text[255];
-    XLookupString(&e.xkey, text, 255, &key, 0);
+  case KeyRelease: {
+    KeyEvent key = eventKeyToString(e);
     if (e.type == KeyPress)
-      return keyPressEvent(key, std::string(text));
+      return keyPressEvent(key);
     if (e.type == KeyRelease)
-      return keyReleaseEvent(key, std::string(text));
+      return keyReleaseEvent(key);
     return false;
+  }
   case ButtonPress:
     if (getButton(e.xbutton.button) == MouseButton::Scroll) {
       return mouseScrollEvent(e.xbutton, getDirection(e.xbutton.button));
@@ -96,11 +95,11 @@ void Widget::updateSizeAndPos() {
 void Widget::paintEvent(XEvent &) {
 }
 
-bool Widget::keyPressEvent(KeySym, std::string) {
+bool Widget::keyPressEvent(KeyEvent) {
   return false;
 }
 
-bool Widget::keyReleaseEvent(KeySym, std::string) {
+bool Widget::keyReleaseEvent(KeyEvent) {
   return false;
 }
 

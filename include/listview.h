@@ -18,16 +18,12 @@ public:
   void addItem(std::string);
   void addItemAt(int, std::string);
 
-  void paintEvent(XEvent &);
   void selectClosestIndex(int);
 
-  bool keyPressEvent(KeySym, std::string);
-  bool mousePressEvent(XButtonEvent &, MouseButton);
-  bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection);
-
-  const Window id() const {
-    return m_window;
-  }
+  void paintEvent(XEvent &) override;
+  bool keyPressEvent(KeyEvent) override;
+  bool mousePressEvent(XButtonEvent &, MouseButton) override;
+  bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection) override;
 
 private:
   void recalculateItems();

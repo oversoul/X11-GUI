@@ -25,24 +25,24 @@ bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
   return false;
 }
 
-bool TextInput::keyPressEvent(KeySym key, std::string text) {
+bool TextInput::keyPressEvent(KeyEvent ke) {
   if (!isFocused())
     return false;
 
-  if (key == XK_BackSpace) {
+  if (ke.key == XK_BackSpace) {
     if (m_value.size() > 0)
       m_value.pop_back();
     return true;
   }
 
-  if (key == XK_Tab || key == XK_Delete || key == XK_Return)
+  if (ke.key == XK_Tab || ke.key == XK_Delete || ke.key == XK_Return)
     return false;
 
-  m_value += text;
+  m_value += ke.text;
   return true;
 }
 
-bool TextInput::keyReleaseEvent(KeySym, std::string) {
+bool TextInput::keyReleaseEvent(KeyEvent) {
   return false;
 }
 

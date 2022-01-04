@@ -1,6 +1,7 @@
 #pragma once
 #include "painter.h"
 #include "rect.h"
+#include "typedefs.h"
 #include <assert.h>
 #include <iostream>
 
@@ -32,8 +33,8 @@ public:
   const bool isFocused() const;
 
   virtual void paintEvent(XEvent &);
-  virtual bool keyPressEvent(KeySym, std::string);
-  virtual bool keyReleaseEvent(KeySym, std::string);
+  virtual bool keyPressEvent(KeyEvent);
+  virtual bool keyReleaseEvent(KeyEvent);
   virtual bool mousePressEvent(XButtonEvent &, MouseButton);
   virtual bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection);
 
