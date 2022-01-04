@@ -16,7 +16,7 @@ public:
 
   void initializeColor(std::string color);
 
-  void clear(unsigned long = 0xFFFFFF);
+  void clear(ulong color, Rect r);
   void drawPoint(int x, int y);
   void drawLine(int x1, int y1, int x2, int y2);
   void drawRect(Rect r);
@@ -25,19 +25,17 @@ public:
   void fillCircle(Rect r);
   uint textWidth(const char *text);
   void drawString(const char *text, int x, int y, std::string color = "#000000");
-  void setForeground(unsigned long color);
-  void setBackground(unsigned long color);
+  void setForeground(ulong color);
   void swapBuffers();
 
 private:
   GC m_gc;
   Window m_window;
-  Pixmap m_pixmap;
   XdbeBackBuffer m_backBuffer;
   Display *m_display = nullptr;
   FontSystem *m_font = nullptr;
 
-  XftColor m_color;
   XftDraw *m_draw;
+  XftColor m_color;
   std::map<std::string, XftColor> m_colors;
 };

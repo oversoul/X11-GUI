@@ -122,7 +122,7 @@ bool ListView::mouseScrollEvent(MouseEvent e) {
 
 void ListView::paintEvent() {
   recalculateItems();
-  m_painter->clear(m_bgColor);
+  m_painter->clear(m_bgColor, m_rect);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;

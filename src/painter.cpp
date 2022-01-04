@@ -1,6 +1,7 @@
 #include "../include/painter.h"
 #include "../include/application.h"
 #include <X11/Xft/Xft.h>
+#include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>
 #include <X11/extensions/Xrender.h>
 #include <cstring>
@@ -61,10 +62,9 @@ void Painter::drawPoint(int x, int y) {
   XDrawPoint(m_display, m_backBuffer, m_gc, x, y);
 }
 
-void Painter::clear(unsigned long color) {
+void Painter::clear(ulong color, Rect r) {
   XSetForeground(m_display, m_gc, color);
-  XFillRectangle(m_display, m_backBuffer, m_gc, 0, 0, Application::instance()->width(),
-                 Application::instance()->height());
+  XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
 }
 
 void Painter::drawRect(Rect r) {
@@ -75,12 +75,8 @@ void Painter::fillRect(Rect r) {
   XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
 }
 
-void Painter::setForeground(unsigned long color) {
+void Painter::setForeground(ulong color) {
   XSetForeground(m_display, m_gc, color);
-}
-
-void Painter::setBackground(unsigned long color) {
-  XSetWindowBackground(m_display, m_window, color);
 }
 
 uint Painter::textWidth(const char *text) {

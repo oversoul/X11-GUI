@@ -34,7 +34,7 @@ bool Button::mousePressEvent(MouseEvent e) {
 }
 
 void Button::paintEvent() {
-  m_painter->clear(m_bgColor);
+  m_painter->clear(m_bgColor, m_rect);
   uint width = m_painter->textWidth(m_label.c_str());
   m_painter->drawString(m_label.c_str(), m_rect.w / 2 - width / 2, m_rect.h / 2);
   m_painter->swapBuffers();
