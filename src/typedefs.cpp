@@ -3,14 +3,24 @@
 #include <iostream>
 #include <stdexcept>
 
+
+static int error_handler(Display * d, XErrorEvent * e)
+{
+    std::cerr << "Error minor code: " << e->minor_code << std::endl;
+    std::cerr << "Error code: " << e->error_code << std::endl;
+    return 0;
+}
+
 Display *openDisplay() {
   Display *dpy = XOpenDisplay(getenv("DISPLAY"));
   if (!dpy) {
     fprintf(stderr, "Couldn't open Display\n");
     exit(1);
   }
+  XSetErrorHandler(error_handler);
   return dpy;
 }
+
 
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;

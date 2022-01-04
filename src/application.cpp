@@ -78,15 +78,10 @@ FontSystem *Application::font() {
 }
 
 void Application::setSize(uint w, uint h) {
-  m_width = w;
-  m_height = h;
-
   XSizeHints sizehints;
   sizehints.flags = PMinSize | PMaxSize;
-  sizehints.min_width = w;
-  sizehints.max_width = w;
-  sizehints.min_height = h;
-  sizehints.max_height = h;
+  sizehints.max_width = sizehints.min_width = m_width = w;
+  sizehints.max_height = sizehints.min_height = m_height = h;
   XSetNormalHints(m_display, m_window, &sizehints);
   XMoveResizeWindow(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
 }
