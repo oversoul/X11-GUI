@@ -3,6 +3,16 @@
 #include <iostream>
 #include <stdexcept>
 
+// print key modifier...
+void print_modifiers(uint mask) {
+  const char *MODIFIERS[] = {"Shift", "Lock", "Ctrl", "Alt", "Mod2", "Mod3", "Mod4", "Mod5"};
+  for (const char **modifier = MODIFIERS; mask; mask >>= 1, ++modifier) {
+    if (mask & 1) {
+      printf("Modifier mask: %s\n", *modifier);
+    }
+  }
+}
+
 static int error_handler(Display *d, XErrorEvent *e) {
   std::cerr << "Error minor code: " << e->minor_code << std::endl;
   std::cerr << "Error code: " << e->error_code << std::endl;
