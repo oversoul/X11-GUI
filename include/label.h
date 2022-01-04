@@ -9,7 +9,7 @@ public:
   Label();
   Label(std::string value);
   ~Label();
-  void paintEvent(XEvent &) override;
+  void paintEvent() override;
   void setValue(std::string value);
 
 private:

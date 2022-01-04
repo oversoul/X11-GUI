@@ -120,7 +120,7 @@ bool ListView::mouseScrollEvent(MouseEvent e) {
   return false;
 }
 
-void ListView::paintEvent(XEvent &e) {
+void ListView::paintEvent() {
   recalculateItems();
   m_painter->clear(m_bgColor);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});

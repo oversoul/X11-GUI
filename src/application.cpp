@@ -186,7 +186,7 @@ void Application::processEvents() {
     if (!w->handleEvent(m_event)) {
       checkForExit();
     }
-    w->paintEvent(m_event);
+    w->paintEvent();
   }
 }
 

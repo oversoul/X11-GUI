@@ -9,10 +9,9 @@ public:
   TextInput();
   TextInput(std::string value);
   ~TextInput();
-  void paint(XEvent &e);
   void setValue(std::string value);
 
-  void paintEvent(XEvent &) override;
+  void paintEvent() override;
   bool keyPressEvent(KeyEvent) override;
 
 private:

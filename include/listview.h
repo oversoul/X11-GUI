@@ -20,7 +20,7 @@ public:
 
   void selectClosestIndex(int);
 
-  void paintEvent(XEvent &) override;
+  void paintEvent() override;
   bool keyPressEvent(KeyEvent) override;
   bool mousePressEvent(MouseEvent) override;
   bool mouseScrollEvent(MouseEvent) override;

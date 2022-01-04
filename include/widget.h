@@ -26,7 +26,7 @@ public:
   bool handleEvent(XEvent &e);
   const bool isFocused() const;
 
-  virtual void paintEvent(XEvent &);
+  virtual void paintEvent();
   virtual bool keyPressEvent(KeyEvent);
   virtual bool keyReleaseEvent(KeyEvent);
   virtual bool mousePressEvent(MouseEvent);

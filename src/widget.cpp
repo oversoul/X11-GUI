@@ -73,7 +73,7 @@ void Widget::updateSizeAndPos() {
   XMoveResizeWindow(m_display, m_window, m_rect.x, m_rect.y, m_rect.w, m_rect.h);
 }
 
-void Widget::paintEvent(XEvent &) {
+void Widget::paintEvent() {
 }
 
 bool Widget::keyPressEvent(KeyEvent) {
