@@ -7,14 +7,13 @@
 
 class Widget {
 public:
-  virtual const Window id() const;
-
   Widget();
   ~Widget();
 
-  void newWindow(XSetWindowAttributes attr, bool isChildWindow = true);
+  void newWindow();
 
   void setRect(Rect r);
+  const Window id() const;
   const Rect getRect() const;
 
   void setBg(ulong c);
@@ -34,9 +33,9 @@ public:
 
 protected:
   Window m_window;
+  ulong m_bgColor = 0xffffff;
   Rect m_rect = {0, 0, 1, 1};
   bool m_needRepaint = true;
   Display *m_display = nullptr;
   Painter *m_painter = nullptr;
-  unsigned long m_bgColor = 0xffffff;
 };

@@ -4,13 +4,7 @@
 #include <cstdio>
 
 Label::Label() {
-  // EnterWindowMask | LeaveWindowMask|
-  XSetWindowAttributes attr = {
-      .background_pixel = m_bgColor,
-      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask,
-  };
-
-  newWindow(attr);
+  newWindow();
 }
 
 Label::Label(std::string value) : Label() {

@@ -6,12 +6,7 @@
 #include <vector>
 
 ListView::ListView() {
-  XSetWindowAttributes attr = {
-      .background_pixel = m_bgColor,
-      .event_mask = ExposureMask | EnterWindowMask | LeaveWindowMask | ButtonPressMask,
-  };
-
-  newWindow(attr);
+  newWindow();
 
   m_rows = {
       "Item 1", "Item 2", "Item 3", "Item 4",  "Item 5",  "Item 6",
@@ -125,7 +120,7 @@ void ListView::paintEvent() {
   m_painter->clear(m_bgColor, m_rect);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
-  unsigned long sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
+  ulong sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
 
   for (uint i = 0; i < m_areas; ++i) {
     if (i + m_scroll == m_rows.size())

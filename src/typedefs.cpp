@@ -1,4 +1,6 @@
 #include "../include/typedefs.h"
+#include <X11/X.h>
+#include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>
 #include <iostream>
 #include <stdexcept>
@@ -13,11 +15,13 @@ void print_modifiers(uint mask) {
   }
 }
 
+/*
 static int error_handler(Display *d, XErrorEvent *e) {
   std::cerr << "Error minor code: " << e->minor_code << std::endl;
   std::cerr << "Error code: " << e->error_code << std::endl;
   return 0;
 }
+*/
 
 Display *openDisplay() {
   Display *dpy = XOpenDisplay(getenv("DISPLAY"));
@@ -25,7 +29,7 @@ Display *openDisplay() {
     fprintf(stderr, "Couldn't open Display\n");
     exit(1);
   }
-  XSetErrorHandler(error_handler);
+  // XSetErrorHandler(error_handler);
   return dpy;
 }
 
@@ -74,7 +78,7 @@ void loadXdbeExtension(Display *dpy) {
     throw std::runtime_error("XDBE is not supported!!!");
 }
 
-unsigned long stringToKeysym(const char *key) {
+ulong stringToKeysym(const char *key) {
   return XStringToKeysym(key);
 }
 
@@ -97,30 +101,22 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
 
   for (int i = 0; i < nmonitors; i++) {
     XRRCrtcInfo *screen_info = XRRGetCrtcInfo(dpy, screen_res, screen_res->crtcs[i]);
-    // option flag for using the "anchor" (top left corner)  of a window to determine what screen it belongs to
-    /*
-    if (use_anchors == 1) {
-      det_x = win_attr.x;
-      det_y = win_attr.y;
-      // Use the center of the window to determine what screen it's on
-    } else {
-      det_x = win_attr.x + ((win_attr.width) / 2);
-      det_y = win_attr.y + ((win_attr.height) / 2);
-    }*/
 
     // If the window is on the ith screen in the x
-    if (det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) {
-      // If the window is on the ith screen in the y
-      if (det_y >= screen_info->y && det_y < (int)(screen_info->y + screen_info->height)) {
-        *left_x = screen_info->x;
-        *right_x = screen_info->x + screen_info->width;
-        *top_y = screen_info->y;
-        *bottom_y = screen_info->y + screen_info->height;
-        return 0;
-      }
+    if ((det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) &&
+        (det_y >= screen_info->y && det_y < (int)(screen_info->y + screen_info->height))) {
+      *left_x = screen_info->x;
+      *right_x = screen_info->x + screen_info->width;
+      *top_y = screen_info->y;
+      *bottom_y = screen_info->y + screen_info->height;
+      free(screen_info);
+      free(screen_res);
+      return 0;
     }
+    free(screen_info);
   }
 
+  free(screen_res);
   // If the function has not returned yet, then it could not find a screen on which 'win' resides.
   return -1;
 }
@@ -136,12 +132,33 @@ void getMonitorSize(Display *dpy, uint *width, uint *height) {
   }
 }
 
-Window createWindow(Display *dpy, XSetWindowAttributes attr, Window p) {
+void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::string title) {
+  if (title == "")
+    title = name;
+  char *cname = (char *)(name.c_str());
+  XClassHint class_hints = {.res_name = cname, .res_class = cname};
+  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
+
+  XSetWMHints(dpy, win, &wmhints);
+  XStoreName(dpy, win, title.c_str());
+  XSetClassHint(dpy, win, &class_hints);
+}
+
+Window createWindow(Display *dpy, ulong color, Window p) {
   int screen = DefaultScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
 
-  unsigned long mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
+  XSetWindowAttributes attr{
+      .background_pixel = color,
+      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask,
+  };
+
+  if (p == (long unsigned int)-1) {
+    p = DefaultRootWindow(dpy);
+  }
+
+  ulong mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
   auto w = XCreateWindow(dpy, p, 0, 1, 1, 1, 0, depth, InputOutput, visual, mask, &attr);
   return w;
 }

@@ -4,10 +4,10 @@
 
 class FontSystem {
 public:
-  FontSystem(Display *d, std::string name, uint size);
+  FontSystem(Display *d, std::string name, uint size, std::string weight = "normal");
   ~FontSystem();
 
-  void setFont(std::string, uint);
+  void setFont(std::string, uint, std::string = "normal");
   XftFont *getFontArea();
 
 private:

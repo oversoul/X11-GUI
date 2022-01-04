@@ -32,14 +32,10 @@ protected:
 
 class VLayout : public Layout {
 public:
-  VLayout();
-  ~VLayout();
-  void updatePosition();
+  void updatePosition() override;
 };
 
 class HLayout : public Layout {
 public:
-  HLayout();
-  ~HLayout();
-  void updatePosition();
+  void updatePosition() override;
 };

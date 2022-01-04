@@ -9,13 +9,13 @@ const Window Widget::id() const {
   return m_window;
 }
 
-void Widget::newWindow(XSetWindowAttributes attr, bool isChildWindow) {
-  Window p = (isChildWindow) ? Application::instance()->window() : DefaultRootWindow(m_display);
-  m_window = createWindow(m_display, attr, p);
+void Widget::newWindow() {
+  m_window = createWindow(m_display, m_bgColor, Application::instance()->window());
   m_painter = new Painter(m_display, m_window);
 }
 
 Widget::~Widget() {
+  delete m_painter;
   XDestroyWindow(m_display, m_window);
 }
 

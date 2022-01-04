@@ -12,16 +12,14 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(std::string title, bool isModal = false);
+  Application(std::string name, std::string title = "");
   ~Application();
   static Application *instance();
 
-  void setName(char *name);
+  void setBg(ulong color);
   void setType(std::string type);
-  void setBg(unsigned long color);
 
   void exec();
-  void clear();
   bool shouldExit();
   void triggerExit();
   bool eventPending();
@@ -31,10 +29,9 @@ public:
   void setSize(uint, uint);
   void setLayout(Layout &);
   void setLayout(Layout *);
-  void addWidget(Widget *);
 
   FontSystem *font();
-  void setFont(std::string name, uint size = 12);
+  void setFont(std::string name, uint size = 12, std::string weight = "normal");
 
   Display *display() const;
   const Window id() const;
@@ -55,13 +52,11 @@ private:
   uint m_screenWidth = 1;
   uint m_screenHeight = 1;
 
-  int m_root;
   int m_screen;
   XEvent m_event;
   Window m_window;
 
   Window m_focusedWindow = -1;
-  std::vector<Widget *> m_widgets;
 
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;

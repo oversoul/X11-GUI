@@ -3,12 +3,7 @@
 #include "../include/typedefs.h"
 
 Button::Button() {
-  XSetWindowAttributes attr = {
-      .background_pixel = m_bgColor,
-      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask,
-  };
-
-  newWindow(attr);
+  newWindow();
 }
 
 Button::Button(std::string label) : Button() {
@@ -27,8 +22,9 @@ void Button::setOnClick(std::function<void()> callback) {
 }
 
 bool Button::mousePressEvent(MouseEvent e) {
-  if (!isFocused() && e.button != MouseButton::Left)
+  if (!isFocused() || e.button != MouseButton::Left)
     return false;
+
   m_onClickCallback();
   return true;
 }

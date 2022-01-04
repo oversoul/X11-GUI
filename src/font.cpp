@@ -2,21 +2,24 @@
 #include "application.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
+#include <string>
 
-FontSystem::FontSystem(Display *d, std::string name, uint size) : m_display(d) {
-  setFont(name, size);
+FontSystem::FontSystem(Display *d, std::string name, uint size, std::string weight) : m_display(d) {
+  setFont(name, size, weight);
 }
 
 FontSystem::~FontSystem() {
   XftFontClose(m_display, m_area);
+  // delete m_area;
 }
 
-void FontSystem::setFont(std::string name, uint size) {
+void FontSystem::setFont(std::string name, uint size, std::string weight) {
   if (m_area != nullptr)
     XftFontClose(m_display, m_area);
 
   int s = DefaultScreen(m_display);
-  m_area = XftFontOpenName(m_display, s, (name + "-" + std::to_string(size)).c_str());
+
+  m_area = XftFontOpenName(m_display, s, (name + ":pixelsize=" + std::to_string(size) + ":weight=" + weight).c_str());
 
   if (!m_area) {
     fprintf(stderr, "Couldn't open font.\n");

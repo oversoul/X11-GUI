@@ -1,7 +1,5 @@
 #pragma once
-#include "painter.h"
 #include "widget.h"
-#include <X11/Xlib.h>
 #include <iostream>
 
 class TextInput : public Widget {

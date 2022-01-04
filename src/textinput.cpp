@@ -5,13 +5,7 @@
 #include <cstdio>
 
 TextInput::TextInput() {
-  XSetWindowAttributes attr = {
-      .background_pixel = m_bgColor,
-      .event_mask =
-          ButtonPressMask | ButtonReleaseMask | ExposureMask | EnterWindowMask | LeaveWindowMask | KeyPressMask,
-  };
-
-  newWindow(attr);
+  newWindow();
 }
 
 TextInput::TextInput(std::string value) : TextInput() {

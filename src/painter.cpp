@@ -43,7 +43,7 @@ void Painter::initializeColor(std::string color) {
 void Painter::drawString(const char *text, int x, int y, std::string color) {
   auto font = Application::instance()->font()->getFontArea();
   XftColor c = m_colors.count(color) ? m_colors[color] : m_colors["#000000"];
-  XftDrawStringUtf8(m_draw, &c, font, x, y + font->ascent / 2, (FcChar8 *)text, strlen(text));
+  XftDrawStringUtf8(m_draw, &c, font, x, y + font->ascent / 2, (const FcChar8 *)text, strlen(text));
 }
 
 void Painter::drawLine(int x1, int y1, int x2, int y2) {
@@ -64,7 +64,7 @@ void Painter::drawPoint(int x, int y) {
 
 void Painter::clear(ulong color, Rect r) {
   XSetForeground(m_display, m_gc, color);
-  XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
+  XFillRectangle(m_display, m_backBuffer, m_gc, 0, 0, r.w, r.h);
 }
 
 void Painter::drawRect(Rect r) {
@@ -82,7 +82,7 @@ void Painter::setForeground(ulong color) {
 uint Painter::textWidth(const char *text) {
   XGlyphInfo extents = {};
   auto font = Application::instance()->font()->getFontArea();
-  XftTextExtentsUtf8(m_display, font, (FcChar8 *)text, strlen(text), &extents);
+  XftTextExtentsUtf8(m_display, font, (const FcChar8 *)text, strlen(text), &extents);
   return extents.width;
 }
 
