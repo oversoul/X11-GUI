@@ -22,8 +22,8 @@ public:
 
   void paintEvent(XEvent &) override;
   bool keyPressEvent(KeyEvent) override;
-  bool mousePressEvent(XButtonEvent &, MouseButton) override;
-  bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection) override;
+  bool mousePressEvent(MouseEvent) override;
+  bool mouseScrollEvent(MouseEvent) override;
 
 private:
   void recalculateItems();

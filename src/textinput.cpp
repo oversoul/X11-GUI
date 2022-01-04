@@ -21,10 +21,6 @@ TextInput::TextInput(std::string value) : TextInput() {
 TextInput::~TextInput() {
 }
 
-bool TextInput::mousePressEvent(XButtonEvent &, MouseButton) {
-  return false;
-}
-
 bool TextInput::keyPressEvent(KeyEvent ke) {
   if (!isFocused())
     return false;
@@ -40,10 +36,6 @@ bool TextInput::keyPressEvent(KeyEvent ke) {
 
   m_value += ke.text;
   return true;
-}
-
-bool TextInput::keyReleaseEvent(KeyEvent) {
-  return false;
 }
 
 void TextInput::paintEvent(XEvent &) {

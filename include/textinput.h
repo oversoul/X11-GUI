@@ -14,8 +14,6 @@ public:
 
   void paintEvent(XEvent &) override;
   bool keyPressEvent(KeyEvent) override;
-  bool keyReleaseEvent(KeyEvent) override;
-  bool mousePressEvent(XButtonEvent &, MouseButton) override;
 
 private:
   std::string m_value;

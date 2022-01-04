@@ -26,8 +26,8 @@ void Button::setOnClick(std::function<void()> callback) {
   m_onClickCallback = callback;
 }
 
-bool Button::mousePressEvent(XButtonEvent &e, MouseButton) {
-  if (!isFocused())
+bool Button::mousePressEvent(MouseEvent e) {
+  if (!isFocused() && e.button != MouseButton::Left)
     return false;
   m_onClickCallback();
   return true;

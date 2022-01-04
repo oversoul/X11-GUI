@@ -18,11 +18,11 @@ all : ${FILENAME}
 xgui:
 	$(CC) -c xgui.cpp -fpic -o $(BUILD)/xgui.o $(LDFLAGS) $(STANDARD) $(INCLUDE_DIR)
 
-$(FILENAME): $(OBJECTS) xgui
+$(FILENAME): xgui $(OBJECTS) 
 	@mkdir -p $(@D)
 	$(CC) $(BUILD)/xgui.o $(OBJECTS) -shared -o $(FILENAME) $(LDFLAGS) $(STANDARD) $(INCLUDE_DIR)
 
 clean:
-	@$(RM) -rf $(BUILD)/*.o
-	@$(RM) -rf $(OBJ_DIR)/*.o
+	@$(RM) -rf $(BUILD)
+	@$(RM) -rf libxgui.so
 	@echo "cleaning..."

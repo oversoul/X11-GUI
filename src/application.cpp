@@ -177,7 +177,7 @@ void Application::processEvents() {
     return;
   }
 
-  if (m_event.type == ButtonPress && getButton(m_event.xbutton.button) == MouseButton::Left) {
+  if (m_event.type == ButtonPress && getMouseEvent(m_event).button == MouseButton::Left) {
     m_focusedWindow = m_event.xbutton.window;
   }
 

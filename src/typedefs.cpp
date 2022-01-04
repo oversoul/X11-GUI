@@ -19,11 +19,43 @@ Display *openDisplay() {
   return dpy;
 }
 
-KeyEvent eventKeyToString(XEvent e) {
+KeyEvent getKeyEvent(XEvent e) {
   KeySym key;
   char text[255];
   XLookupString(&e.xkey, text, 255, &key, 0);
   return {.key = key, .text = std::string(text)};
+}
+
+static MouseButton getButton(int btn) {
+  if (btn == 1)
+    return MouseButton::Left;
+  if (btn == 2)
+    return MouseButton::Middle;
+  if (btn == 3)
+    return MouseButton::Right;
+  if (btn == 4 || btn == 5)
+    return MouseButton::Scroll;
+  return MouseButton::Unknown;
+}
+
+static WheelDirection getDirection(int btn) {
+  if (btn == 4)
+    return WheelDirection::Up;
+  if (btn == 5)
+    return WheelDirection::Down;
+  return WheelDirection::Unknown;
+}
+
+MouseEvent getMouseEvent(XEvent e) {
+  auto button = getButton(e.xbutton.button);
+
+  return {
+      .x = e.xbutton.x,
+      .y = e.xbutton.y,
+      .isScroll = button == MouseButton::Scroll,
+      .button = button,
+      .direction = getDirection(e.xbutton.button),
+  };
 }
 
 void loadXdbeExtension(Display *dpy) {

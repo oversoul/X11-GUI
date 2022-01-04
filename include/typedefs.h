@@ -9,8 +9,18 @@ typedef struct {
   std::string text;
 } KeyEvent;
 
+enum class MouseButton { Unknown, Left, Middle, Right, Scroll };
+enum class WheelDirection { Up, Down, Unknown };
+typedef struct {
+  int x, y;
+  bool isScroll;
+  MouseButton button;
+  WheelDirection direction;
+} MouseEvent;
+
 Display *openDisplay();
-KeyEvent eventKeyToString(XEvent e);
+KeyEvent getKeyEvent(XEvent e);
+MouseEvent getMouseEvent(XEvent e);
 void loadXdbeExtension(Display *dpy);
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 void getMonitorSize(Display *dpy, uint *width, uint *height);

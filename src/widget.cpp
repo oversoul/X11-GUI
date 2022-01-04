@@ -23,31 +23,11 @@ const bool Widget::isFocused() const {
   return Application::instance()->isFocused(id());
 }
 
-MouseButton getButton(int btn) {
-  if (btn == 1)
-    return MouseButton::Left;
-  if (btn == 2)
-    return MouseButton::Middle;
-  if (btn == 3)
-    return MouseButton::Right;
-  if (btn == 4 || btn == 5)
-    return MouseButton::Scroll;
-  return MouseButton::Unknown;
-}
-
-MouseWheelDirection getDirection(int btn) {
-  if (btn == 4)
-    return MouseWheelDirection::Up;
-  if (btn == 5)
-    return MouseWheelDirection::Down;
-  return MouseWheelDirection::Unknown;
-}
-
 bool Widget::handleEvent(XEvent &e) {
   switch (e.type) {
   case KeyPress:
   case KeyRelease: {
-    KeyEvent key = eventKeyToString(e);
+    KeyEvent key = getKeyEvent(e);
     if (e.type == KeyPress)
       return keyPressEvent(key);
     if (e.type == KeyRelease)
@@ -55,10 +35,11 @@ bool Widget::handleEvent(XEvent &e) {
     return false;
   }
   case ButtonPress:
-    if (getButton(e.xbutton.button) == MouseButton::Scroll) {
-      return mouseScrollEvent(e.xbutton, getDirection(e.xbutton.button));
+    auto mouseEvent = getMouseEvent(e);
+    if (mouseEvent.isScroll) {
+      return mouseScrollEvent(mouseEvent);
     }
-    return mousePressEvent(e.xbutton, getButton(e.xbutton.button));
+    return mousePressEvent(mouseEvent);
   }
   return false;
 };
@@ -103,10 +84,10 @@ bool Widget::keyReleaseEvent(KeyEvent) {
   return false;
 }
 
-bool Widget::mousePressEvent(XButtonEvent &, MouseButton) {
+bool Widget::mousePressEvent(MouseEvent) {
   return false;
 }
 
-bool Widget::mouseScrollEvent(XButtonEvent &, MouseWheelDirection) {
+bool Widget::mouseScrollEvent(MouseEvent) {
   return false;
 }

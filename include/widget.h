@@ -5,12 +5,6 @@
 #include <assert.h>
 #include <iostream>
 
-enum class MouseWheelDirection { Up, Down, Unknown };
-enum class MouseButton { Unknown, Left, Middle, Right, Scroll };
-
-MouseButton getButton(int btn);
-MouseWheelDirection getDirection(int btn);
-
 class Widget {
 public:
   virtual const Window id() const;
@@ -35,8 +29,8 @@ public:
   virtual void paintEvent(XEvent &);
   virtual bool keyPressEvent(KeyEvent);
   virtual bool keyReleaseEvent(KeyEvent);
-  virtual bool mousePressEvent(XButtonEvent &, MouseButton);
-  virtual bool mouseScrollEvent(XButtonEvent &, MouseWheelDirection);
+  virtual bool mousePressEvent(MouseEvent);
+  virtual bool mouseScrollEvent(MouseEvent);
 
 protected:
   Window m_window;

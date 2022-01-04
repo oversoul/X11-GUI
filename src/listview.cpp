@@ -84,15 +84,13 @@ bool ListView::keyPressEvent(KeyEvent ke) {
   return false;
 }
 
-bool ListView::mousePressEvent(XButtonEvent &e, MouseButton btn) {
+bool ListView::mousePressEvent(MouseEvent e) {
   if (!isFocused())
     return false;
-  if (btn != MouseButton::Left)
+  if (e.button != MouseButton::Left)
     return false;
 
   selectClosestIndex(e.y);
-
-  // std::cout << "selected: " << m_rows[m_selectedItem + m_scroll] << std::endl;
 
   return true;
 }
@@ -109,14 +107,14 @@ bool ListView::scrollDown() {
   return true;
 }
 
-bool ListView::mouseScrollEvent(XButtonEvent &, MouseWheelDirection dir) {
+bool ListView::mouseScrollEvent(MouseEvent e) {
   if (!isFocused())
     return false;
 
-  if (dir == MouseWheelDirection::Down)
+  if (e.direction == WheelDirection::Down)
     return scrollUp();
 
-  if (dir == MouseWheelDirection::Up)
+  if (e.direction == WheelDirection::Up)
     return scrollDown();
 
   return false;
