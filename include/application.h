@@ -55,7 +55,6 @@ private:
   int m_screen;
   XEvent m_event;
   Window m_window;
-
   Window m_focusedWindow = -1;
 
   Atom m_wmDeleteMessage;
