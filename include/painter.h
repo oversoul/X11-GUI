@@ -16,14 +16,14 @@ public:
 
   void clear(ulong color, Rect r);
   void drawPoint(int x, int y);
-  void drawLine(int x1, int y1, int x2, int y2);
   void drawRect(Rect r);
+  void drawLine(int x1, int y1, int x2, int y2);
   void fillRect(Rect r);
   void drawCircle(Rect r);
   void fillCircle(Rect r);
   uint textWidth(const char *text);
   void drawString(const char *text, int x, int y, std::string color = "#000000");
-  void setForeground(ulong color);
+  void setForeground(std::string color);
   void swapBuffers();
 
 private:

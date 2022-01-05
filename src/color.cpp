@@ -30,7 +30,7 @@ Color::~Color() {
 XftColor Color::get(std::string name) {
   if (!m_instance)
     throw new std::runtime_error("Color needs to be initialized first");
-  if (m_instance->m_colors.count(name))
-    return m_instance->m_colors[name];
-  return m_instance->m_colors["#000000"];
+  if (!m_instance->m_colors.count(name))
+    set(name);
+  return m_instance->m_colors[name];
 }

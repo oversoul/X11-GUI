@@ -1,8 +1,6 @@
 #include "painter.h"
 #include "application.h"
 #include "color.h"
-#include <cstring>
-#include <iostream>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
@@ -52,8 +50,9 @@ void Painter::fillRect(Rect r) {
   XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
 }
 
-void Painter::setForeground(ulong color) {
-  XSetForeground(m_display, m_gc, color);
+void Painter::setForeground(std::string color) {
+  auto c = Color::get(color);
+  XSetForeground(m_display, m_gc, c.pixel);
 }
 
 uint Painter::textWidth(const char *text) {

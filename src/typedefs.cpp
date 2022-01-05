@@ -1,4 +1,4 @@
-#include "../include/typedefs.h"
+#include "typedefs.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>

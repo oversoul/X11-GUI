@@ -112,20 +112,20 @@ bool ListView::mouseScrollEvent(MouseEvent e) {
 void ListView::paintEvent() {
   recalculateItems();
   m_painter->clear(m_bgColor, m_rect);
-  m_painter->setForeground(0x000000);
+  m_painter->setForeground("#000000");
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
-  ulong sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
+  const char *sColor = isFocused() ? "#FF0000" : "#AAAAAA";
 
   for (uint i = 0; i < m_areas; ++i) {
     if (i + m_scroll == m_rows.size())
       break;
 
     Rect r = m_rects[i];
-    m_painter->setForeground(m_selectedItem == i ? sColor : 0xFFFFFF);
+    auto isCurrent = m_selectedItem == i;
+    m_painter->setForeground(isCurrent ? sColor : "#FFFFFF");
     m_painter->fillRect(r);
-    m_painter->setForeground(m_selectedItem == i ? 0xFFFFFF : 0x000000);
-    m_painter->drawString(m_rows[i + m_scroll].c_str(), m_rect.x - 5, r.y + r.h / 2);
+    m_painter->drawString(m_rows[i + m_scroll].c_str(), m_rect.x - 5, r.y + r.h / 2, isCurrent ? "#FFFFFF" : "#000000");
   }
 
   m_painter->swapBuffers();
