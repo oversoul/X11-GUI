@@ -26,6 +26,8 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
 void getMonitorSize(Display *dpy, uint *width, uint *height);
 Window createWindow(Display *dpy, ulong color, Window p = -1);
 void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::string title);
+Atom getWindowClosingAtom(Display* dpy, Window w);
+
 
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);

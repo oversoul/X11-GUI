@@ -22,8 +22,7 @@ Application::Application(std::string name, std::string title) : m_width(640), m_
 
   loadXdbeExtension(m_display);
 
-  m_wmDeleteMessage = XInternAtom(m_display, "WM_DELETE_WINDOW", false);
-  XSetWMProtocols(m_display, m_window, &m_wmDeleteMessage, 1);
+  m_wmDeleteMessage = getWindowClosingAtom(m_display, m_window);
 
   setWindowNameAndTitle(m_display, m_window, name, title);
   m_font = new FontSystem(m_display, "arial", 16);
