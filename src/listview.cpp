@@ -15,6 +15,8 @@ ListView::ListView() {
 }
 
 ListView::~ListView() {
+  m_rows.clear();
+  m_rects.clear();
 }
 
 ListView::ListView(std::vector<std::string> rows) : ListView() {

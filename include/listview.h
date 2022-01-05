@@ -15,7 +15,6 @@ public:
   void addItem(std::string);
   void addItemAt(int, std::string);
 
-
   void paintEvent() override;
   bool keyPressEvent(KeyEvent) override;
   bool mousePressEvent(MouseEvent) override;

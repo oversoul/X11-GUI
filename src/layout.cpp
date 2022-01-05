@@ -9,6 +9,11 @@ const Rect Layout::getRect() const {
   return m_rect;
 }
 
+Layout::~Layout() {
+  m_weights.clear();
+  m_widgets.clear();
+}
+
 void Layout::setSpaceBetween(uint sb) {
   m_spaceBetween = sb;
 }

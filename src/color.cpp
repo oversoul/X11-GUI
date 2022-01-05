@@ -24,6 +24,7 @@ void Color::set(std::string name) {
 }
 
 Color::~Color() {
+  m_colors.clear();
   delete m_instance;
 }
 

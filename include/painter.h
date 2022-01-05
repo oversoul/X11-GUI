@@ -5,7 +5,6 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>
 #include <iostream>
-#include <map>
 
 class Application;
 
