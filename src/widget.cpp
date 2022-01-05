@@ -44,7 +44,7 @@ bool Widget::handleEvent(XEvent &e) {
   return false;
 };
 
-void Widget::setBg(ulong c) {
+void Widget::setBg(std::string c) {
   m_bgColor = c;
 }
 

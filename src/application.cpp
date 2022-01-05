@@ -13,7 +13,8 @@ Application::Application(std::string name, std::string title) : m_width(640), m_
   m_instance = this;
 
   m_display = openDisplay();
-  m_window = createWindow(m_display, 0x000000);
+  m_color = new Color(m_display);
+  m_window = createWindow(m_display, "#000000");
 
   getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
   setSize(m_width, m_height);
@@ -24,7 +25,6 @@ Application::Application(std::string name, std::string title) : m_width(640), m_
   m_wmDeleteMessage = getWindowClosingAtom(m_display, m_window);
   setWindowNameAndTitle(m_display, m_window, name, title);
   m_font = new FontSystem(m_display, "arial", 16);
-  m_color = new Color();
 }
 
 void Application::setType(std::string type) {
@@ -45,8 +45,9 @@ Application *Application::instance() {
   return m_instance;
 }
 
-void Application::setBg(ulong color) {
-  XSetWindowBackground(m_display, m_window, color);
+void Application::setBg(std::string color) {
+  auto c = Color::get(color);
+  XSetWindowBackground(m_display, m_window, c.pixel);
 }
 
 void Application::setFont(std::string name, uint size, std::string weight) {

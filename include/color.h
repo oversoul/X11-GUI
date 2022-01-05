@@ -5,7 +5,7 @@
 
 class Color {
 public:
-  Color();
+  Color(Display* dpy);
   ~Color();
   static void set(std::string name);
   static XftColor get(std::string name);

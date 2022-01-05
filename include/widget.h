@@ -16,9 +16,9 @@ public:
   const Window id() const;
   const Rect getRect() const;
 
-  void setBg(ulong c);
   void setWidth(uint w);
   void setHeight(uint h);
+  void setBg(std::string c);
   void setPosition(uint x, uint y);
 
   void updateSizeAndPos();
@@ -33,9 +33,10 @@ public:
 
 protected:
   Window m_window;
-  ulong m_bgColor = 0xffffff;
   Rect m_rect = {0, 0, 1, 1};
   bool m_needRepaint = true;
   Display *m_display = nullptr;
   Painter *m_painter = nullptr;
+
+  std::string m_bgColor = "#ffffff";
 };

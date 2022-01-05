@@ -4,12 +4,12 @@
 
 Color *Color::m_instance = nullptr;
 
-Color::Color() : m_display(Application::instance()->display()) {
+Color::Color(Display *dpy) : m_display(dpy) {
   if (m_instance)
     throw std::runtime_error("Color already initialized.");
   m_instance = this;
-  set("#000000");
-  set("#FFFFFF");
+  Color::set("#000000");
+  // set("#FFFFFF");
 }
 
 void Color::set(std::string name) {
@@ -30,6 +30,9 @@ Color::~Color() {
 XftColor Color::get(std::string name) {
   if (!m_instance)
     throw new std::runtime_error("Color needs to be initialized first");
+
+  assert(name.length() == 7 && "Color name is empty\n");
+
   if (!m_instance->m_colors.count(name))
     set(name);
   return m_instance->m_colors[name];

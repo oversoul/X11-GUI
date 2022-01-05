@@ -14,7 +14,6 @@ public:
   Painter(Display *display, Window window);
   ~Painter();
 
-  void clear(ulong color, Rect r);
   void drawPoint(int x, int y);
   void drawRect(Rect r);
   void drawLine(int x1, int y1, int x2, int y2);
@@ -24,6 +23,7 @@ public:
   uint textWidth(const char *text);
   void drawString(const char *text, int x, int y, std::string color = "#000000");
   void setForeground(std::string color);
+  void clear(std::string color, Rect r);
   void swapBuffers();
 
 private:

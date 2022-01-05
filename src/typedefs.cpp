@@ -1,4 +1,5 @@
 #include "typedefs.h"
+#include "color.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xdbe.h>
@@ -89,9 +90,9 @@ XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
 
 int setXftColor(Display *dpy, void *mem, std::string color) {
   int s = getScreen(dpy);
-  memset(mem, 0, sizeof(XftColor));
   int cm = XDefaultColormap(dpy, s);
   Visual *dv = DefaultVisual(dpy, s);
+  memset((XftColor *)mem, 0, sizeof(XftColor));
 
   if (!XftColorAllocName(dpy, dv, cm, color.c_str(), (XftColor *)mem)) {
     return -1;
@@ -172,13 +173,14 @@ void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::stri
   XSetClassHint(dpy, win, &class_hints);
 }
 
-Window createWindow(Display *dpy, ulong color, Window p) {
+Window createWindow(Display *dpy, std::string color, Window p) {
   int screen = getScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
+  auto c = Color::get(color);
 
   XSetWindowAttributes attr{
-      .background_pixel = color,
+      .background_pixel = c.pixel,
       .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask,
   };
 

@@ -2,8 +2,8 @@
 #include <iostream>
 #include <vector>
 
-#include "font.h"
 #include "color.h"
+#include "font.h"
 #include "layout.h"
 #include "painter.h"
 #include "widget.h"
@@ -17,7 +17,7 @@ public:
   ~Application();
   static Application *instance();
 
-  void setBg(ulong color);
+  void setBg(std::string color);
   void setType(std::string type);
 
   void exec();
