@@ -14,8 +14,6 @@ public:
   Painter(Display *display, Window window);
   ~Painter();
 
-  void initializeColor(std::string color);
-
   void clear(ulong color, Rect r);
   void drawPoint(int x, int y);
   void drawLine(int x1, int y1, int x2, int y2);
@@ -31,11 +29,8 @@ public:
 private:
   GC m_gc;
   Window m_window;
+  XftDraw *m_draw;
   XdbeBackBuffer m_backBuffer;
   Display *m_display = nullptr;
   FontSystem *m_font = nullptr;
-
-  XftDraw *m_draw;
-  XftColor m_color;
-  std::map<std::string, XftColor> m_colors;
 };

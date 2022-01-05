@@ -24,6 +24,7 @@ Application::Application(std::string name, std::string title) : m_width(640), m_
   m_wmDeleteMessage = getWindowClosingAtom(m_display, m_window);
   setWindowNameAndTitle(m_display, m_window, name, title);
   m_font = new FontSystem(m_display, "arial", 16);
+  m_color = new Color();
 }
 
 void Application::setType(std::string type) {
@@ -95,6 +96,7 @@ bool Application::isFocused(Window id) {
 
 Application::~Application() {
   delete m_font;
+  delete m_color;
   XUnmapWindow(m_display, m_window);
   XDestroyWindow(m_display, m_window);
   XCloseDisplay(m_display);

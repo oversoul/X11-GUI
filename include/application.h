@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "font.h"
+#include "color.h"
 #include "layout.h"
 #include "painter.h"
 #include "widget.h"
@@ -59,6 +60,7 @@ private:
 
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
+  Color *m_color = nullptr;
   Layout *m_layout = nullptr;
   FontSystem *m_font = nullptr;
   Display *m_display = nullptr;

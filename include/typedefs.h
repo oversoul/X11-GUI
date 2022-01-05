@@ -31,6 +31,8 @@ Window createWindow(Display *dpy, ulong color, Window p = -1);
 void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::string title);
 Atom getWindowClosingAtom(Display *dpy, Window w);
 
+int setXftColor(Display *dpy, void *mem, std::string color);
+
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);

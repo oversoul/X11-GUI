@@ -1,5 +1,6 @@
 #include "painter.h"
 #include "application.h"
+#include "color.h"
 #include <cstring>
 #include <iostream>
 
@@ -8,8 +9,6 @@ Painter::Painter(Display *display, Window window) : m_window(window), m_display(
 
   m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
   m_draw = getXftDrawArea(m_display, m_backBuffer);
-  initializeColor("#000000");
-  initializeColor("#FFFFFF");
 }
 
 Painter::~Painter() {
@@ -18,25 +17,9 @@ Painter::~Painter() {
   XFreeGC(m_display, m_gc);
 }
 
-void Painter::initializeColor(std::string color) {
-  if (m_colors.count(color))
-    return;
-
-  int s = getScreen(m_display);
-  int cm = XDefaultColormap(m_display, s);
-  Visual *dv = DefaultVisual(m_display, s);
-
-  memset(&m_colors[color], 0, sizeof(XftColor));
-
-  if (!XftColorAllocName(m_display, dv, cm, color.c_str(), &m_colors[color])) {
-    XftDrawDestroy(m_draw);
-    throw std::runtime_error("Couldn't create xft drawing area.");
-  }
-}
-
 void Painter::drawString(const char *text, int x, int y, std::string color) {
+  XftColor c = Color::get(color);
   auto font = Application::instance()->font()->getFontArea();
-  XftColor c = m_colors.count(color) ? m_colors[color] : m_colors["#000000"];
   XftDrawStringUtf8(m_draw, &c, font, x, y + font->ascent / 2, (const FcChar8 *)text, strlen(text));
 }
 

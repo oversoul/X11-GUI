@@ -87,6 +87,18 @@ XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
   return XftDrawCreate(dpy, d, DefaultVisual(dpy, s), DefaultColormap(dpy, s));
 }
 
+int setXftColor(Display *dpy, void *mem, std::string color) {
+  int s = getScreen(dpy);
+  memset(mem, 0, sizeof(XftColor));
+  int cm = XDefaultColormap(dpy, s);
+  Visual *dv = DefaultVisual(dpy, s);
+
+  if (!XftColorAllocName(dpy, dv, cm, color.c_str(), (XftColor *)mem)) {
+    return -1;
+  }
+  return 0;
+}
+
 void loadXdbeExtension(Display *dpy) {
   int majorVersion, minorVersion;
   if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion))
