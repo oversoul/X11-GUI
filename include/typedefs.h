@@ -1,6 +1,7 @@
 #pragma once
 #include "rect.h"
 #include <X11/Xatom.h>
+#include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 
@@ -19,15 +20,16 @@ typedef struct {
 } MouseEvent;
 
 Display *openDisplay();
+int getScreen(Display *d);
 KeyEvent getKeyEvent(XEvent e);
 MouseEvent getMouseEvent(XEvent e);
+XftDraw *getXftDrawArea(Display *dpy, Drawable d);
 void loadXdbeExtension(Display *dpy);
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 void getMonitorSize(Display *dpy, uint *width, uint *height);
 Window createWindow(Display *dpy, ulong color, Window p = -1);
 void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::string title);
-Atom getWindowClosingAtom(Display* dpy, Window w);
-
+Atom getWindowClosingAtom(Display *dpy, Window w);
 
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);

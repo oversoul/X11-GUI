@@ -39,6 +39,10 @@ Atom getWindowClosingAtom(Display *dpy, Window w) {
   return dm;
 }
 
+int getScreen(Display *dpy) {
+  return DefaultScreen(dpy);
+}
+
 KeyEvent getKeyEvent(XEvent e) {
   KeySym key;
   char text[255];
@@ -76,6 +80,11 @@ MouseEvent getMouseEvent(XEvent e) {
       .button = button,
       .direction = getDirection(e.xbutton.button),
   };
+}
+
+XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
+  int s = getScreen(dpy);
+  return XftDrawCreate(dpy, d, DefaultVisual(dpy, s), DefaultColormap(dpy, s));
 }
 
 void loadXdbeExtension(Display *dpy) {
@@ -130,8 +139,9 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
 void getMonitorSize(Display *dpy, uint *width, uint *height) {
   int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
   if (getScreens(dpy, 0, &left_x, &right_x, &top_y, &bottom_y) < 0) {
-    *width = XDisplayWidth(dpy, XDefaultScreen(dpy));
-    *height = XDisplayHeight(dpy, XDefaultScreen(dpy));
+    int s = getScreen(dpy);
+    *width = XDisplayWidth(dpy, s);
+    *height = XDisplayHeight(dpy, s);
   } else {
     *width = right_x;
     *height = bottom_y;
@@ -151,7 +161,7 @@ void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::stri
 }
 
 Window createWindow(Display *dpy, ulong color, Window p) {
-  int screen = DefaultScreen(dpy);
+  int screen = getScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
 

@@ -5,11 +5,9 @@
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
-  int s = XDefaultScreen(display);
 
   m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
-  m_draw = XftDrawCreate(display, m_backBuffer, DefaultVisual(display, s), DefaultColormap(display, s));
-
+  m_draw = getXftDrawArea(m_display, m_backBuffer);
   initializeColor("#000000");
   initializeColor("#FFFFFF");
 }
@@ -24,7 +22,7 @@ void Painter::initializeColor(std::string color) {
   if (m_colors.count(color))
     return;
 
-  int s = XDefaultScreen(m_display);
+  int s = getScreen(m_display);
   int cm = XDefaultColormap(m_display, s);
   Visual *dv = DefaultVisual(m_display, s);
 

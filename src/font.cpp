@@ -3,6 +3,7 @@
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <boost/format.hpp>
+#include <cstdio>
 #include <string>
 
 FontSystem::FontSystem(Display *d, std::string name, uint size, std::string weight) : m_display(d) {
@@ -18,10 +19,8 @@ void FontSystem::setFont(std::string name, uint size, std::string weight) {
   if (m_area != nullptr)
     XftFontClose(m_display, m_area);
 
-  int s = DefaultScreen(m_display);
-
   std::string fname = (boost::format("%s:pixelsize=%d:weight=%s") % name % size % weight).str();
-  m_area = XftFontOpenName(m_display, s, fname.c_str());
+  m_area = XftFontOpenName(m_display, getScreen(m_display), fname.c_str());
 
   if (!m_area) {
     fprintf(stderr, "Couldn't open font.\n");
