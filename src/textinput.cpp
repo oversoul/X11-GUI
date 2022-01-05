@@ -1,7 +1,4 @@
 #include "../include/textinput.h"
-#include "../include/application.h"
-#include "../include/typedefs.h"
-#include <X11/keysym.h>
 #include <cstdio>
 
 TextInput::TextInput() {
