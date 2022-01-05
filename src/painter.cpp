@@ -1,6 +1,7 @@
 #include "painter.h"
 #include "application.h"
 #include "color.h"
+#include <X11/Xlib.h>
 
 Painter::Painter(Display *display, Window window) : m_window(window), m_display(display) {
   m_gc = XCreateGC(m_display, m_window, 0, 0);
@@ -59,7 +60,7 @@ uint Painter::textWidth(const char *text) {
   XGlyphInfo extents = {};
   auto font = Application::instance()->font()->getFontArea();
   XftTextExtentsUtf8(m_display, font, (const FcChar8 *)text, strlen(text), &extents);
-  return extents.width;
+  return extents.xOff;
 }
 
 void Painter::swapBuffers() {

@@ -1,6 +1,6 @@
-#include "../include/listview.h"
-#include "../include/application.h"
-#include "../include/typedefs.h"
+#include "listview.h"
+#include "application.h"
+#include "typedefs.h"
 #include <X11/keysym.h>
 #include <algorithm>
 #include <vector>
@@ -42,9 +42,8 @@ void ListView::recalculateItems() {
   m_rects.clear();
   uint width = m_rect.w - 2;
   uint height = m_itemHeight - 2;
-  m_areas = m_rect.h / m_itemHeight;
 
-  for (uint i = 0; i < m_areas; ++i) {
+  for (uint i = 0; i < m_rows.size(); ++i) {
     uint ypos = m_itemHeight * i;
     m_rects.push_back({1, ypos + 1, width, height});
   }
@@ -57,17 +56,15 @@ bool ListView::keyPressEvent(KeyEvent ke) {
   if (ke.key == XK_Up) {
     if (m_selectedItem > 0) {
       m_selectedItem--;
-    } else {
-      scrollDown();
+      scrollDown(m_itemHeight);
     }
     return true;
   }
 
   if (ke.key == XK_Down) {
-    if (m_selectedItem < m_areas - 1) {
+    if (m_selectedItem < m_rows.size() - 1) {
       m_selectedItem++;
-    } else {
-      scrollUp();
+      scrollUp(m_itemHeight);
     }
     return true;
   }
@@ -79,22 +76,30 @@ bool ListView::mousePressEvent(MouseEvent e) {
   if (!isFocused() || e.button != MouseButton::Left)
     return false;
 
-  uint index = e.y / m_itemHeight;
-  if (index < m_areas)
-    m_selectedItem = index;
+  uint index = (e.y + m_scroll) / m_itemHeight;
+  m_selectedItem = index;
 
   return true;
 }
 
-bool ListView::scrollUp() {
-  if ((m_scroll < m_rows.size() - m_areas) && m_rows.size() > m_areas)
-    ++m_scroll;
+bool ListView::scrollUp(uint amount) {
+  // total
+  double max = (m_rows.size() * m_itemHeight) - m_rect.h;
+
+  if (m_scroll < max) {
+    m_scroll += amount;
+    if (m_scroll > max)
+      m_scroll = max;
+  }
   return true;
 }
 
-bool ListView::scrollDown() {
-  if (m_scroll > 0)
-    --m_scroll;
+bool ListView::scrollDown(uint amount) {
+  if (m_scroll > 0) {
+    m_scroll -= amount;
+    if (m_scroll < 0)
+      m_scroll = 0;
+  }
   return true;
 }
 
@@ -114,21 +119,20 @@ bool ListView::mouseScrollEvent(MouseEvent e) {
 void ListView::paintEvent() {
   recalculateItems();
   m_painter->clear(m_bgColor, m_rect);
-  m_painter->setForeground("#000000");
-  m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   const char *sColor = isFocused() ? "#FF0000" : "#AAAAAA";
 
-  for (uint i = 0; i < m_areas; ++i) {
-    if (i + m_scroll == m_rows.size())
-      break;
-
+  for (uint i = 0; i < m_rows.size(); ++i) {
     Rect r = m_rects[i];
+    r.y -= m_scroll;
     auto isCurrent = m_selectedItem == i;
     m_painter->setForeground(isCurrent ? sColor : "#FFFFFF");
     m_painter->fillRect(r);
-    m_painter->drawString(m_rows[i + m_scroll].c_str(), m_rect.x - 5, r.y + r.h / 2, isCurrent ? "#FFFFFF" : "#000000");
+    m_painter->drawString(m_rows[i].c_str(), m_rect.x - 5, r.y + r.h / 2, isCurrent ? "#FFFFFF" : "#000000");
   }
+
+  m_painter->setForeground("#000000");
+  m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   m_painter->swapBuffers();
 }
