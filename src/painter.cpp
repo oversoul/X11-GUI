@@ -1,9 +1,5 @@
-#include "../include/painter.h"
-#include "../include/application.h"
-#include <X11/Xft/Xft.h>
-#include <X11/Xlib.h>
-#include <X11/extensions/Xdbe.h>
-#include <X11/extensions/Xrender.h>
+#include "painter.h"
+#include "application.h"
 #include <cstring>
 #include <iostream>
 

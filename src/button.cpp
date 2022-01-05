@@ -1,6 +1,6 @@
-#include "../include/button.h"
-#include "../include/application.h"
-#include "../include/typedefs.h"
+#include "button.h"
+#include "application.h"
+#include "typedefs.h"
 
 Button::Button() {
   newWindow();
