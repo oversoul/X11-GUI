@@ -48,12 +48,6 @@ void ListView::recalculateItems() {
   }
 }
 
-void ListView::selectClosestIndex(int position) {
-  uint index = position / m_itemHeight;
-  if (index < m_areas)
-    m_selectedItem = index;
-}
-
 bool ListView::keyPressEvent(KeyEvent ke) {
   if (!isFocused())
     return false;
@@ -80,12 +74,12 @@ bool ListView::keyPressEvent(KeyEvent ke) {
 }
 
 bool ListView::mousePressEvent(MouseEvent e) {
-  if (!isFocused())
-    return false;
-  if (e.button != MouseButton::Left)
+  if (!isFocused() || e.button != MouseButton::Left)
     return false;
 
-  selectClosestIndex(e.y);
+  uint index = e.y / m_itemHeight;
+  if (index < m_areas)
+    m_selectedItem = index;
 
   return true;
 }
@@ -118,6 +112,7 @@ bool ListView::mouseScrollEvent(MouseEvent e) {
 void ListView::paintEvent() {
   recalculateItems();
   m_painter->clear(m_bgColor, m_rect);
+  m_painter->setForeground(0x000000);
   m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
 
   ulong sColor = isFocused() ? 0xFF0000 : 0xAAAAAA;
