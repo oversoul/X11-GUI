@@ -141,9 +141,7 @@ void Application::processEvents() {
     return;
   }
 
-  if (m_event.type == ButtonPress && getMouseEvent(m_event).button == MouseButton::Left) {
-    m_focusedWindow = m_event.xbutton.window;
-  }
+  m_server->changeFocus(m_event, &m_focusedWindow);
 
   for (auto &w : m_layout->getWidgets()) {
     w->updateSizeAndPos();

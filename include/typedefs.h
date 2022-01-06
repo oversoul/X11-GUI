@@ -22,7 +22,10 @@ typedef struct {
 KeyEvent getKeyEvent(XEvent e);
 MouseEvent getMouseEvent(XEvent e);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
+
+/*
 void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h);
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
+*/

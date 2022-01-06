@@ -40,6 +40,8 @@ public:
 
   bool isEventPending();
 
+  void changeFocus(Event e, DrawableId* d);
+
   // font...
   FontArea getFontArea();
   void setFontArea(std::string name);
