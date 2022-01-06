@@ -19,11 +19,9 @@ Application::Application(std::string name, std::string title) : m_width(640), m_
   getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
   setSize(m_width, m_height);
 
-  XSetTransientForHint(m_display, m_window, m_window);
-
   loadXdbeExtension(m_display);
   m_wmDeleteMessage = getWindowClosingAtom(m_display, m_window);
-  setWindowNameAndTitle(m_display, m_window, name, title);
+  setWindowProperties(m_display, m_window, name, title);
   m_font = new FontSystem(m_display, "arial", 16);
 }
 

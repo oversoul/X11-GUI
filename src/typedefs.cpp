@@ -161,7 +161,7 @@ void getMonitorSize(Display *dpy, uint *width, uint *height) {
   }
 }
 
-void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::string title) {
+void setWindowProperties(Display *dpy, Window win, std::string name, std::string title) {
   if (title == "")
     title = name;
   char *cname = (char *)(name.c_str());
@@ -169,6 +169,7 @@ void setWindowNameAndTitle(Display *dpy, Window win, std::string name, std::stri
   XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
 
   XSetWMHints(dpy, win, &wmhints);
+  XSetTransientForHint(dpy, win, win);
   XStoreName(dpy, win, title.c_str());
   XSetClassHint(dpy, win, &class_hints);
 }
