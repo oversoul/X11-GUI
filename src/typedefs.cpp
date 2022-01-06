@@ -24,12 +24,6 @@ static int error_handler(Display *d, XErrorEvent *e) {
 }
 */
 
-Atom getWindowClosingAtom(Display *dpy, Window w) {
-  Atom dm = XInternAtom(dpy, "WM_DELETE_WINDOW", false);
-  XSetWMProtocols(dpy, w, &dm, 1);
-  return dm;
-}
-
 KeyEvent getKeyEvent(XEvent e) {
   KeySym key;
   char text[255];

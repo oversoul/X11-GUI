@@ -27,8 +27,6 @@ Window createWindow(Display *dpy, std::string color, Window p = -1);
 void setWindowProperties(Display *dpy, Window win, std::string name, std::string title);
 void setWindowBg(Display *dpy, Window w, std::string color);
 void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h);
-Atom getWindowClosingAtom(Display *dpy, Window w);
-
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
