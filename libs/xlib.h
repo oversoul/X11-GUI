@@ -8,6 +8,7 @@
 #include <iostream>
 
 using Event = XEvent;
+using IColor = XftColor;
 using FontArea = XftFont *;
 using DrawableId = Window;
 

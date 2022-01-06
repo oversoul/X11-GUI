@@ -1,9 +1,4 @@
 #include "listview.h"
-#include "application.h"
-#include "typedefs.h"
-#include <X11/keysym.h>
-#include <algorithm>
-#include <vector>
 
 ListView::ListView() {
   newWindow();

@@ -1,8 +1,6 @@
 #pragma once
 #include "../libs/xlib.h"
 #include "rect.h"
-#include "typedefs.h"
-#include <assert.h>
 #include <iostream>
 
 class Widget {

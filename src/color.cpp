@@ -28,7 +28,7 @@ Color::~Color() {
   delete m_instance;
 }
 
-XftColor Color::get(std::string name) {
+IColor Color::get(std::string name) {
   if (!m_instance)
     throw new std::runtime_error("Color needs to be initialized first");
 

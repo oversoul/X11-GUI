@@ -1,7 +1,4 @@
 #include "painter.h"
-#include "application.h"
-#include "color.h"
-#include <X11/Xlib.h>
 
 Painter::~Painter() {
 }
