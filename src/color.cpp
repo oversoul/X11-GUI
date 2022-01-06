@@ -4,7 +4,7 @@
 
 Color *Color::m_instance = nullptr;
 
-Color::Color(Xlib *server) : m_server(server) {
+Color::Color(WindowServer *server) : m_server(server) {
   if (m_instance)
     throw std::runtime_error("Color already initialized.");
   m_instance = this;

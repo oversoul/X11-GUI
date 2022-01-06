@@ -1,33 +1,32 @@
 #include "application.h"
 #include "typedefs.h"
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "xlib.h"
 #include <unistd.h>
 #define FPS 120
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(Xlib *server, std::string name, std::string title)
-    : m_width(640), m_height(480), m_server(server) {
+Application::Application(ServerType type, std::string name, std::string title) : m_width(640), m_height(480) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  server->setup();
-  m_color = new Color(server);
+  m_server = new Xlib;
+  m_server->setup();
+  m_color = new Color(m_server);
 
   ParentWindowInfo info{.name = name, .color = "#000000", .title = title, .w = m_width, .h = m_height};
-  m_window = server->newParentWindow(info);
+  m_window = m_server->newParentWindow(info);
   setSize(m_width, m_height);
 
-  m_font = new FontSystem(server, "arial", 16);
+  m_font = new FontSystem(m_server, "arial", 16);
 }
 
 const FontArea Application::getFontArea() const {
   return m_server->getFontArea();
 }
 
-Xlib *Application::server() const {
+WindowServer *Application::server() const {
   return m_server;
 }
 
@@ -99,7 +98,7 @@ bool Application::isFocused(Window id) {
 Application::~Application() {
   delete m_font;
   delete m_color;
-  delete m_server;
+  // delete m_server;
 }
 
 void Application::setLayout(Layout &l) {

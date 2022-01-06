@@ -1,6 +1,7 @@
 #pragma once
 #include "../include/painter.h"
 #include "../include/rect.h"
+#include "../include/server.h"
 #include "../include/typedefs.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
@@ -10,48 +11,42 @@ using Event = XEvent;
 using FontArea = XftFont *;
 using DrawableId = Window;
 
-typedef struct {
-  std::string name;
-  std::string color;
-  std::string title;
-  uint w, h;
-} ParentWindowInfo;
+using WindowServer = Server<Event, DrawableId, FontArea>;
 
-class Xlib {
+class Xlib : public WindowServer {
 public:
   ~Xlib();
 
-  bool isEventPending();
-  bool shouldClose(Event evt);
-  KeyEvent getKeyEvent(Event e);
-  MouseEvent getMouseEvent(Event e);
-  Painter *createPainter(DrawableId d);
-  int setColor(void *mem, std::string name);
-  DrawableId newSubWindow(std::string color);
-  DrawableId newParentWindow(ParentWindowInfo winInfo);
+  bool isEventPending() override;
+  bool shouldClose(Event evt) override;
+  KeyEvent getKeyEvent(Event e) override;
+  MouseEvent getMouseEvent(Event e) override;
+  Painter *createPainter(DrawableId d) override;
+  int setColor(void *mem, std::string name) override;
+  DrawableId newSubWindow(std::string color) override;
+  DrawableId newParentWindow(ParentWindowInfo winInfo) override;
 
-  void setup();
-  void getNextEvent(Event *evt);
-  void showWindow(DrawableId w);
-  void hideWindow(DrawableId w);
-  void destroyWindow(DrawableId d);
-  void changeFocus(Event e, DrawableId *d);
-  void setParentWindowSize(uint w, uint h);
-  void setWindowSizeAndPos(DrawableId d, Rect r);
-  void setWindowSize(DrawableId d, uint w, uint h);
-  void setWindowBg(DrawableId d, std::string color);
+  void setup() override;
+  void getNextEvent(Event *evt) override;
+  void showWindow(DrawableId w) override;
+  void hideWindow(DrawableId w) override;
+  void destroyWindow(DrawableId d) override;
+  void changeFocus(Event e, DrawableId *d) override;
+  void setWindowSizeAndPos(DrawableId d, Rect r) override;
+  void setWindowSize(DrawableId d, uint w, uint h) override;
+  void setWindowBg(DrawableId d, std::string color) override;
 
   // font...
-  void closeFontArea();
-  FontArea getFontArea();
-  void setFontArea(std::string name);
+  void closeFontArea() override;
+  FontArea getFontArea() override;
+  void setFontArea(std::string name) override;
 
-  bool onMouse(Event &e);
-  bool onKeyUp(Event &e);
-  bool onKeyDown(Event &e);
+  bool onMouse(Event &e) override;
+  bool onKeyUp(Event &e) override;
+  bool onKeyDown(Event &e) override;
 
-  MouseButton getButton(int btn);
-  WheelDirection getDirection(int btn);
+  MouseButton getButton(int btn) override;
+  WheelDirection getDirection(int btn) override;
 
 private:
   void getMonitorSize(uint *w, uint *h);
@@ -69,3 +64,4 @@ private:
   FontArea m_fontArea = nullptr;
   uint m_monitorWidth, m_monitorHeight;
 };
+

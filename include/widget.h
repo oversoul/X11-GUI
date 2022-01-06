@@ -34,8 +34,8 @@ public:
 protected:
   DrawableId m_drawable;
   Rect m_rect = {0, 0, 1, 1};
-  Xlib *m_server = nullptr;
   Painter *m_painter = nullptr;
+  WindowServer *m_server = nullptr;
 
   std::string m_bgColor = "#ffffff";
 };

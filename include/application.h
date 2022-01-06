@@ -2,11 +2,11 @@
 #include <iostream>
 #include <vector>
 
-#include "../libs/xlib.h"
 #include "color.h"
 #include "font.h"
 #include "layout.h"
 #include "painter.h"
+#include "server.h"
 #include "widget.h"
 
 class Application {
@@ -14,7 +14,7 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(Xlib *server, std::string name, std::string title = "");
+  Application(ServerType type, std::string name, std::string title = "");
   ~Application();
   static Application *instance();
 
@@ -35,7 +35,7 @@ public:
   FontSystem *font();
   void setFont(std::string name, uint size = 12, std::string weight = "normal");
 
-  Xlib* server() const;
+  WindowServer *server() const;
   Display *display() const;
   const DrawableId id() const;
   const Painter *painter() const;
@@ -66,6 +66,6 @@ private:
   Layout *m_layout = nullptr;
   FontSystem *m_font = nullptr;
 
-  Xlib *m_server = nullptr;
+  WindowServer *m_server = nullptr;
   static Application *m_instance;
 };
