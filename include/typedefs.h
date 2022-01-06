@@ -19,8 +19,8 @@ typedef struct {
   WheelDirection direction;
 } MouseEvent;
 
-KeyEvent getKeyEvent(XEvent e);
-MouseEvent getMouseEvent(XEvent e);
+MouseButton getButton(int btn);
+WheelDirection getDirection(int btn);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
 
 /*

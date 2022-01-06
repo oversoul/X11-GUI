@@ -16,7 +16,7 @@ void Widget::newWindow() {
 
 Widget::~Widget() {
   delete m_painter;
-  // XDestroyWindow(m_display, m_drawable);
+  m_server->destroyWindow(m_drawable);
 }
 
 const bool Widget::isFocused() const {
@@ -24,18 +24,16 @@ const bool Widget::isFocused() const {
 }
 
 bool Widget::handleEvent(Event &e) {
-  switch (e.type) {
-  case KeyPress:
-  case KeyRelease: {
-    KeyEvent key = getKeyEvent(e);
-    if (e.type == KeyPress)
-      return keyPressEvent(key);
-    if (e.type == KeyRelease)
-      return keyReleaseEvent(key);
-    return false;
+  if (m_server->onKeyDown(e)) {
+    auto key = m_server->getKeyEvent(e);
+    return keyPressEvent(key);
   }
-  case ButtonPress:
-    auto mouseEvent = getMouseEvent(e);
+  if (m_server->onKeyUp(e)) {
+    auto key = m_server->getKeyEvent(e);
+    return keyReleaseEvent(key);
+  }
+  if (m_server->onMouse(e)) {
+    auto mouseEvent = m_server->getMouseEvent(e);
     if (mouseEvent.isScroll) {
       return mouseScrollEvent(mouseEvent);
     }

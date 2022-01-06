@@ -185,3 +185,37 @@ void Xlib::changeFocus(Event e, DrawableId *d) {
     *d = e.xbutton.window;
   }
 }
+
+void Xlib::destroyWindow(DrawableId d) {
+  XDestroyWindow(m_dpy, d);
+}
+
+KeyEvent Xlib::getKeyEvent(Event e) {
+  KeySym key;
+  char text[255];
+  XLookupString(&e.xkey, text, 255, &key, 0);
+  return {.key = key, .text = std::string(text)};
+}
+
+MouseEvent Xlib::getMouseEvent(Event e) {
+  auto button = getButton(e.xbutton.button);
+  return {
+      .x = e.xbutton.x,
+      .y = e.xbutton.y,
+      .isScroll = button == MouseButton::Scroll,
+      .button = button,
+      .direction = getDirection(e.xbutton.button),
+  };
+}
+
+bool Xlib::onMouse(Event &e) {
+  return (e.type == ButtonPress);
+}
+
+bool Xlib::onKeyDown(Event &e) {
+  return (e.type == KeyPress);
+}
+
+bool Xlib::onKeyUp(Event &e) {
+  return (e.type == KeyRelease);
+}

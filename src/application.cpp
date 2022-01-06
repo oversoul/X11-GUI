@@ -119,10 +119,8 @@ void Application::triggerExit() {
 }
 
 void Application::checkForExit() {
-  if (m_server->shouldClose(m_event)) {
-    triggerExit();
-    return;
-  }
+  if (m_server->shouldClose(m_event))
+    return triggerExit();
 }
 
 void Application::processEvents() {
@@ -153,9 +151,9 @@ void Application::processEvents() {
 
 void Application::exec() {
   m_server->showWindow(m_window);
-  for (auto &w : m_layout->getWidgets()) {
+  for (auto &w : m_layout->getWidgets())
     m_server->showWindow(w->id());
-  }
+
   auto *widget = m_layout->getFirstWidget();
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
 

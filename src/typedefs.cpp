@@ -24,14 +24,7 @@ static int error_handler(Display *d, XErrorEvent *e) {
 }
 */
 
-KeyEvent getKeyEvent(XEvent e) {
-  KeySym key;
-  char text[255];
-  XLookupString(&e.xkey, text, 255, &key, 0);
-  return {.key = key, .text = std::string(text)};
-}
-
-static MouseButton getButton(int btn) {
+MouseButton getButton(int btn) {
   if (btn == 1)
     return MouseButton::Left;
   if (btn == 2)
@@ -43,7 +36,7 @@ static MouseButton getButton(int btn) {
   return MouseButton::Unknown;
 }
 
-static WheelDirection getDirection(int btn) {
+WheelDirection getDirection(int btn) {
   if (btn == 4)
     return WheelDirection::Up;
   if (btn == 5)
@@ -51,17 +44,6 @@ static WheelDirection getDirection(int btn) {
   return WheelDirection::Unknown;
 }
 
-MouseEvent getMouseEvent(XEvent e) {
-  auto button = getButton(e.xbutton.button);
-
-  return {
-      .x = e.xbutton.x,
-      .y = e.xbutton.y,
-      .isScroll = button == MouseButton::Scroll,
-      .button = button,
-      .direction = getDirection(e.xbutton.button),
-  };
-}
 
 void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
   XSizeHints sizehints;

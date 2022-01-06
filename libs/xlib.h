@@ -1,6 +1,7 @@
 #pragma once
 #include "../include/painter.h"
 #include "../include/rect.h"
+#include "../include/typedefs.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <iostream>
@@ -40,12 +41,20 @@ public:
 
   bool isEventPending();
 
-  void changeFocus(Event e, DrawableId* d);
+  void changeFocus(Event e, DrawableId *d);
+  void destroyWindow(DrawableId d);
+
+  KeyEvent getKeyEvent(Event e);
+  MouseEvent getMouseEvent(Event e);
 
   // font...
   FontArea getFontArea();
   void setFontArea(std::string name);
   void closeFontArea();
+
+  bool onMouse(Event& e);
+  bool onKeyUp(Event& e);
+  bool onKeyDown(Event& e);
 
 private:
   int getScreens(int *left_x, int *right_x, int *top_y, int *bottom_y);
