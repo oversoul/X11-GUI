@@ -20,48 +20,52 @@ typedef struct {
 class Xlib {
 public:
   ~Xlib();
-  void setup();
-  void getMonitorSize(uint *w, uint *h);
-  DrawableId newParentWindow(ParentWindowInfo winInfo);
-  DrawableId newSubWindow(std::string color);
-  void setParentWindowSize(uint w, uint h);
-  void setWindowSizeAndPos(DrawableId d, Rect r);
 
+  bool isEventPending();
+  bool shouldClose(Event evt);
+  KeyEvent getKeyEvent(Event e);
+  MouseEvent getMouseEvent(Event e);
   Painter *createPainter(DrawableId d);
+  int setColor(void *mem, std::string name);
+  DrawableId newSubWindow(std::string color);
+  DrawableId newParentWindow(ParentWindowInfo winInfo);
 
+  void setup();
+  void getNextEvent(Event *evt);
   void showWindow(DrawableId w);
   void hideWindow(DrawableId w);
-
-  bool shouldClose(Event evt);
-  int setColor(void *mem, std::string name);
+  void destroyWindow(DrawableId d);
+  void changeFocus(Event e, DrawableId *d);
+  void setParentWindowSize(uint w, uint h);
+  void setWindowSizeAndPos(DrawableId d, Rect r);
   void setWindowSize(DrawableId d, uint w, uint h);
   void setWindowBg(DrawableId d, std::string color);
 
-  void getNextEvent(Event *evt);
-
-  bool isEventPending();
-
-  void changeFocus(Event e, DrawableId *d);
-  void destroyWindow(DrawableId d);
-
-  KeyEvent getKeyEvent(Event e);
-  MouseEvent getMouseEvent(Event e);
-
   // font...
+  void closeFontArea();
   FontArea getFontArea();
   void setFontArea(std::string name);
-  void closeFontArea();
 
-  bool onMouse(Event& e);
-  bool onKeyUp(Event& e);
-  bool onKeyDown(Event& e);
+  bool onMouse(Event &e);
+  bool onKeyUp(Event &e);
+  bool onKeyDown(Event &e);
+
+  MouseButton getButton(int btn);
+  WheelDirection getDirection(int btn);
 
 private:
+  void getMonitorSize(uint *w, uint *h);
+
   int getScreens(int *left_x, int *right_x, int *top_y, int *bottom_y);
-  int m_defaultScreen;
-  uint m_monitorWidth, m_monitorHeight;
+  DrawableId createWindow(Display *dpy, std::string color, DrawableId p = -1);
+
   Display *m_dpy;
+  int m_defaultDepth;
+  int m_defaultScreen;
+  int m_defaultColorMap;
   Atom m_wmDeleteMessage;
+  Visual *m_defaultVisual;
   DrawableId m_mainWindow;
   FontArea m_fontArea = nullptr;
+  uint m_monitorWidth, m_monitorHeight;
 };

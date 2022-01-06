@@ -3,8 +3,25 @@
 #include "typedefs.h"
 #include "xlibpainter.h"
 #include <X11/Xlib.h>
+#include <X11/extensions/Xrandr.h>
 #include <cstdlib>
 #include <stdio.h>
+
+DrawableId Xlib::createWindow(Display *dpy, std::string color, DrawableId p) {
+  auto c = Color::get(color);
+
+  XSetWindowAttributes attr{
+      .background_pixel = c.pixel,
+      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask,
+  };
+
+  if (p == (long unsigned int)-1) {
+    p = DefaultRootWindow(dpy);
+  }
+
+  ulong mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
+  return XCreateWindow(dpy, p, 0, 1, 1, 1, 0, m_defaultDepth, InputOutput, m_defaultVisual, mask, &attr);
+}
 
 Xlib::~Xlib() {
   hideWindow(m_mainWindow);
@@ -19,11 +36,14 @@ void Xlib::setup() {
     exit(1);
   }
 
+  m_defaultScreen = DefaultScreen(m_dpy);
+  m_defaultDepth = DefaultDepth(m_dpy, m_defaultScreen);
+  m_defaultVisual = XDefaultVisual(m_dpy, m_defaultScreen);
+  m_defaultColorMap = XDefaultColormap(m_dpy, m_defaultScreen);
+
   int majorVersion, minorVersion;
   if (!XdbeQueryExtension(m_dpy, &majorVersion, &minorVersion))
     throw std::runtime_error("XDBE is not supported!!!");
-
-  m_defaultScreen = DefaultScreen(m_dpy);
 }
 
 DrawableId Xlib::newParentWindow(ParentWindowInfo winInfo) {
@@ -135,11 +155,9 @@ void Xlib::getMonitorSize(uint *w, uint *h) {
 }
 
 int Xlib::setColor(void *mem, std::string name) {
-  int cm = XDefaultColormap(m_dpy, m_defaultScreen);
-  Visual *dv = DefaultVisual(m_dpy, m_defaultScreen);
   memset((XftColor *)mem, 0, sizeof(XftColor));
 
-  if (!XftColorAllocName(m_dpy, dv, cm, name.c_str(), (XftColor *)mem)) {
+  if (!XftColorAllocName(m_dpy, m_defaultVisual, m_defaultColorMap, name.c_str(), (XftColor *)mem)) {
     return -1;
   }
   return 0;
@@ -218,4 +236,24 @@ bool Xlib::onKeyDown(Event &e) {
 
 bool Xlib::onKeyUp(Event &e) {
   return (e.type == KeyRelease);
+}
+
+MouseButton Xlib::getButton(int btn) {
+  if (btn == 1)
+    return MouseButton::Left;
+  if (btn == 2)
+    return MouseButton::Middle;
+  if (btn == 3)
+    return MouseButton::Right;
+  if (btn == 4 || btn == 5)
+    return MouseButton::Scroll;
+  return MouseButton::Unknown;
+}
+
+WheelDirection Xlib::getDirection(int btn) {
+  if (btn == 4)
+    return WheelDirection::Up;
+  if (btn == 5)
+    return WheelDirection::Down;
+  return WheelDirection::Unknown;
 }

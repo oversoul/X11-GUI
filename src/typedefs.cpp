@@ -1,10 +1,5 @@
 #include "typedefs.h"
-#include "color.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/extensions/Xdbe.h>
 #include <iostream>
-#include <stdexcept>
 
 // print key modifier...
 void print_modifiers(uint mask) {
@@ -23,46 +18,6 @@ static int error_handler(Display *d, XErrorEvent *e) {
   return 0;
 }
 */
-
-MouseButton getButton(int btn) {
-  if (btn == 1)
-    return MouseButton::Left;
-  if (btn == 2)
-    return MouseButton::Middle;
-  if (btn == 3)
-    return MouseButton::Right;
-  if (btn == 4 || btn == 5)
-    return MouseButton::Scroll;
-  return MouseButton::Unknown;
-}
-
-WheelDirection getDirection(int btn) {
-  if (btn == 4)
-    return WheelDirection::Up;
-  if (btn == 5)
-    return WheelDirection::Down;
-  return WheelDirection::Unknown;
-}
-
-Window createWindow(Display *dpy, std::string color, Window p) {
-  int screen = XDefaultScreen(dpy);
-  int depth = DefaultDepth(dpy, screen);
-  Visual *visual = XDefaultVisual(dpy, screen);
-  auto c = Color::get(color);
-
-  XSetWindowAttributes attr{
-      .background_pixel = c.pixel,
-      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask,
-  };
-
-  if (p == (long unsigned int)-1) {
-    p = DefaultRootWindow(dpy);
-  }
-
-  ulong mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
-  auto w = XCreateWindow(dpy, p, 0, 1, 1, 1, 0, depth, InputOutput, visual, mask, &attr);
-  return w;
-}
 
 /*
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite) {
