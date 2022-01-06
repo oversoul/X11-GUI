@@ -44,17 +44,6 @@ WheelDirection getDirection(int btn) {
   return WheelDirection::Unknown;
 }
 
-
-void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
-  XSizeHints sizehints;
-  sizehints.flags = PMinSize | PMaxSize;
-  sizehints.max_width = sizehints.min_width = w;
-  sizehints.max_height = sizehints.min_height = h;
-  XSetNormalHints(dpy, win, &sizehints);
-  XMoveResizeWindow(dpy, win, x, y, w, h);
-}
-
-
 Window createWindow(Display *dpy, std::string color, Window p) {
   int screen = XDefaultScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
@@ -75,6 +64,7 @@ Window createWindow(Display *dpy, std::string color, Window p) {
   return w;
 }
 
+/*
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite) {
   Atom wmatom = XInternAtom(dpy, data, False);
   Atom atom = XInternAtom(dpy, property.c_str(), False);
@@ -94,3 +84,4 @@ void setWindowType(Display *dpy, Window w, std::string type) {
   // printf("Setting window as type %s\n",type);
   changeWMprop(dpy, w, "_NET_WM_WINDOW_TYPE", prop.c_str(), True);
 }
+*/
