@@ -72,12 +72,6 @@ void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
   XMoveResizeWindow(dpy, win, x, y, w, h);
 }
 
-void loadXdbeExtension(Display *dpy) {
-  int majorVersion, minorVersion;
-  if (!XdbeQueryExtension(dpy, &majorVersion, &minorVersion))
-    throw std::runtime_error("XDBE is not supported!!!");
-}
-
 ulong stringToKeysym(const char *key) {
   return XStringToKeysym(key);
 }

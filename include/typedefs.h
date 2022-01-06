@@ -21,7 +21,6 @@ typedef struct {
 
 KeyEvent getKeyEvent(XEvent e);
 MouseEvent getMouseEvent(XEvent e);
-void loadXdbeExtension(Display *dpy);
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
 void setWindowProperties(Display *dpy, Window win, std::string name, std::string title);

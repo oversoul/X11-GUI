@@ -19,7 +19,10 @@ void Xlib::setup() {
     exit(1);
   }
 
-  loadXdbeExtension(m_dpy);
+  int majorVersion, minorVersion;
+  if (!XdbeQueryExtension(m_dpy, &majorVersion, &minorVersion))
+    throw std::runtime_error("XDBE is not supported!!!");
+
   m_defaultScreen = DefaultScreen(m_dpy);
 }
 
