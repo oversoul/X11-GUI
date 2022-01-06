@@ -19,10 +19,8 @@ typedef struct {
   WheelDirection direction;
 } MouseEvent;
 
-Display *openDisplay();
 KeyEvent getKeyEvent(XEvent e);
 MouseEvent getMouseEvent(XEvent e);
-XftDraw *getXftDrawArea(Display *dpy, Drawable d);
 void loadXdbeExtension(Display *dpy);
 int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
@@ -30,8 +28,6 @@ void setWindowProperties(Display *dpy, Window win, std::string name, std::string
 void setWindowBg(Display *dpy, Window w, std::string color);
 void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h);
 Atom getWindowClosingAtom(Display *dpy, Window w);
-
-int setXftColor(Display *dpy, void *mem, std::string color);
 
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);

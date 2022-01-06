@@ -81,7 +81,14 @@ void Xlib::getMonitorSize(uint *w, uint *h) {
 }
 
 int Xlib::setColor(void *mem, std::string name) {
-  return setXftColor(m_dpy, mem, name);
+  int cm = XDefaultColormap(m_dpy, m_defaultScreen);
+  Visual *dv = DefaultVisual(m_dpy, m_defaultScreen);
+  memset((XftColor *)mem, 0, sizeof(XftColor));
+
+  if (!XftColorAllocName(m_dpy, dv, cm, name.c_str(), (XftColor *)mem)) {
+    return -1;
+  }
+  return 0;
 }
 
 bool Xlib::shouldClose(Event evt) {

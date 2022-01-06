@@ -24,16 +24,6 @@ static int error_handler(Display *d, XErrorEvent *e) {
 }
 */
 
-Display *openDisplay() {
-  Display *dpy = XOpenDisplay(getenv("DISPLAY"));
-  if (!dpy) {
-    fprintf(stderr, "Couldn't open Display\n");
-    exit(1);
-  }
-  // XSetErrorHandler(error_handler);
-  return dpy;
-}
-
 Atom getWindowClosingAtom(Display *dpy, Window w) {
   Atom dm = XInternAtom(dpy, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(dpy, w, &dm, 1);
@@ -86,23 +76,6 @@ void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
   sizehints.max_height = sizehints.min_height = h;
   XSetNormalHints(dpy, win, &sizehints);
   XMoveResizeWindow(dpy, win, x, y, w, h);
-}
-
-XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
-  int s = XDefaultScreen(dpy);
-  return XftDrawCreate(dpy, d, DefaultVisual(dpy, s), DefaultColormap(dpy, s));
-}
-
-int setXftColor(Display *dpy, void *mem, std::string color) {
-  int s = XDefaultScreen(dpy);
-  int cm = XDefaultColormap(dpy, s);
-  Visual *dv = DefaultVisual(dpy, s);
-  memset((XftColor *)mem, 0, sizeof(XftColor));
-
-  if (!XftColorAllocName(dpy, dv, cm, color.c_str(), (XftColor *)mem)) {
-    return -1;
-  }
-  return 0;
 }
 
 void loadXdbeExtension(Display *dpy) {
