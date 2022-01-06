@@ -83,6 +83,15 @@ MouseEvent getMouseEvent(XEvent e) {
   };
 }
 
+void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
+  XSizeHints sizehints;
+  sizehints.flags = PMinSize | PMaxSize;
+  sizehints.max_width = sizehints.min_width = w;
+  sizehints.max_height = sizehints.min_height = h;
+  XSetNormalHints(dpy, win, &sizehints);
+  XMoveResizeWindow(dpy, win, x, y, w, h);
+}
+
 XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
   int s = getScreen(dpy);
   return XftDrawCreate(dpy, d, DefaultVisual(dpy, s), DefaultColormap(dpy, s));
@@ -174,7 +183,7 @@ void setWindowProperties(Display *dpy, Window win, std::string name, std::string
   XSetClassHint(dpy, win, &class_hints);
 }
 
-void setWindowBg(Display* dpy, Window w, std::string color) {
+void setWindowBg(Display *dpy, Window w, std::string color) {
   auto c = Color::get(color);
   XSetWindowBackground(dpy, w, c.pixel);
 }

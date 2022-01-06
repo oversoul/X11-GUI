@@ -30,6 +30,7 @@ void getMonitorSize(Display *dpy, uint *width, uint *height);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
 void setWindowProperties(Display *dpy, Window win, std::string name, std::string title);
 void setWindowBg(Display *dpy, Window w, std::string color);
+void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h);
 Atom getWindowClosingAtom(Display *dpy, Window w);
 
 int setXftColor(Display *dpy, void *mem, std::string color);
