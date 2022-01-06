@@ -72,66 +72,6 @@ void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
   XMoveResizeWindow(dpy, win, x, y, w, h);
 }
 
-ulong stringToKeysym(const char *key) {
-  return XStringToKeysym(key);
-}
-
-int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y) {
-  // Get currently focused window
-  Window win = -1;
-  int focus_status;
-  XGetInputFocus(dpy, &win, &focus_status);
-
-  if (win == PointerRoot || win == None)
-    return -1;
-
-  XWindowAttributes win_attr;
-  XRRScreenResources *screen_res = XRRGetScreenResources(dpy, DefaultRootWindow(dpy));
-  XGetWindowAttributes(dpy, win, &win_attr);
-
-  int det_x = 0, det_y = 0, nmonitors = 0;
-
-  XRRGetMonitors(dpy, win, 1, &nmonitors);
-
-  for (int i = 0; i < nmonitors; i++) {
-    XRRCrtcInfo *screen_info = XRRGetCrtcInfo(dpy, screen_res, screen_res->crtcs[i]);
-
-    // If the window is on the ith screen in the x
-    if ((det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) &&
-        (det_y >= screen_info->y && det_y < (int)(screen_info->y + screen_info->height))) {
-      *left_x = screen_info->x;
-      *right_x = screen_info->x + screen_info->width;
-      *top_y = screen_info->y;
-      *bottom_y = screen_info->y + screen_info->height;
-      free(screen_info);
-      free(screen_res);
-      return 0;
-    }
-    free(screen_info);
-  }
-
-  free(screen_res);
-  // If the function has not returned yet, then it could not find a screen on which 'win' resides.
-  return -1;
-}
-
-void setWindowProperties(Display *dpy, Window win, std::string name, std::string title) {
-  if (title == "")
-    title = name;
-  char *cname = (char *)(name.c_str());
-  XClassHint class_hints = {.res_name = cname, .res_class = cname};
-  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
-
-  XSetWMHints(dpy, win, &wmhints);
-  XSetTransientForHint(dpy, win, win);
-  XStoreName(dpy, win, title.c_str());
-  XSetClassHint(dpy, win, &class_hints);
-}
-
-void setWindowBg(Display *dpy, Window w, std::string color) {
-  auto c = Color::get(color);
-  XSetWindowBackground(dpy, w, c.pixel);
-}
 
 Window createWindow(Display *dpy, std::string color, Window p) {
   int screen = XDefaultScreen(dpy);

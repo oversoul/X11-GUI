@@ -28,7 +28,19 @@ void Xlib::setup() {
 
 DrawableId Xlib::newParentWindow(ParentWindowInfo winInfo) {
   m_mainWindow = createWindow(m_dpy, winInfo.color);
-  setWindowProperties(m_dpy, m_mainWindow, winInfo.name, winInfo.title);
+
+  if (winInfo.title == "")
+    winInfo.title = winInfo.name;
+
+  char *cname = (char *)(winInfo.name.c_str());
+  XClassHint class_hints = {.res_name = cname, .res_class = cname};
+  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
+
+  XSetWMHints(m_dpy, m_mainWindow, &wmhints);
+  XSetTransientForHint(m_dpy, m_mainWindow, m_mainWindow);
+  XStoreName(m_dpy, m_mainWindow, winInfo.title.c_str());
+  XSetClassHint(m_dpy, m_mainWindow, &class_hints);
+
   m_wmDeleteMessage = XInternAtom(m_dpy, "WM_DELETE_WINDOW", false);
   XSetWMProtocols(m_dpy, m_mainWindow, &m_wmDeleteMessage, 1);
   getMonitorSize(&m_monitorWidth, &m_monitorHeight);
@@ -72,9 +84,48 @@ void Xlib::setWindowSize(DrawableId d, uint w, uint h) {
   XMoveResizeWindow(m_dpy, d, x, y, w, h);
 }
 
+int Xlib::getScreens(int *left_x, int *right_x, int *top_y, int *bottom_y) {
+  // Get currently focused window
+  Window win = -1;
+  int focus_status;
+  XGetInputFocus(m_dpy, &win, &focus_status);
+
+  if (win == PointerRoot || win == None)
+    return -1;
+
+  XWindowAttributes win_attr;
+  XRRScreenResources *screen_res = XRRGetScreenResources(m_dpy, DefaultRootWindow(m_dpy));
+  XGetWindowAttributes(m_dpy, win, &win_attr);
+
+  int det_x = 0, det_y = 0, nmonitors = 0;
+
+  XRRGetMonitors(m_dpy, win, 1, &nmonitors);
+
+  for (int i = 0; i < nmonitors; i++) {
+    XRRCrtcInfo *screen_info = XRRGetCrtcInfo(m_dpy, screen_res, screen_res->crtcs[i]);
+
+    // If the window is on the ith screen in the x
+    if ((det_x >= screen_info->x && det_x < (int)(screen_info->x + screen_info->width)) &&
+        (det_y >= screen_info->y && det_y < (int)(screen_info->y + screen_info->height))) {
+      *left_x = screen_info->x;
+      *right_x = screen_info->x + screen_info->width;
+      *top_y = screen_info->y;
+      *bottom_y = screen_info->y + screen_info->height;
+      free(screen_info);
+      free(screen_res);
+      return 0;
+    }
+    free(screen_info);
+  }
+
+  free(screen_res);
+  // If the function has not returned yet, then it could not find a screen on which 'win' resides.
+  return -1;
+}
+
 void Xlib::getMonitorSize(uint *w, uint *h) {
   int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
-  if (getScreens(m_dpy, 0, &left_x, &right_x, &top_y, &bottom_y) < 0) {
+  if (getScreens(&left_x, &right_x, &top_y, &bottom_y) < 0) {
     *w = XDisplayWidth(m_dpy, m_defaultScreen);
     *h = XDisplayHeight(m_dpy, m_defaultScreen);
   } else {

@@ -6,7 +6,7 @@
 #include <X11/extensions/Xrandr.h>
 
 typedef struct {
-  KeySym key;
+  unsigned long key;
   std::string text;
 } KeyEvent;
 
@@ -21,13 +21,8 @@ typedef struct {
 
 KeyEvent getKeyEvent(XEvent e);
 MouseEvent getMouseEvent(XEvent e);
-int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *top_y, int *bottom_y);
 Window createWindow(Display *dpy, std::string color, Window p = -1);
-void setWindowProperties(Display *dpy, Window win, std::string name, std::string title);
-void setWindowBg(Display *dpy, Window w, std::string color);
 void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h);
 void setWindowType(Display *dpy, Window w, std::string type);
 Atom addWindowState(Display *dpy, Window w, std::string type);
 Atom changeWMprop(Display *dpy, Window w, std::string property, const char *data, Bool overwrite);
-
-ulong stringToKeysym(const char *key);

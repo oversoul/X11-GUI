@@ -46,6 +46,7 @@ public:
   void closeFontArea();
 
 private:
+  int getScreens(int *left_x, int *right_x, int *top_y, int *bottom_y);
   int m_defaultScreen;
   uint m_monitorWidth, m_monitorHeight;
   Display *m_dpy;
