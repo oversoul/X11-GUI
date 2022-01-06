@@ -174,6 +174,11 @@ void setWindowProperties(Display *dpy, Window win, std::string name, std::string
   XSetClassHint(dpy, win, &class_hints);
 }
 
+void setWindowBg(Display* dpy, Window w, std::string color) {
+  auto c = Color::get(color);
+  XSetWindowBackground(dpy, w, c.pixel);
+}
+
 Window createWindow(Display *dpy, std::string color, Window p) {
   int screen = getScreen(dpy);
   int depth = DefaultDepth(dpy, screen);

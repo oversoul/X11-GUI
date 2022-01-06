@@ -44,8 +44,7 @@ Application *Application::instance() {
 }
 
 void Application::setBg(std::string color) {
-  auto c = Color::get(color);
-  XSetWindowBackground(m_display, m_window, c.pixel);
+  setWindowBg(m_display, m_window, color);
 }
 
 void Application::setFont(std::string name, uint size, std::string weight) {
