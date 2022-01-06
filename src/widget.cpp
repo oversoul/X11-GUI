@@ -2,28 +2,28 @@
 #include "../include/application.h"
 #include "../include/typedefs.h"
 
-Widget::Widget() : m_display(Application::instance()->display()) {
+Widget::Widget() : m_server(Application::instance()->server()) {
 }
 
 const Window Widget::id() const {
-  return m_window;
+  return m_drawable;
 }
 
 void Widget::newWindow() {
-  m_window = createWindow(m_display, m_bgColor, Application::instance()->window());
-  m_painter = new Painter(m_display, m_window);
+  m_drawable = m_server->newSubWindow(m_bgColor);
+  m_painter = m_server->createPainter(m_drawable);
 }
 
 Widget::~Widget() {
   delete m_painter;
-  XDestroyWindow(m_display, m_window);
+  // XDestroyWindow(m_display, m_drawable);
 }
 
 const bool Widget::isFocused() const {
   return Application::instance()->isFocused(id());
 }
 
-bool Widget::handleEvent(XEvent &e) {
+bool Widget::handleEvent(Event &e) {
   switch (e.type) {
   case KeyPress:
   case KeyRelease: {
@@ -70,7 +70,7 @@ const Rect Widget::getRect() const {
 }
 
 void Widget::updateSizeAndPos() {
-  XMoveResizeWindow(m_display, m_window, m_rect.x, m_rect.y, m_rect.w, m_rect.h);
+  m_server->setWindowSizeAndPos(m_drawable, m_rect);
 }
 
 void Widget::paintEvent() {

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "../libs/xlib.h"
 #include "color.h"
 #include "font.h"
 #include "layout.h"
@@ -13,7 +14,7 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(std::string name, std::string title = "");
+  Application(Xlib *server, std::string name, std::string title = "");
   ~Application();
   static Application *instance();
 
@@ -23,9 +24,9 @@ public:
   void exec();
   bool shouldExit();
   void triggerExit();
-  bool eventPending();
+  const FontArea getFontArea() const;
 
-  bool isFocused(Window id);
+  bool isFocused(DrawableId id);
 
   void setSize(uint, uint);
   void setLayout(Layout &);
@@ -34,11 +35,12 @@ public:
   FontSystem *font();
   void setFont(std::string name, uint size = 12, std::string weight = "normal");
 
+  Xlib* server() const;
   Display *display() const;
-  const Window id() const;
-  const Window window() const;
+  const DrawableId id() const;
   const Painter *painter() const;
-  const Window focusedWindow() const;
+  const DrawableId window() const;
+  const DrawableId focusedWindow() const;
 
   const uint width() const;
   const uint height() const;
@@ -55,15 +57,15 @@ private:
 
   int m_screen;
   XEvent m_event;
-  Window m_window;
-  Window m_focusedWindow = -1;
+  DrawableId m_window;
+  DrawableId m_focusedWindow = -1;
 
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
   Color *m_color = nullptr;
   Layout *m_layout = nullptr;
   FontSystem *m_font = nullptr;
-  Display *m_display = nullptr;
 
+  Xlib *m_server = nullptr;
   static Application *m_instance;
 };

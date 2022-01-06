@@ -6,6 +6,7 @@
 #include <X11/Xutil.h>
 #include <X11/extensions/Xdbe.h>
 
+#include "libs/xlib.h"
 #include "include/typedefs.h"
 #include "include/painter.h"
 #include "include/widget.h"

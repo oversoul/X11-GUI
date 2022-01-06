@@ -40,10 +40,6 @@ Atom getWindowClosingAtom(Display *dpy, Window w) {
   return dm;
 }
 
-int getScreen(Display *dpy) {
-  return DefaultScreen(dpy);
-}
-
 KeyEvent getKeyEvent(XEvent e) {
   KeySym key;
   char text[255];
@@ -93,12 +89,12 @@ void setWindowSize(Display *dpy, Window win, uint x, uint y, uint w, uint h) {
 }
 
 XftDraw *getXftDrawArea(Display *dpy, Drawable d) {
-  int s = getScreen(dpy);
+  int s = XDefaultScreen(dpy);
   return XftDrawCreate(dpy, d, DefaultVisual(dpy, s), DefaultColormap(dpy, s));
 }
 
 int setXftColor(Display *dpy, void *mem, std::string color) {
-  int s = getScreen(dpy);
+  int s = XDefaultScreen(dpy);
   int cm = XDefaultColormap(dpy, s);
   Visual *dv = DefaultVisual(dpy, s);
   memset((XftColor *)mem, 0, sizeof(XftColor));
@@ -158,18 +154,6 @@ int getScreens(Display *dpy, int use_anchors, int *left_x, int *right_x, int *to
   return -1;
 }
 
-void getMonitorSize(Display *dpy, uint *width, uint *height) {
-  int left_x = 0, right_x = 0, top_y = 0, bottom_y = 0;
-  if (getScreens(dpy, 0, &left_x, &right_x, &top_y, &bottom_y) < 0) {
-    int s = getScreen(dpy);
-    *width = XDisplayWidth(dpy, s);
-    *height = XDisplayHeight(dpy, s);
-  } else {
-    *width = right_x;
-    *height = bottom_y;
-  }
-}
-
 void setWindowProperties(Display *dpy, Window win, std::string name, std::string title) {
   if (title == "")
     title = name;
@@ -189,7 +173,7 @@ void setWindowBg(Display *dpy, Window w, std::string color) {
 }
 
 Window createWindow(Display *dpy, std::string color, Window p) {
-  int screen = getScreen(dpy);
+  int screen = XDefaultScreen(dpy);
   int depth = DefaultDepth(dpy, screen);
   Visual *visual = XDefaultVisual(dpy, screen);
   auto c = Color::get(color);

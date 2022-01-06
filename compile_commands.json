@@ -10,11 +10,13 @@
       "-std=c++0x",
       "-I",
       "include/",
+      "-I",
+      "libs/",
       "-I/usr/include/freetype2",
       "-I/usr/include/libpng16"
     ],
-    "directory": "/home/ae/Code/clang/notes/xgui/lib",
-    "file": "/home/ae/Code/clang/notes/xgui/lib/xgui.cpp",
-    "output": "/home/ae/Code/clang/notes/xgui/lib/build/xgui.o"
+    "directory": "/home/ae/Code/clang/notes/xgui",
+    "file": "/home/ae/Code/clang/notes/xgui/xgui.cpp",
+    "output": "/home/ae/Code/clang/notes/xgui/build/xgui.o"
   }
 ]

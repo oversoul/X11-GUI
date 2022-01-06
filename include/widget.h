@@ -1,5 +1,5 @@
 #pragma once
-#include "painter.h"
+#include "../libs/xlib.h"
 #include "rect.h"
 #include "typedefs.h"
 #include <assert.h>
@@ -13,8 +13,8 @@ public:
   void newWindow();
 
   void setRect(Rect r);
-  const Window id() const;
   const Rect getRect() const;
+  const DrawableId id() const;
 
   void setWidth(uint w);
   void setHeight(uint h);
@@ -22,7 +22,7 @@ public:
   void setPosition(uint x, uint y);
 
   void updateSizeAndPos();
-  bool handleEvent(XEvent &e);
+  bool handleEvent(Event &e);
   const bool isFocused() const;
 
   virtual void paintEvent();
@@ -32,10 +32,9 @@ public:
   virtual bool mouseScrollEvent(MouseEvent);
 
 protected:
-  Window m_window;
+  DrawableId m_drawable;
   Rect m_rect = {0, 0, 1, 1};
-  bool m_needRepaint = true;
-  Display *m_display = nullptr;
+  Xlib *m_server = nullptr;
   Painter *m_painter = nullptr;
 
   std::string m_bgColor = "#ffffff";

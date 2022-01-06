@@ -7,22 +7,28 @@
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(std::string name, std::string title) : m_width(640), m_height(480) {
+Application::Application(Xlib *server, std::string name, std::string title)
+    : m_width(640), m_height(480), m_server(server) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_display = openDisplay();
-  m_color = new Color(m_display);
-  m_window = createWindow(m_display, "#000000");
+  server->setup();
+  m_color = new Color(server);
 
-  getMonitorSize(m_display, &m_screenWidth, &m_screenHeight);
+  ParentWindowInfo info{.name = name, .color = "#000000", .title = title, .w = m_width, .h = m_height};
+  m_window = server->newParentWindow(info);
   setSize(m_width, m_height);
 
-  loadXdbeExtension(m_display);
-  m_wmDeleteMessage = getWindowClosingAtom(m_display, m_window);
-  setWindowProperties(m_display, m_window, name, title);
-  m_font = new FontSystem(m_display, "arial", 16);
+  m_font = new FontSystem(server, "arial", 16);
+}
+
+const FontArea Application::getFontArea() const {
+  return m_server->getFontArea();
+}
+
+Xlib *Application::server() const {
+  return m_server;
 }
 
 void Application::setType(std::string type) {
@@ -44,7 +50,7 @@ Application *Application::instance() {
 }
 
 void Application::setBg(std::string color) {
-  setWindowBg(m_display, m_window, color);
+  m_server->setWindowBg(m_window, color);
 }
 
 void Application::setFont(std::string name, uint size, std::string weight) {
@@ -58,7 +64,7 @@ FontSystem *Application::font() {
 void Application::setSize(uint w, uint h) {
   m_width = w;
   m_height = h;
-  setWindowSize(m_display, m_window, m_screenWidth / 2 - w / 2, m_screenHeight / 2 - h / 2, w, h);
+  m_server->setWindowSize(m_window, w, h);
 }
 
 const uint Application::width() const {
@@ -78,7 +84,8 @@ const Window Application::id() const {
 }
 
 Display *Application::display() const {
-  return m_display;
+  assert("display is not used anymore");
+  return nullptr;
 }
 
 const Window Application::focusedWindow() const {
@@ -92,13 +99,7 @@ bool Application::isFocused(Window id) {
 Application::~Application() {
   delete m_font;
   delete m_color;
-  XUnmapWindow(m_display, m_window);
-  XDestroyWindow(m_display, m_window);
-  XCloseDisplay(m_display);
-}
-
-bool Application::eventPending() {
-  return XPending(m_display);
+  delete m_server;
 }
 
 void Application::setLayout(Layout &l) {
@@ -118,14 +119,8 @@ void Application::triggerExit() {
 }
 
 void Application::checkForExit() {
-  if (m_event.type == ClientMessage) {
-    if ((Atom)m_event.xclient.data.l[0] == m_wmDeleteMessage)
-      triggerExit();
-    return;
-  }
-  if (m_event.type == KeyPress) {
-    if (XK_Escape == XLookupKeysym(&m_event.xkey, 0))
-      triggerExit();
+  if (m_server->shouldClose(m_event)) {
+    triggerExit();
     return;
   }
 }
@@ -159,16 +154,16 @@ void Application::processEvents() {
 }
 
 void Application::exec() {
-  XMapWindow(m_display, m_window);
+  m_server->showWindow(m_window);
   for (auto &w : m_layout->getWidgets()) {
-    XMapWindow(m_display, w->id());
+    m_server->showWindow(w->id());
   }
   auto *widget = m_layout->getFirstWidget();
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
 
   while (!m_shouldClose) {
-    while (eventPending()) {
-      XNextEvent(m_display, &m_event);
+    while (m_server->isEventPending()) {
+      m_server->getNextEvent(&m_event);
       processEvents();
     }
     usleep(1000 * 1000 / FPS);

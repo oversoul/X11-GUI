@@ -4,7 +4,7 @@
 
 Color *Color::m_instance = nullptr;
 
-Color::Color(Display *dpy) : m_display(dpy) {
+Color::Color(Xlib *server) : m_server(server) {
   if (m_instance)
     throw std::runtime_error("Color already initialized.");
   m_instance = this;
@@ -19,7 +19,7 @@ void Color::set(std::string name) {
   if (m_instance->m_colors.count(name))
     return;
 
-  if (setXftColor(m_instance->m_display, &m_instance->m_colors[name], name) < 0)
+  if (m_instance->m_server->setColor(&m_instance->m_colors[name], name) < 0)
     throw std::runtime_error("Couldn't allocate color");
 }
 

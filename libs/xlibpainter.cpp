@@ -1,0 +1,70 @@
+#include "xlibpainter.h"
+#include "color.h"
+#include "typedefs.h"
+#include <X11/Xlib.h>
+
+XlibPainter::XlibPainter(Display *display, Window window, FontArea area)
+    : m_display(display), m_window(window), m_area(area) {
+  m_gc = XCreateGC(m_display, m_window, 0, 0);
+
+  m_backBuffer = XdbeAllocateBackBufferName(m_display, m_window, 0);
+
+  int s = XDefaultScreen(display);
+  m_draw = XftDrawCreate(display, m_backBuffer, DefaultVisual(display, s), DefaultColormap(display, s));
+}
+
+XlibPainter::~XlibPainter() {
+  XdbeDeallocateBackBufferName(m_display, m_backBuffer);
+  XftDrawDestroy(m_draw);
+  XFreeGC(m_display, m_gc);
+}
+
+void XlibPainter::drawString(const char *text, int x, int y, std::string color) {
+  XftColor c = Color::get(color);
+  XftDrawStringUtf8(m_draw, &c, m_area, x, y + m_area->ascent / 2, (const FcChar8 *)text, strlen(text));
+}
+
+void XlibPainter::drawLine(int x1, int y1, int x2, int y2) {
+  XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
+}
+
+void XlibPainter::drawCircle(Rect r) {
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h, 0, 360 * 64);
+}
+
+void XlibPainter::fillCircle(Rect r) {
+  XFillArc(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h, 0, 360 * 64);
+}
+
+void XlibPainter::drawPoint(int x, int y) {
+  XDrawPoint(m_display, m_backBuffer, m_gc, x, y);
+}
+
+void XlibPainter::clear(std::string color, Rect r) {
+  setForeground(color);
+  XFillRectangle(m_display, m_backBuffer, m_gc, 0, 0, r.w, r.h);
+}
+
+void XlibPainter::drawRect(Rect r) {
+  XDrawRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
+}
+
+void XlibPainter::fillRect(Rect r) {
+  XFillRectangle(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h);
+}
+
+void XlibPainter::setForeground(std::string color) {
+  auto c = Color::get(color);
+  XSetForeground(m_display, m_gc, c.pixel);
+}
+
+uint XlibPainter::textWidth(const char *text) {
+  XGlyphInfo extents = {};
+  XftTextExtentsUtf8(m_display, m_area, (const FcChar8 *)text, strlen(text), &extents);
+  return extents.xOff;
+}
+
+void XlibPainter::swapBuffers() {
+  XdbeSwapInfo swap_info = {.swap_window = m_window, .swap_action = 0};
+  XdbeSwapBuffers(m_display, &swap_info, 1);
+}
