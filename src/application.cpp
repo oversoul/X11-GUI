@@ -66,19 +66,19 @@ void Application::setSize(uint w, uint h) {
   m_server->setWindowSize(m_window, w, h);
 }
 
-const uint Application::width() const {
+uint Application::width() const {
   return m_width;
 }
 
-const uint Application::height() const {
+uint Application::height() const {
   return m_height;
 }
 
-const Window Application::window() const {
+Window Application::window() const {
   return m_window;
 }
 
-const Window Application::id() const {
+Window Application::id() const {
   return m_window;
 }
 
@@ -87,7 +87,7 @@ Display *Application::display() const {
   return nullptr;
 }
 
-const Window Application::focusedWindow() const {
+Window Application::focusedWindow() const {
   return m_focusedWindow;
 }
 

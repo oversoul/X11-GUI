@@ -37,13 +37,13 @@ public:
 
   WindowServer *server() const;
   Display *display() const;
-  const DrawableId id() const;
+  DrawableId id() const;
   const Painter *painter() const;
-  const DrawableId window() const;
-  const DrawableId focusedWindow() const;
+  DrawableId window() const;
+  DrawableId focusedWindow() const;
 
-  const uint width() const;
-  const uint height() const;
+  uint width() const;
+  uint height() const;
 
 protected:
   void checkForExit();

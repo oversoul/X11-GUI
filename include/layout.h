@@ -8,7 +8,7 @@ class Layout {
   friend class Application;
 
 public:
-  ~Layout();
+  virtual ~Layout();
   void setRect(Rect r);
   const Rect getRect() const;
   void setSpaceBetween(uint);

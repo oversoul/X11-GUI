@@ -6,22 +6,22 @@
 class Widget {
 public:
   Widget();
-  ~Widget();
+  virtual ~Widget();
 
   void newWindow();
 
   void setRect(Rect r);
+  DrawableId id() const;
   const Rect getRect() const;
-  const DrawableId id() const;
 
   void setWidth(uint w);
   void setHeight(uint h);
   void setBg(std::string c);
   void setPosition(uint x, uint y);
 
+  bool isFocused() const;
   void updateSizeAndPos();
   bool handleEvent(Event &e);
-  const bool isFocused() const;
 
   virtual void paintEvent();
   virtual bool keyPressEvent(KeyEvent);

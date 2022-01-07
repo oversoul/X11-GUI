@@ -5,7 +5,7 @@
 Widget::Widget() : m_server(Application::instance()->server()) {
 }
 
-const Window Widget::id() const {
+Window Widget::id() const {
   return m_drawable;
 }
 
@@ -19,7 +19,7 @@ Widget::~Widget() {
   m_server->destroyWindow(m_drawable);
 }
 
-const bool Widget::isFocused() const {
+bool Widget::isFocused() const {
   return Application::instance()->isFocused(id());
 }
 
