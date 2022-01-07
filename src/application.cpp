@@ -1,6 +1,6 @@
 #include "application.h"
+#include "libs/impl.h"
 #include "typedefs.h"
-#include "xlib.h"
 #include <unistd.h>
 #define FPS 120
 
@@ -11,7 +11,8 @@ Application::Application(ServerType type, std::string name, std::string title) :
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_server = new Xlib;
+  m_server = newServer(type);
+
   m_server->setup();
   m_color = new Color(m_server);
 
@@ -74,11 +75,11 @@ uint Application::height() const {
   return m_height;
 }
 
-Window Application::window() const {
+DrawableId Application::window() const {
   return m_window;
 }
 
-Window Application::id() const {
+DrawableId Application::id() const {
   return m_window;
 }
 
@@ -87,11 +88,11 @@ Display *Application::display() const {
   return nullptr;
 }
 
-Window Application::focusedWindow() const {
+DrawableId Application::focusedWindow() const {
   return m_focusedWindow;
 }
 
-bool Application::isFocused(Window id) {
+bool Application::isFocused(DrawableId id) {
   return focusedWindow() == id;
 }
 
@@ -125,8 +126,8 @@ void Application::checkForExit() {
 void Application::processEvents() {
   m_layout->updatePosition();
 
+  /*
   if (m_event.type == ConfigureNotify) {
-    /*
     setSize(m_width, m_height);
     if ((uint)m_event.xconfigure.width != m_width || (uint)m_event.xconfigure.height != m_height) {
       // if ((event.xconfigure.x!=ewin->x || event.xconfigure.y!=ewin->y)) break;
@@ -134,9 +135,9 @@ void Application::processEvents() {
       m_width = m_event.xconfigure.width;
       m_height = m_event.xconfigure.height;
     }
-    */
     return;
   }
+  */
 
   m_server->changeFocus(m_event, &m_focusedWindow);
 
@@ -157,10 +158,10 @@ void Application::exec() {
   m_focusedWindow = widget == nullptr ? m_window : widget->id();
 
   while (!m_shouldClose) {
-    while (m_server->isEventPending()) {
-      m_server->getNextEvent(&m_event);
+    while (m_server->getNextEvent(&m_event)) {
       processEvents();
     }
+
     usleep(1000 * 1000 / FPS);
   }
 }

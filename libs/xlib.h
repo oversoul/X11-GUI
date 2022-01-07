@@ -7,12 +7,15 @@
 #include <X11/Xlib.h>
 #include <iostream>
 
+#ifndef SERVER_
+#define SERVER_
 using Event = XEvent;
 using IColor = XftColor;
 using FontArea = XftFont *;
 using DrawableId = Window;
 
 using WindowServer = Server<Event, DrawableId, FontArea>;
+#endif
 
 class Xlib : public WindowServer {
 public:
@@ -28,7 +31,7 @@ public:
   DrawableId newParentWindow(ParentWindowInfo winInfo) override;
 
   void setup() override;
-  void getNextEvent(Event *evt) override;
+  bool getNextEvent(Event *evt) override;
   void showWindow(DrawableId w) override;
   void hideWindow(DrawableId w) override;
   void destroyWindow(DrawableId d) override;
@@ -62,7 +65,6 @@ private:
   Atom m_wmDeleteMessage;
   Visual *m_defaultVisual;
   DrawableId m_mainWindow;
-  FontArea m_fontArea = nullptr;
+  FontArea m_fontArea;
   uint m_monitorWidth, m_monitorHeight;
 };
-

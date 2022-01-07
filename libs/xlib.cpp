@@ -7,6 +7,10 @@
 #include <cstdlib>
 #include <stdio.h>
 
+WindowServer *newServer(ServerType type) {
+  return new Xlib;
+}
+
 DrawableId Xlib::createWindow(Display *dpy, std::string color, DrawableId p) {
   auto c = Color::get(color);
 
@@ -155,9 +159,9 @@ void Xlib::getMonitorSize(uint *w, uint *h) {
 }
 
 int Xlib::setColor(void *mem, std::string name) {
-  memset((XftColor *)mem, 0, sizeof(XftColor));
+  memset(mem, 0, sizeof(IColor));
 
-  if (!XftColorAllocName(m_dpy, m_defaultVisual, m_defaultColorMap, name.c_str(), (XftColor *)mem)) {
+  if (!XftColorAllocName(m_dpy, m_defaultVisual, m_defaultColorMap, name.c_str(), (IColor *)mem)) {
     return -1;
   }
   return 0;
@@ -190,8 +194,12 @@ void Xlib::closeFontArea() {
     XftFontClose(m_dpy, m_fontArea);
 }
 
-void Xlib::getNextEvent(Event *evt) {
-  XNextEvent(m_dpy, evt);
+bool Xlib::getNextEvent(Event *evt) {
+  if (XPending(m_dpy)) {
+    XNextEvent(m_dpy, evt);
+    return true;
+  }
+  return false;
 }
 
 bool Xlib::isEventPending() {
