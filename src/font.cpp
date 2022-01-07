@@ -13,5 +13,5 @@ FontSystem::~FontSystem() {
 
 void FontSystem::setFont(std::string name, uint size, std::string weight) {
   std::string fname = (boost::format("%s:pixelsize=%d:weight=%s") % name % size % weight).str();
-  m_server->setFontArea(name);
+  m_server->setFontArea(fname);
 }
