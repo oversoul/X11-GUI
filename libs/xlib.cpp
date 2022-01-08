@@ -206,10 +206,11 @@ bool Xlib::isEventPending() {
   return XPending(m_dpy);
 }
 
-void Xlib::changeFocus(Event e, DrawableId *d) {
+DrawableId Xlib::changeFocus(Event e) {
   if (e.type == ButtonPress && getMouseEvent(e).button == MouseButton::Left) {
-    *d = e.xbutton.window;
+    return e.xbutton.window;
   }
+  return 0;
 }
 
 void Xlib::destroyWindow(DrawableId d) {
