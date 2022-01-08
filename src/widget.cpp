@@ -5,7 +5,7 @@
 Widget::Widget() : m_server(Application::instance()->server()) {
 }
 
-Window Widget::id() const {
+const DrawableId Widget::id() const {
   return m_drawable;
 }
 

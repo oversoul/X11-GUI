@@ -1,5 +1,5 @@
 #pragma once
-#include "../libs/xlib.h"
+#include "../libs/impl.h"
 #include "rect.h"
 #include <iostream>
 
@@ -11,7 +11,7 @@ public:
   void newWindow();
 
   void setRect(Rect r);
-  DrawableId id() const;
+  const DrawableId id() const;
   const Rect getRect() const;
 
   void setWidth(uint w);
