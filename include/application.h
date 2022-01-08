@@ -58,7 +58,7 @@ private:
   int m_screen;
   XEvent m_event;
   DrawableId m_window;
-  DrawableId m_focusedWindow = -1;
+  DrawableId m_focusedWindow;
 
   Atom m_wmDeleteMessage;
   bool m_shouldClose = false;
