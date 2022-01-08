@@ -158,10 +158,10 @@ void Application::exec() {
   for (auto &w : m_layout->getWidgets())
     m_server->showWindow(w->id());
 
-  // auto *widget = m_layout->getFirstWidget();
+  auto *widget = m_layout->getFirstWidget();
 
   // std::cout << "parent: " << m_focusedWindow << " window: " << m_window << std::endl;
-  // m_focusedWindow = m_window;
+  m_focusedWindow = widget == nullptr ? m_window : widget->id();
   while (!m_shouldClose) {
     while (m_server->getNextEvent(&m_event)) {
       processEvents();

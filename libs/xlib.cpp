@@ -57,12 +57,12 @@ DrawableId Xlib::newParentWindow(ParentWindowInfo winInfo) {
     winInfo.title = winInfo.name;
 
   char *cname = (char *)(winInfo.name.c_str());
-  XClassHint class_hints = {.res_name = cname, .res_class = cname};
-  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
 
-  XSetWMHints(m_dpy, m_mainWindow, &wmhints);
   XSetTransientForHint(m_dpy, m_mainWindow, m_mainWindow);
+  XWMHints wmhints = {.flags = StateHint, .initial_state = NormalState};
+  XSetWMHints(m_dpy, m_mainWindow, &wmhints);
   XStoreName(m_dpy, m_mainWindow, winInfo.title.c_str());
+  XClassHint class_hints = {.res_name = cname, .res_class = cname};
   XSetClassHint(m_dpy, m_mainWindow, &class_hints);
 
   m_wmDeleteMessage = XInternAtom(m_dpy, "WM_DELETE_WINDOW", false);
