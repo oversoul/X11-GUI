@@ -20,7 +20,7 @@ XlibPainter::~XlibPainter() {
 }
 
 void XlibPainter::drawString(const char *text, int x, int y, std::string color) {
-  XftColor c = Color::get(color);
+  IColor c = Color::get(color);
   XftDrawStringUtf8(m_draw, &c, m_area, x, y + m_area->ascent / 2, (const FcChar8 *)text, strlen(text));
 }
 

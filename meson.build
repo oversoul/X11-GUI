@@ -2,13 +2,15 @@ project(
   'xgui',
   'cpp',
   version : '1.0.0',
-  default_options : ['warning_level=1']
+  default_options : ['warning_level=1', '-std=c++0x']
 )
+
 
 project_description = 'Simpe X11 Gui System'
 
 project_headers = [
   'xgui.h',
+  'libs/impl.h'
 ]
 
 project_source_files = [
@@ -25,9 +27,23 @@ project_source_files = [
   'src/server.cpp',
   'src/textinput.cpp',
   'src/typedefs.cpp',
-  'libs/xlib.cpp',
-  'libs/xlibpainter.cpp',
 ]
+
+
+libs_headers = []
+server_source_files = []
+
+if get_option('server') == 'xlib'
+  server = [dependency('X11')]
+  add_project_arguments('-DS_IMP=xlib', language : 'cpp')
+  libs_headers = ['libs/xlib.h', 'libs/xlibpainter.h']
+  server_source_files = ['libs/xlib.cpp', 'libs/xlibpainter.cpp']
+elif get_option('server') == 'xcb'
+  server = [dependency('xcb'), dependency('xcb-render'), dependency('xcb-xrm'), dependency('xcb-renderutil'), dependency('fontconfig')]
+  add_project_arguments('-DS_IMP=xcb', language : 'cpp')
+  libs_headers = [ 'libs/xcbft.h', 'libs/xcb.h', 'libs/xcbpainter.h' ]
+  server_source_files = ['libs/xcbft.cpp', 'libs/xcb.cpp', 'libs/xcbpainter.cpp' ]
+endif
 
 build_args = [
 ]
@@ -40,16 +56,15 @@ build_args = [
 # ======
 
 public_headers = [
-  include_directories('./'),
+  include_directories('./'), 
   include_directories('include'), 
-  include_directories('libs')
 ]
 
-deps = [ dependency('X11'), dependency('xext'), dependency('xrandr'), dependency('xft'), dependency('freetype2') ]
+deps = [ server, dependency('xext'), dependency('xcb-icccm'), dependency('xrandr'), dependency('xft'), dependency('freetype2') ]
 
 project_target = shared_library(
   meson.project_name(),
-  project_source_files,
+  [project_source_files, server_source_files],
   include_directories : public_headers,
   dependencies: deps
 )
@@ -67,9 +82,12 @@ project_dep = declare_dependency(
 
 set_variable(meson.project_name() + '_dep', project_dep)
 
+# -DS_IMPL=DB_XDBE
+
 # Make this library usable from the system's
 # package manager.
 install_headers(project_headers, subdir : meson.project_name())
+install_headers(libs_headers, subdir : meson.project_name())
 
 pkg_mod = import('pkgconfig')
 pkg_mod.generate(

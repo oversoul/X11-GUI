@@ -35,7 +35,7 @@ public:
   void showWindow(DrawableId w) override;
   void hideWindow(DrawableId w) override;
   void destroyWindow(DrawableId d) override;
-  void changeFocus(Event e, DrawableId *d) override;
+  DrawableId changeFocus(Event e) override;
   void setWindowSizeAndPos(DrawableId d, Rect r) override;
   void setWindowSize(DrawableId d, uint w, uint h) override;
   void setWindowBg(DrawableId d, std::string color) override;
