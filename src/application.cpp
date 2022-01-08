@@ -18,6 +18,7 @@ Application::Application(ServerType type, std::string name, std::string title) :
 
   ParentWindowInfo info{.name = name, .color = "#000000", .title = title, .w = m_width, .h = m_height};
   m_window = m_server->newParentWindow(info);
+
   setSize(m_width, m_height);
 
   m_font = new FontSystem(m_server, "arial", 16);
@@ -139,7 +140,10 @@ void Application::processEvents() {
   }
   */
 
-  m_server->changeFocus(m_event, &m_focusedWindow);
+  // std::cout << "pointer of focused: " << m_focusedWindow << std::endl;
+  auto toFocus = m_server->changeFocus(m_event);
+  if (toFocus != 0)
+    m_focusedWindow = toFocus;
 
   for (auto &w : m_layout->getWidgets()) {
     w->updateSizeAndPos();
@@ -154,9 +158,10 @@ void Application::exec() {
   for (auto &w : m_layout->getWidgets())
     m_server->showWindow(w->id());
 
-  auto *widget = m_layout->getFirstWidget();
-  m_focusedWindow = widget == nullptr ? m_window : widget->id();
+  // auto *widget = m_layout->getFirstWidget();
 
+  // std::cout << "parent: " << m_focusedWindow << " window: " << m_window << std::endl;
+  // m_focusedWindow = m_window;
   while (!m_shouldClose) {
     while (m_server->getNextEvent(&m_event)) {
       processEvents();

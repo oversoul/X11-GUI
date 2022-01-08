@@ -13,34 +13,35 @@ enum class ServerType { Xlib, Xcb };
 
 template <typename E, typename D, typename F> class Server {
 public:
-  virtual ~Server() {}
-  virtual void setup() {}
-  virtual bool isEventPending() { return false; }
-  virtual bool shouldClose(E) { return true; }
-  virtual KeyEvent getKeyEvent(E) { return {}; }
-  virtual Painter *createPainter(D) { return nullptr; }
-  virtual MouseEvent getMouseEvent(E) { return {}; }
-  virtual D newSubWindow(std::string) { return {}; }
-  virtual int setColor(void *, std::string) { return {}; }
-  virtual D newParentWindow(ParentWindowInfo) { return {}; }
+  virtual ~Server() {
+  }
+  virtual void setup() = 0;
+  virtual bool isEventPending() = 0;
+  virtual bool shouldClose(E) = 0;
+  virtual KeyEvent getKeyEvent(E) = 0;
+  virtual Painter *createPainter(D) = 0;
+  virtual MouseEvent getMouseEvent(E) = 0;
+  virtual D newSubWindow(std::string) = 0;
+  virtual int setColor(void *, std::string) = 0;
+  virtual D newParentWindow(ParentWindowInfo) = 0;
 
-  virtual void getNextEvent(E *) { }
-  virtual void showWindow(D ) { }
-  virtual void hideWindow(D ) { }
-  virtual void destroyWindow(D ) { }
-  virtual void changeFocus(E , D *) { }
-  virtual void setWindowBg(D , std::string ) { }
-  virtual void setWindowSize(D , uint , uint ) { }
-  virtual void setWindowSizeAndPos(D , Rect ) { }
+  virtual bool getNextEvent(E *) = 0;
+  virtual void showWindow(D) = 0;
+  virtual void hideWindow(D) = 0;
+  virtual void destroyWindow(D) = 0;
+  virtual D changeFocus(E) = 0;
+  virtual void setWindowBg(D, std::string) = 0;
+  virtual void setWindowSize(D, uint, uint) = 0;
+  virtual void setWindowSizeAndPos(D, Rect) = 0;
 
-  virtual void closeFontArea() {  }
-  virtual F getFontArea() { return {}; }
-  virtual void setFontArea(std::string) { }
+  virtual void closeFontArea() = 0;
+  virtual F getFontArea() = 0;
+  virtual void setFontArea(std::string) = 0;
 
-  virtual bool onMouse(E &) { return {}; }
-  virtual bool onKeyUp(E &) { return {}; }
-  virtual bool onKeyDown(E &) { return {}; }
+  virtual bool onMouse(E &) = 0;
+  virtual bool onKeyUp(E &) = 0;
+  virtual bool onKeyDown(E &) = 0;
 
-  virtual MouseButton getButton(int) { return MouseButton::Unknown; }
-  virtual WheelDirection getDirection(int) { return WheelDirection::Unknown; }
+  virtual MouseButton getButton(int) = 0;
+  virtual WheelDirection getDirection(int) = 0;
 };
