@@ -31,7 +31,7 @@ bool XcbServer::isEventPending() {
 }
 
 bool XcbServer::shouldClose(Event event) {
-  int type = (m_event->response_type & 0x7f);
+  int type = (m_event->response_type & ~0x80);
   // not detected...
   if (type == XCB_CLIENT_MESSAGE) {
     return ((*(xcb_client_message_event_t *)event).data.data32[0] == (*m_AtomWmDeleteWindow).atom);
@@ -199,7 +199,8 @@ void XcbServer::setFontArea(std::string name) {
 }
 
 bool XcbServer::onMouse(Event &) {
-  return false;
+  int type = (m_event->response_type & ~0x80);
+  return (type == XCB_BUTTON_PRESS);
 }
 
 bool XcbServer::onKeyUp(Event &) {
@@ -226,12 +227,17 @@ MouseButton XcbServer::getButton(int detail) {
   case XCB_BUTTON_INDEX_3:
     return MouseButton::Right;
   case XCB_BUTTON_INDEX_4:
+  case XCB_BUTTON_INDEX_5:
     return MouseButton::Scroll;
   default:
     return MouseButton::Unknown;
   }
 }
-WheelDirection XcbServer::getDirection(int v) {
-  // std::cout << "direction: " << v << std::endl;
+
+WheelDirection XcbServer::getDirection(int btn) {
+  if (btn == 4)
+    return WheelDirection::Up;
+  if (btn == 5)
+    return WheelDirection::Down;
   return WheelDirection::Unknown;
 }
