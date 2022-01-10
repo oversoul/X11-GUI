@@ -1,5 +1,5 @@
 #include "application.h"
-#include "libs/impl.h"
+#include "impl.h"
 #include "typedefs.h"
 #include <unistd.h>
 #define FPS 120
