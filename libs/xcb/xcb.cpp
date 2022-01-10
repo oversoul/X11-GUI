@@ -5,6 +5,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
 #include <xcb/xproto.h>
+#include <xkbcommon/xkbcommon.h>
 
 WindowServer *newServer(ServerType type) {
   return new XcbServer;
@@ -24,6 +25,12 @@ void XcbServer::setup() {
 
   xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(m_connection, 0, 16, "WM_DELETE_WINDOW");
   m_AtomWmDeleteWindow = xcb_intern_atom_reply(m_connection, cookie2, 0);
+
+  m_keysym = xcb_key_symbols_alloc(m_connection);
+}
+
+XcbServer::~XcbServer() {
+  xcb_key_symbols_free(m_keysym);
 }
 
 bool XcbServer::isEventPending() {
@@ -46,7 +53,13 @@ bool XcbServer::shouldClose(Event event) {
 }
 
 KeyEvent XcbServer::getKeyEvent(Event) {
-  return {};
+  xcb_key_press_event_t *kp = (xcb_key_press_event_t *)m_event;
+  xcb_keysym_t ks = xcb_key_press_lookup_keysym(m_keysym, kp, 0);
+  if (ks == XKB_KEY_NoSymbol)
+    return {};
+  char text[255];
+  int r = xkb_keysym_to_utf8(ks, text, 255);
+  return {.key = ks, .text = (r > 0) ? std::string(text) : ""};
 }
 
 Painter *XcbServer::createPainter(DrawableId d) {
@@ -127,7 +140,6 @@ DrawableId XcbServer::newParentWindow(ParentWindowInfo info) {
 
 bool XcbServer::getNextEvent(Event *evt) {
   xcb_flush(m_connection);
-  // return ((*evt = xcb_poll_for_event(m_connection)) != NULL);
   m_event = xcb_poll_for_event(m_connection);
   return (m_event != NULL);
 }
@@ -204,18 +216,13 @@ bool XcbServer::onMouse(Event &) {
 }
 
 bool XcbServer::onKeyUp(Event &) {
-  return false;
+  int type = (m_event->response_type & ~0x80);
+  return (type == XCB_KEY_RELEASE);
 }
 
 bool XcbServer::onKeyDown(Event &) {
   int type = (m_event->response_type & ~0x80);
-  if (type != XCB_KEY_PRESS) {
-    return false;
-  }
-
-  // const xcb_key_press_event_t *kp = (const xcb_key_press_event_t *)m_event;
-  // std::cout << "Key pressed in window " << (k) << " esc: " <<  << std::endl;
-  return false;
+  return (type == XCB_KEY_PRESS);
 }
 
 MouseButton XcbServer::getButton(int detail) {

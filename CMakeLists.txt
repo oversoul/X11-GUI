@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14.0)
+set(XCB_FIND_QUIETLY ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-set(XCB_FIND_QUIETLY ON)
 
 project(xgui)
 
@@ -74,13 +74,17 @@ elseif (server STREQUAL "xcb")
   target_link_libraries(xgui ${XCB_XRM_LIBRARY})
   target_link_libraries(xgui ${XCB_ICCCM_LIBRARY})
   target_link_libraries(xgui ${XCB_RENDER_LIBRARY})
+  target_link_libraries(xgui ${XCB_KEYSYMS_LIBRARY})
   target_link_libraries(xgui ${XCB_RENDERUTIL_LIBRARY})
   target_include_directories(xgui PRIVATE ${XCB_INCLUDE_DIRS})
+
+  find_package(Xkbcommon REQUIRED)
+  target_link_libraries(xgui ${XKBCOMMON_LIBRARIES})
 
   find_package(Fontconfig REQUIRED)
   target_link_libraries(xgui ${Fontconfig_LIBRARIES})
 
-  message(STATUS "hello: ${XCB_RENDER_LIBRARY}")
+  message(STATUS "hello: ${XKBCOMMON_INCLUDE_DIRS}")
 
 else()
   message(FATAL_ERROR "Server not specifed (xlib, xcb).")

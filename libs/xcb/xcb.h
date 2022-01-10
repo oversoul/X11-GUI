@@ -2,6 +2,7 @@
 #include "server.h"
 #include "xcbft.h"
 #include <xcb/xcb.h>
+#include <xcb/xcb_keysyms.h>
 
 #ifndef SERVER_
 #define SERVER_
@@ -21,6 +22,7 @@ using WindowServer = Server<Event, DrawableId, FontArea>;
 
 class XcbServer : public WindowServer {
 public:
+  ~XcbServer();
   void setup() override;
   bool isEventPending() override;
   bool shouldClose(Event) override;
@@ -55,6 +57,7 @@ private:
   FontArea m_fontArea;
   DrawableId m_mainWindow;
   xcb_screen_t *m_screen = nullptr;
+  xcb_key_symbols_t *m_keysym = nullptr;
   xcb_generic_event_t *m_event = nullptr;
   xcb_connection_t *m_connection = nullptr;
   xcb_intern_atom_reply_t *m_AtomWmDeleteWindow;
