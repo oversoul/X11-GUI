@@ -1,9 +1,9 @@
 #pragma once
 
 #if S_IMPL == xlib
-#include "xlib.h"
+#include "../libs/xlib/xlib.h"
 #elif S_IMPL == xcb
-#include "xcb.h"
+#include "../libs/xcb/xcb.h"
 #else
 #endif
 

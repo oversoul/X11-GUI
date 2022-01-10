@@ -35,12 +35,12 @@ void ListView::recalculateItems() {
     return;
 
   m_rects.clear();
-  uint width = m_rect.w - 2;
-  uint height = m_itemHeight - 2;
+  uint width = m_rect.w;
+  uint height = m_itemHeight;
 
   for (uint i = 0; i < m_rows.size(); ++i) {
     uint ypos = m_itemHeight * i;
-    m_rects.push_back({1, ypos + 1, width, height});
+    m_rects.push_back({1, ypos, width, height});
   }
 }
 
