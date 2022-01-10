@@ -7,7 +7,6 @@ project(xgui)
 
 
 set(XGUI_HDR 
-  xgui.h
   include/impl.h
   include/font.h
   include/color.h
@@ -24,7 +23,6 @@ set(XGUI_HDR
 )
 
 set(XGUI_SRCS 
-  xgui.cpp
   src/font.cpp
   src/color.cpp
   src/label.cpp
