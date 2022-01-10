@@ -21,7 +21,7 @@ XlibPainter::~XlibPainter() {
 
 void XlibPainter::drawString(const char *text, int x, int y, std::string color) {
   IColor c = Color::get(color);
-  XftDrawStringUtf8(m_draw, &c, m_area, x, y + m_area->descent, (const FcChar8 *)text, strlen(text));
+  XftDrawStringUtf8(m_draw, &c, m_area, x, y + m_area->ascent / 2, (const FcChar8 *)text, strlen(text));
 }
 
 void XlibPainter::drawLine(int x1, int y1, int x2, int y2) {
