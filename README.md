@@ -1,6 +1,6 @@
 # X11 GUI
 
-Graphical User Interface build with X11 (Xlib).
+Graphical User Interface build with X (Xlib, Xcb).
 
 ## Widgets
 
@@ -9,6 +9,7 @@ Graphical User Interface build with X11 (Xlib).
 - ListView
 - VLayout / HLayout
 - Button
+- Checkbox
 
 ## Sample Application
 
@@ -41,5 +42,7 @@ int main() {
 ## Running
 
 ```console
-$ make run
+$ mkdir build && cd build
+$ cmake ../
+$ make
 ```
