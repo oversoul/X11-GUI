@@ -24,8 +24,10 @@ void XlibPainter::drawString(const char *text, int x, int y, std::string color) 
   XftDrawStringUtf8(m_draw, &c, m_area, x, y + m_area->ascent / 2, (const FcChar8 *)text, strlen(text));
 }
 
-void XlibPainter::drawLine(int x1, int y1, int x2, int y2) {
+void XlibPainter::drawLine(int x1, int y1, int x2, int y2, int w) {
+  XSetLineAttributes(m_display, m_gc, w, LineSolid, CapRound, JoinRound);
   XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
+  XSetLineAttributes(m_display, m_gc, 1, LineSolid, CapRound, JoinRound);
 }
 
 void XlibPainter::drawCircle(Rect r) {

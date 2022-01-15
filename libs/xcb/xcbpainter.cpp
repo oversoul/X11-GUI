@@ -42,7 +42,7 @@ void XcbPainter::drawString(const char *text, int x, int y, std::string color) {
   xcbft_draw_text(m_connection, m_window, x, y + m_area.ascent / 2, msg, text_color, m_area.holder, m_area.dpi);
 }
 
-void XcbPainter::drawLine(int x1, int y1, int x2, int y2) {
+void XcbPainter::drawLine(int x1, int y1, int x2, int y2, int w) {
   // XDrawLine(m_display, m_backBuffer, m_gc, x1, y1, x2, y2);
 }
 

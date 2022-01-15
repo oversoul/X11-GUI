@@ -15,6 +15,6 @@ public:
   virtual uint textWidth(const char *text) = 0;
   virtual void setForeground(std::string color) = 0;
   virtual void clear(std::string color, Rect r) = 0;
-  virtual void drawLine(int x1, int y1, int x2, int y2) = 0;
+  virtual void drawLine(int x1, int y1, int x2, int y2, int w = 1) = 0;
   virtual void drawString(const char *text, int x, int y, std::string color = "#000000") = 0;
 };
