@@ -33,7 +33,7 @@ void Checkbox::paintEvent() {
   m_painter->clear(m_bgColor, m_rect);
 
   uint pd = 4;
-  uint size = 20;
+  uint size = 16;
   uint padd = (m_rect.h - size) / 2;
 
   m_painter->setForeground("#333333");
