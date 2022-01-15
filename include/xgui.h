@@ -9,6 +9,7 @@
 #include "layout.h"
 #include "textinput.h"
 #include "button.h"
+#include "checkbox.h"
 #include "label.h"
 #include "listview.h"
 #include "application.h"

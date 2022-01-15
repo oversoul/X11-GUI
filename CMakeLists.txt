@@ -19,6 +19,7 @@ set(XGUI_HDR
   include/widget.h
   include/painter.h
   include/typedefs.h
+  include/checkbox.h
   include/application.h
   include/listview.h
   include/textinput.h
@@ -34,6 +35,7 @@ set(XGUI_SRCS
   src/widget.cpp
   src/painter.cpp
   src/typedefs.cpp
+  src/checkbox.cpp
   src/listview.cpp
   src/textinput.cpp
   src/application.cpp
