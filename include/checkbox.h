@@ -8,6 +8,7 @@ public:
   Checkbox();
   Checkbox(std::string);
   ~Checkbox();
+  bool isChecked() const;
   void setLabel(std::string);
   void paintEvent() override;
   bool mousePressEvent(MouseEvent) override;

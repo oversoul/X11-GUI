@@ -13,6 +13,10 @@ Checkbox::Checkbox(std::string label) : Checkbox() {
 Checkbox::~Checkbox() {
 }
 
+bool Checkbox::isChecked() const {
+  return m_isChecked;
+}
+
 void Checkbox::setLabel(std::string label) {
   m_label = label;
 }
