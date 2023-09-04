@@ -3,11 +3,12 @@
 #include "typedefs.h"
 #include "xlibpainter.h"
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <X11/extensions/Xrandr.h>
 #include <cstdlib>
 #include <stdio.h>
 
-WindowServer *newServer(ServerType type) {
+WindowServer *newServer() {
   return new Xlib;
 }
 
@@ -184,7 +185,8 @@ void Xlib::setFontArea(std::string name) {
   m_fontArea = XftFontOpenName(m_dpy, m_defaultScreen, name.c_str());
 
   if (!m_fontArea) {
-    fprintf(stderr, "Couldn't open font.\n");
+    printf("%s\n", name.c_str());
+    fprintf(stderr, "Couldn't open font: %s.\n", name.c_str());
     exit(1);
   }
 }

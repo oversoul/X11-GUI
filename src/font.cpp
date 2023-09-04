@@ -1,7 +1,6 @@
+#include <string>
 #include "font.h"
 #include "application.h"
-#include <boost/format.hpp>
-#include <string>
 
 FontSystem::FontSystem(WindowServer *server, std::string name, uint size, std::string weight) : m_server(server) {
   setFont(name, size, weight);
@@ -12,6 +11,7 @@ FontSystem::~FontSystem() {
 }
 
 void FontSystem::setFont(std::string name, uint size, std::string weight) {
-  std::string fname = (boost::format("%s:pixelsize=%d:weight=%s") % name % size % weight).str();
+  char fname[100];
+  std::snprintf(fname, 100, "%s:pixelsize=%d:width=%s", name.c_str(), size, weight.c_str());
   m_server->setFontArea(fname);
 }

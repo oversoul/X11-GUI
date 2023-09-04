@@ -14,7 +14,7 @@ class Application {
   friend class HLayout;
 
 public:
-  Application(ServerType type, std::string name, std::string title = "");
+  Application(std::string name, std::string title = "");
   ~Application();
   static Application *instance();
 

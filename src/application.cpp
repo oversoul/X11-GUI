@@ -6,22 +6,22 @@
 
 Application *Application::m_instance = nullptr;
 
-Application::Application(ServerType type, std::string name, std::string title) : m_width(640), m_height(480) {
+Application::Application(std::string name, std::string title) : m_width(640), m_height(480) {
   if (m_instance != nullptr)
     throw std::runtime_error("The program can have only one instance of Application");
   m_instance = this;
 
-  m_server = newServer(type);
+  m_server = newServer();
 
   m_server->setup();
   m_color = new Color(m_server);
 
-  ParentWindowInfo info{.name = name, .color = "#000000", .title = title, .w = m_width, .h = m_height};
+  ParentWindowInfo info{.name = name, .color = "#ffffff", .title = title, .w = m_width, .h = m_height};
   m_window = m_server->newParentWindow(info);
 
   setSize(m_width, m_height);
 
-  m_font = new FontSystem(m_server, "arial", 16);
+  m_font = new FontSystem(m_server, "DejaVu", 16);
 }
 
 const FontArea Application::getFontArea() const {

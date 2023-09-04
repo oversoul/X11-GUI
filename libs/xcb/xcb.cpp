@@ -7,7 +7,7 @@
 #include <xcb/xproto.h>
 #include <xkbcommon/xkbcommon.h>
 
-WindowServer *newServer(ServerType type) {
+WindowServer *newServer() {
   return new XcbServer;
 }
 

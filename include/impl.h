@@ -7,4 +7,4 @@
 #else
 #endif
 
-WindowServer *newServer(ServerType type);
+WindowServer *newServer();
