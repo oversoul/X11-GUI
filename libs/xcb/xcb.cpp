@@ -59,7 +59,7 @@ KeyEvent XcbServer::getKeyEvent(Event) {
     return {};
   char text[255];
   int r = xkb_keysym_to_utf8(ks, text, 255);
-  return {.key = ks, .text = (r > 0) ? std::string(text) : ""};
+  return {.key = ks, .text = (r > 0) ? std::string(text) : "", .mod = KeyMod::None};
 }
 
 Painter *XcbServer::createPainter(DrawableId d) {

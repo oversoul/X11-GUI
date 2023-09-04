@@ -41,6 +41,7 @@ public:
   const Painter *painter() const;
   DrawableId window() const;
   DrawableId focusedWindow() const;
+  void focusNext(int direction);
 
   uint width() const;
   uint height() const;
@@ -54,6 +55,7 @@ private:
   uint m_height = 0;
   uint m_screenWidth = 1;
   uint m_screenHeight = 1;
+  int  m_focusNext = 0;
 
   int m_screen;
   XEvent m_event;

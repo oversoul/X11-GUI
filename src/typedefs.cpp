@@ -1,6 +1,19 @@
 #include "typedefs.h"
 #include <iostream>
 
+
+const char* mod_to_string(KeyModifier mod) {
+  switch(mod) {
+    case KeyModifier::Ctrl:
+      return "ctrl";
+    case KeyModifier::Shift:
+      return "shift";
+    default:
+      return "";
+  }
+}
+
+
 // print key modifier...
 void print_modifiers(uint mask) {
   const char *MODIFIERS[] = {"Shift", "Lock", "Ctrl", "Alt", "Mod2", "Mod3", "Mod4", "Mod5"};

@@ -24,13 +24,23 @@ bool Widget::isFocused() const {
 }
 
 bool Widget::handleEvent(Event &e) {
-  if (m_server->onKeyDown(e)) {
-    auto key = m_server->getKeyEvent(e);
-    return keyPressEvent(key);
-  }
-  if (m_server->onKeyUp(e)) {
-    auto key = m_server->getKeyEvent(e);
-    return keyReleaseEvent(key);
+  if (isFocused()) {
+    if (m_server->onKeyDown(e)) {
+      auto ke = m_server->getKeyEvent(e);
+      auto handled = keyPressEvent(ke);
+      if (!handled) {
+        if (ke.key == XK_Tab) {
+          auto direction = ke.mod == KeyModifier::Shift ? -1 : 1;
+          Application::instance()->focusNext(direction);
+          return true;
+        }
+      }
+      return false;
+    }
+    if (m_server->onKeyUp(e)) {
+      auto key = m_server->getKeyEvent(e);
+      return keyReleaseEvent(key);
+    }
   }
   if (m_server->onMouse(e)) {
     auto mouseEvent = m_server->getMouseEvent(e);

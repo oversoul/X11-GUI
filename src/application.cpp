@@ -124,6 +124,34 @@ void Application::checkForExit() {
     return triggerExit();
 }
 
+DrawableId nextWidget(std::vector<Widget*> widgets, int direction) {
+  for (uint i = 0; i < widgets.size(); ++i) {
+    if (widgets[i]->isFocused()) {
+      if (direction == 1) {
+        if (i + 1 < widgets.size()) {
+          return widgets[i + 1]->id();
+        } else {
+          return widgets[0]->id();
+        }
+      }
+      if (direction == -1) {
+        if (i == 0) {
+          return widgets[widgets.size() - 1]->id();
+        } else {
+          return widgets[i - 1]->id();
+        }
+      }
+      break;
+    }
+  }
+
+  return -1;
+}
+
+void Application::focusNext(int direction) {
+  m_focusNext = direction;
+}
+
 void Application::processEvents() {
   m_layout->updatePosition();
 
@@ -142,8 +170,16 @@ void Application::processEvents() {
 
   // std::cout << "pointer of focused: " << m_focusedWindow << std::endl;
   auto toFocus = m_server->changeFocus(m_event);
-  if (toFocus != 0)
+  if (toFocus != -1)
     m_focusedWindow = toFocus;
+
+  if (m_focusNext) {
+    auto focused = nextWidget(m_layout->getWidgets(), m_focusNext);
+    if (focused != -1) {
+      m_focusedWindow = focused;   
+    }
+    m_focusNext = 0;
+  }
 
   for (auto &w : m_layout->getWidgets()) {
     w->updateSizeAndPos();

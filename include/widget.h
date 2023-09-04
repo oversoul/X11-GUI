@@ -21,7 +21,7 @@ public:
 
   bool isFocused() const;
   void updateSizeAndPos();
-  bool handleEvent(Event &e);
+  virtual bool handleEvent(Event &e);
 
   virtual void paintEvent();
   virtual bool keyPressEvent(KeyEvent);

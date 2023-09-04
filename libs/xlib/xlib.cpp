@@ -214,7 +214,7 @@ DrawableId Xlib::changeFocus(Event e) {
   if (e.type == ButtonPress && getMouseEvent(e).button == MouseButton::Left) {
     return e.xbutton.window;
   }
-  return 0;
+  return -1;
 }
 
 void Xlib::destroyWindow(DrawableId d) {
@@ -225,7 +225,22 @@ KeyEvent Xlib::getKeyEvent(Event e) {
   KeySym key;
   char text[255];
   XLookupString(&e.xkey, text, 255, &key, 0);
-  return {.key = key, .text = std::string(text)};
+  KeyEvent key_event;
+  key_event.mod = KeyModifier::Non;
+  if (e.xkey.state & ControlMask) {
+    key_event.mod = KeyModifier::Ctrl;
+  }
+  if ((e.xkey.state & ShiftMask) == ShiftMask) {
+    key_event.mod = KeyModifier::Shift;
+  }
+  key_event.key = key;
+  if (key == XK_ISO_Left_Tab) {
+    key_event.mod = KeyModifier::Shift;
+    key_event.key = XK_Tab;
+  }
+  key_event.text = std::string(text);
+
+  return key_event;
 }
 
 MouseEvent Xlib::getMouseEvent(Event e) {

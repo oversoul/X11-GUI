@@ -12,6 +12,9 @@ public:
   void paintEvent() override;
   bool keyPressEvent(KeyEvent) override;
 
+  bool handleHotKeys(KeyEvent);
+
 private:
+  uint m_cursor = 0;
   std::string m_value;
 };
