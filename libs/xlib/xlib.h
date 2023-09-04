@@ -5,6 +5,7 @@
 #include "../include/typedefs.h"
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <iostream>
 
 #ifndef SERVER_
@@ -29,6 +30,8 @@ public:
   int setColor(void *mem, std::string name) override;
   DrawableId newSubWindow(std::string color) override;
   DrawableId newParentWindow(ParentWindowInfo winInfo) override;
+
+  std::string getClipboard() override;
 
   void setup() override;
   bool getNextEvent(Event *evt) override;
@@ -59,6 +62,7 @@ private:
   DrawableId createWindow(Display *dpy, std::string color, DrawableId p = -1);
 
   Display *m_dpy;
+  Atom m_clipboard;
   int m_defaultDepth;
   int m_defaultScreen;
   int m_defaultColorMap;

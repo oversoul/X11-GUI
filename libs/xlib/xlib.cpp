@@ -24,6 +24,8 @@ DrawableId Xlib::createWindow(Display *dpy, std::string color, DrawableId p) {
     p = DefaultRootWindow(dpy);
   }
 
+  m_clipboard = XInternAtom(m_dpy, "CLIPBOARD", False);
+
   ulong mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
   return XCreateWindow(dpy, p, 0, 1, 1, 1, 0, m_defaultDepth, InputOutput, m_defaultVisual, mask, &attr);
 }
@@ -267,4 +269,37 @@ WheelDirection Xlib::getDirection(int btn) {
   if (btn == 5)
     return WheelDirection::Down;
   return WheelDirection::Unknown;
+}
+
+std::string Xlib::getClipboard() {
+  XConvertSelection(m_dpy, m_clipboard, XA_STRING, XA_STRING, m_mainWindow, CurrentTime);
+  XFlush(m_dpy);
+
+  XEvent e;
+  XNextEvent(m_dpy, &e);
+  if (e.type == SelectionNotify && e.xselection.selection == m_clipboard) {
+    Atom target = e.xselection.target;
+    if (target == XA_STRING) {
+      char *clipboardText = NULL;
+      Atom actualType;
+      int actualFormat;
+      unsigned long nitems, bytesAfter;
+      XGetWindowProperty(
+        m_dpy, 
+        m_mainWindow, XA_STRING, 0, LONG_MAX, False, AnyPropertyType,
+        &actualType, &actualFormat, &nitems, &bytesAfter, 
+        (unsigned char**)&clipboardText);
+      
+      if (clipboardText != nullptr) {
+        auto text = std::string(clipboardText);
+        XFree(clipboardText);
+        return text;
+      } else {
+        fprintf(stderr, "Failed to fetch clipboard data\n");
+      }
+    } else {
+      fprintf(stderr, "Unsupported clipboard data format\n");
+    }
+  }
+  return "";
 }

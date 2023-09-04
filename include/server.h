@@ -25,6 +25,8 @@ public:
   virtual int setColor(void *, std::string) = 0;
   virtual D newParentWindow(ParentWindowInfo) = 0;
 
+  virtual std::string getClipboard() = 0;
+
   virtual bool getNextEvent(E *) = 0;
   virtual void showWindow(D) = 0;
   virtual void hideWindow(D) = 0;
