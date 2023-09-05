@@ -17,4 +17,5 @@ public:
   virtual void clear(std::string color, Rect r) = 0;
   virtual void drawLine(int x1, int y1, int x2, int y2, int w = 1) = 0;
   virtual void drawString(const char *text, int x, int y, std::string color = "#000000") = 0;
+  virtual void roundedRect(Rect r, uint radius) = 0;
 };

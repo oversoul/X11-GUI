@@ -38,6 +38,37 @@ void XlibPainter::fillCircle(Rect r) {
   XFillArc(m_display, m_backBuffer, m_gc, r.x, r.y, r.w, r.h, 0, 360 * 64);
 }
 
+void XlibPainter::roundedRect(Rect r, uint radius) {
+  // Draw top left arc
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x, r.y, 2 * radius, 2 * radius, 90 * 64, 90 * 64);
+
+  // Draw top right arc
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x + r.w - 2 * radius, r.y, 2 * radius, 2 * radius, 0 * 64, 90 * 64);
+
+  // Draw bottom left arc
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x, r.y + r.h - 2 * radius, 2 * radius, 2 * radius, 180 * 64, 90 * 64);
+
+  // Draw bottom right arc
+  XDrawArc(m_display, m_backBuffer, m_gc, r.x + r.w - 2 * radius, r.y + r.h - 2 * radius, 2 * radius, 2 * radius, 270 * 64, 90 * 64);
+
+  // Draw top side
+  XDrawLine(m_display, m_backBuffer, m_gc, r.x + radius, r.y, r.w - radius, r.y);
+
+  // Draw bottom side
+  XDrawLine(m_display, m_backBuffer, m_gc, r.x + radius, r.y + r.h, r.w - radius, r.y + r.h);
+
+  // Draw left side
+  XDrawLine(m_display, m_backBuffer, m_gc, r.x, r.y + radius, r.x, r.h - radius);
+
+  // Draw right side
+  XDrawLine(m_display, m_backBuffer, m_gc, r.x + r.w, r.y + radius, r.w, r.h - radius);
+
+  /*
+  // Draw center
+  XFillRectangle(m_display, m_backBuffer, m_gc, r.x + radius, r.y + radius, r.w - 2 * radius, r.h - 2 * radius);
+*/
+}
+
 void XlibPainter::drawPoint(int x, int y) {
   XDrawPoint(m_display, m_backBuffer, m_gc, x, y);
 }

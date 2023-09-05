@@ -39,6 +39,7 @@ bool TextInput::handleHotKeys(KeyEvent e) {
 }
 
 bool TextInput::mousePressEvent(MouseEvent e) {
+  m_dirty = true;
   auto letter = m_painter->textWidth("W");
   auto roughPosition = (e.x - m_padding) / letter;
   if (roughPosition > m_value.length()) {
@@ -49,6 +50,7 @@ bool TextInput::mousePressEvent(MouseEvent e) {
 }
 
 bool TextInput::keyPressEvent(KeyEvent e) {
+  m_dirty = true;
   if (e.mod != KeyModifier::Non) {
     if (handleHotKeys(e)) {
       return true;
@@ -102,18 +104,22 @@ void TextInput::setPadding(uint padding) {
 }
 
 void TextInput::paintEvent() {
-  m_painter->clear(m_bgColor, m_rect);
-  auto pad = m_padding;
-  m_painter->drawString(m_value.c_str(), pad, m_rect.h / 2);
-
-  m_painter->setForeground(isFocused() ? "#ff0000" : "#000000");
-  m_painter->drawRect({0, 0, m_rect.w - 1, m_rect.h - 1});
-
-  if (isFocused()) {
-    auto pos = m_painter->textWidth(m_value.substr(0, m_cursor).c_str()) + pad;
-    m_painter->drawLine(pos, pad, pos, m_rect.h - pad);
+  if (!m_dirty) {
+    return;
   }
 
+  m_painter->clear(m_bgColor, m_rect);
+  m_painter->drawString(m_value.c_str(), m_padding, m_rect.h / 2);
+
+  m_painter->setForeground(isFocused() ? "#ff0000" : "#000000");
+  m_painter->roundedRect({0, 0, m_rect.w - 1, m_rect.h - 1}, 10);
+
+  if (isFocused()) {
+    auto pos = m_painter->textWidth(m_value.substr(0, m_cursor).c_str()) + m_padding;
+    m_painter->drawLine(pos, m_padding, pos, m_rect.h - m_padding);
+  }
+
+  m_dirty = false;
   m_painter->swapBuffers();
 }
 

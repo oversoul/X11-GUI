@@ -19,6 +19,7 @@ public:
   bool handleHotKeys(KeyEvent);
 
 private:
+  bool m_dirty = true;
   uint m_cursor = 0;
   uint m_padding = 10;
   std::string m_value;
