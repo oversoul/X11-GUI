@@ -54,6 +54,11 @@ void Application::setBg(std::string color) {
   m_server->setWindowBg(m_window, color);
 }
 
+
+void Application::setCursor(CursorType type) {
+  m_server->useCursor(type);
+}
+
 void Application::setFont(std::string name, uint size, std::string weight) {
   m_font->setFont(name, size, weight);
 }

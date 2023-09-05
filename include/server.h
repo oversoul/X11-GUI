@@ -15,6 +15,7 @@ template <typename E, typename D, typename F> class Server {
 public:
   virtual ~Server() {
   }
+  virtual void useCursor(CursorType) = 0;
   virtual void setup() = 0;
   virtual bool isEventPending() = 0;
   virtual bool shouldClose(E) = 0;
@@ -32,6 +33,7 @@ public:
   virtual void hideWindow(D) = 0;
   virtual void destroyWindow(D) = 0;
   virtual D changeFocus(E) = 0;
+  virtual void moveWindow(D, int, int) = 0;
   virtual void setWindowBg(D, std::string) = 0;
   virtual void setWindowSize(D, uint, uint) = 0;
   virtual void setWindowSizeAndPos(D, Rect) = 0;
@@ -40,6 +42,7 @@ public:
   virtual F getFontArea() = 0;
   virtual void setFontArea(std::string) = 0;
 
+  virtual bool onHover(E &) = 0;
   virtual bool onMouse(E &) = 0;
   virtual bool onKeyUp(E &) = 0;
   virtual bool onKeyDown(E &) = 0;

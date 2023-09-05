@@ -5,14 +5,11 @@ enum class KeyModifier { Non, Ctrl, Shift };
 
 const char* mod_to_string(KeyModifier mod);
 
+enum class CursorType: uint { Normal = 0, Hand = 1, Text = 2 };
 enum class MouseButton { Unknown, Left, Middle, Right, Scroll };
 enum class WheelDirection { Up, Down, Unknown };
 
-typedef struct {
-  KeyModifier mod;
-  unsigned long key;
-  std::string text;
-} KeyEvent;
+typedef struct { KeyModifier mod; unsigned long key; std::string text; } KeyEvent;
 
 typedef struct {
   int x, y;

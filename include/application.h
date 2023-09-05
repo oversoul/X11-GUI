@@ -35,6 +35,7 @@ public:
   FontSystem *font();
   void setFont(std::string name, uint size = 12, std::string weight = "normal");
 
+  void setCursor(CursorType);
   WindowServer *server() const;
   Display *display() const;
   DrawableId id() const;

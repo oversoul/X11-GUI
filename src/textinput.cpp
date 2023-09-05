@@ -24,6 +24,10 @@ bool isSpecialButton(KeySym key) {
   );
 }
 
+void TextInput::mouseOverEvent(bool in) {
+  Application::instance()->setCursor(in ? CursorType::Text : CursorType::Normal);
+}
+
 bool TextInput::handleHotKeys(KeyEvent e) {
   if (e.mod == KeyModifier::Ctrl && e.key == XK_v) {
     auto v = m_server->getClipboard();  
@@ -34,16 +38,32 @@ bool TextInput::handleHotKeys(KeyEvent e) {
   return false;
 }
 
-bool TextInput::keyPressEvent(KeyEvent e) {
-  if (!isFocused())
-    return false;
+bool TextInput::mousePressEvent(MouseEvent e) {
+  auto letter = m_painter->textWidth("W");
+  auto roughPosition = (e.x - m_padding) / letter;
+  if (roughPosition > m_value.length()) {
+    roughPosition = m_value.length();
+  }
+  m_cursor = roughPosition;
+  return false;
+}
 
+bool TextInput::keyPressEvent(KeyEvent e) {
   if (e.mod != KeyModifier::Non) {
-    return handleHotKeys(e);
+    if (handleHotKeys(e)) {
+      return true;
+    }
   }
 
   if (e.key == XK_Tab) {
     return false;
+  }
+
+  if (e.key == XK_Delete) {
+    if (m_cursor >= 0 && m_cursor < m_value.length()) {
+      m_value.erase(m_cursor, 1);
+    }
+    return true;
   }
 
   if (e.key == XK_BackSpace) {
@@ -77,9 +97,13 @@ bool TextInput::keyPressEvent(KeyEvent e) {
   return true;
 }
 
+void TextInput::setPadding(uint padding) {
+  m_padding = padding;
+}
+
 void TextInput::paintEvent() {
   m_painter->clear(m_bgColor, m_rect);
-  auto pad = 20;
+  auto pad = m_padding;
   m_painter->drawString(m_value.c_str(), pad, m_rect.h / 2);
 
   m_painter->setForeground(isFocused() ? "#ff0000" : "#000000");

@@ -14,4 +14,10 @@ typedef struct _Rect {
     return inX && inY;
   }
 
+  bool inRect(uint rx, uint ry) {
+    bool inX = x >= rx && x <= rx + w;
+    bool inY = y >= ry && y <= ry + h;
+    return inX && inY;
+  }
+
 } Rect;

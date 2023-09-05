@@ -4,6 +4,7 @@
 #include "xlibpainter.h"
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/cursorfont.h>
 #include <X11/extensions/Xrandr.h>
 #include <cstdlib>
 #include <stdio.h>
@@ -17,20 +18,22 @@ DrawableId Xlib::createWindow(Display *dpy, std::string color, DrawableId p) {
 
   XSetWindowAttributes attr{
       .background_pixel = c.pixel,
-      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask,
+      .event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask,
   };
 
   if (p == (long unsigned int)-1) {
     p = DefaultRootWindow(dpy);
   }
 
-  m_clipboard = XInternAtom(m_dpy, "CLIPBOARD", False);
-
   ulong mask = CWBackPixel | CWEventMask | CWOverrideRedirect;
   return XCreateWindow(dpy, p, 0, 1, 1, 1, 0, m_defaultDepth, InputOutput, m_defaultVisual, mask, &attr);
 }
 
 Xlib::~Xlib() {
+  for (const auto& pair: m_cursors) {
+    XFreeCursor(m_dpy, pair.second);
+  }
+
   hideWindow(m_mainWindow);
   XDestroyWindow(m_dpy, m_mainWindow);
   XCloseDisplay(m_dpy);
@@ -48,13 +51,24 @@ void Xlib::setup() {
   m_defaultVisual = XDefaultVisual(m_dpy, m_defaultScreen);
   m_defaultColorMap = XDefaultColormap(m_dpy, m_defaultScreen);
 
+  m_clipboard = XInternAtom(m_dpy, "CLIPBOARD", False);
+  m_cursors[CursorType::Normal] = XCreateFontCursor(m_dpy, XC_left_ptr);
+  m_cursors[CursorType::Hand] = XCreateFontCursor(m_dpy, XC_hand2);
+  m_cursors[CursorType::Text] = XCreateFontCursor(m_dpy, XC_xterm);
+
   int majorVersion, minorVersion;
   if (!XdbeQueryExtension(m_dpy, &majorVersion, &minorVersion))
     throw std::runtime_error("XDBE is not supported!!!");
 }
 
+void Xlib::useCursor(CursorType type) {
+  XDefineCursor(m_dpy, m_mainWindow, m_cursors[type]);  
+}
+
 DrawableId Xlib::newParentWindow(ParentWindowInfo winInfo) {
   m_mainWindow = createWindow(m_dpy, winInfo.color);
+
+  useCursor(CursorType::Normal);
 
   if (winInfo.title == "")
     winInfo.title = winInfo.name;
@@ -97,6 +111,10 @@ void Xlib::hideWindow(DrawableId w) {
 
 void Xlib::showWindow(DrawableId w) {
   XMapWindow(m_dpy, w);
+}
+
+void Xlib::moveWindow(DrawableId w, int x, int y) {
+  XMoveWindow(m_dpy, w, x, y);
 }
 
 void Xlib::setWindowSize(DrawableId d, uint w, uint h) {
@@ -252,6 +270,10 @@ MouseEvent Xlib::getMouseEvent(Event e) {
       .button = button,
       .direction = getDirection(e.xbutton.button),
   };
+}
+
+bool Xlib::onHover(Event &e) {
+  return (e.type == MotionNotify);
 }
 
 bool Xlib::onMouse(Event &e) {

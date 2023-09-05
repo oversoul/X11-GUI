@@ -6,6 +6,7 @@
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <unordered_map>
 #include <iostream>
 
 #ifndef SERVER_
@@ -22,6 +23,7 @@ class Xlib : public WindowServer {
 public:
   ~Xlib();
 
+  void useCursor(CursorType type) override;
   bool isEventPending() override;
   bool shouldClose(Event evt) override;
   KeyEvent getKeyEvent(Event e) override;
@@ -39,6 +41,7 @@ public:
   void hideWindow(DrawableId w) override;
   void destroyWindow(DrawableId d) override;
   DrawableId changeFocus(Event e) override;
+  void moveWindow(DrawableId, int, int) override;
   void setWindowSizeAndPos(DrawableId d, Rect r) override;
   void setWindowSize(DrawableId d, uint w, uint h) override;
   void setWindowBg(DrawableId d, std::string color) override;
@@ -48,6 +51,7 @@ public:
   FontArea getFontArea() override;
   void setFontArea(std::string name) override;
 
+  bool onHover(Event &e) override;
   bool onMouse(Event &e) override;
   bool onKeyUp(Event &e) override;
   bool onKeyDown(Event &e) override;
@@ -71,4 +75,5 @@ private:
   DrawableId m_mainWindow;
   FontArea m_fontArea;
   uint m_monitorWidth, m_monitorHeight;
+  std::unordered_map<CursorType, Cursor> m_cursors;
 };
