@@ -43,11 +43,11 @@ bool Widget::handleEvent(Event &e) {
     }
   }
   if (m_server->onHover(e)) {
-    auto mouseX = e.xmotion.x;
-    auto mouseY = e.xmotion.y;
-    auto inX = mouseX >= m_rect.x && mouseX <= m_rect.x + m_rect.w;
-    auto inY = mouseY >= m_rect.y && mouseY <= m_rect.y + m_rect.h;
-    mouseOverEvent(inX && inY);
+    if (e.xany.window == Application::instance()->window()) {
+      m_server->useCursor(CursorType::Normal);
+    } else if (e.xany.window == id()) {
+      mouseOverEvent();
+    }
   }
   if (m_server->onMouse(e)) {
     auto mouseEvent = m_server->getMouseEvent(e);
@@ -91,7 +91,7 @@ void Widget::updateSizeAndPos() {
 void Widget::paintEvent() {
 }
 
-void Widget::mouseOverEvent(bool) {
+void Widget::mouseOverEvent() {
   
 }
 

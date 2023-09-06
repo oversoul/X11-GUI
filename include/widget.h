@@ -24,7 +24,7 @@ public:
   virtual bool handleEvent(Event &e);
 
   virtual void paintEvent();
-  virtual void mouseOverEvent(bool);
+  virtual void mouseOverEvent();
   virtual bool keyPressEvent(KeyEvent);
   virtual bool keyReleaseEvent(KeyEvent);
   virtual bool mousePressEvent(MouseEvent);

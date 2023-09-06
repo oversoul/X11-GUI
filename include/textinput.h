@@ -12,7 +12,7 @@ public:
   void setPadding(uint padding);
 
   void paintEvent() override;
-  void mouseOverEvent(bool) override;
+  void mouseOverEvent() override;
   bool keyPressEvent(KeyEvent) override;
   bool mousePressEvent(MouseEvent) override;
 

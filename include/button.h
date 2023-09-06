@@ -12,6 +12,7 @@ public:
   void setLabel(std::string);
   void paintEvent() override;
   void setOnClick(std::function<void()>);
+  void mouseOverEvent() override;
   bool mousePressEvent(MouseEvent) override;
 
 private:

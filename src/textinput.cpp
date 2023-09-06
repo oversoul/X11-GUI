@@ -24,8 +24,8 @@ bool isSpecialButton(KeySym key) {
   );
 }
 
-void TextInput::mouseOverEvent(bool in) {
-  Application::instance()->setCursor(in ? CursorType::Text : CursorType::Normal);
+void TextInput::mouseOverEvent() {
+  Application::instance()->setCursor(CursorType::Text);
 }
 
 bool TextInput::handleHotKeys(KeyEvent e) {
@@ -105,7 +105,7 @@ void TextInput::setPadding(uint padding) {
 
 void TextInput::paintEvent() {
   if (!m_dirty) {
-    return;
+    // return;
   }
 
   m_painter->clear(m_bgColor, m_rect);

@@ -13,7 +13,7 @@ public:
   const Rect getRect() const;
   void setSpaceBetween(uint);
   void setFullSize(uint = 0, uint = 0);
-  const Widget *getFirstWidget() const;
+  const Widget* getFirstWidget() const;
   void addWidget(Widget *widget, uint w = 1);
 
   virtual void updatePosition() {

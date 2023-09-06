@@ -27,7 +27,7 @@ void Layout::setFullSize(uint vert, uint hor) {
   };
 }
 
-const Widget *Layout::getFirstWidget() const {
+const Widget* Layout::getFirstWidget() const {
   return (m_widgets.size() > 0) ? m_widgets[0] : nullptr;
 }
 
